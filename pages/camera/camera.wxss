@@ -4,17 +4,16 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background-color: #0a0a0a;
+  background-color: black; /* 黑色背景 */
 }
 
 /* 顶部控制栏 */
 .top-controls {
   position: absolute;
-  top: 60rpx;
+  top: 20px;
   left: 0;
   right: 0;
-  z-index: 999;
-  padding: 0 30rpx;
+  z-index: 999; /* 确保在最上层 */
 }
 
 /* 倒计时样式 */
@@ -22,69 +21,42 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 0;
+  text-align: center;
 }
 
 .countdown {
-  font-size: 48rpx;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 4rpx 12rpx rgba(0,0,0,0.5);
-  letter-spacing: 4rpx;
-  font-variant-numeric: tabular-nums;
-}
-
-.countdown.recording {
-  animation: countdown-tick 1s ease-in-out infinite;
-}
-
-@keyframes countdown-tick {
-  0%, 100% { transform: scale(1); text-shadow: 0 4rpx 12rpx rgba(0,0,0,0.5); }
-  50% { transform: scale(1.05); text-shadow: 0 4rpx 20rpx rgba(239, 68, 68, 0.5); }
+  font-size: 24px;
+  color: white;
 }
 
 /* 控制按钮基础样式 */
 .control-button {
-  background-color: rgba(255, 255, 255, 0.15);
-  border: 1rpx solid rgba(255, 255, 255, 0.2);
-  width: 80rpx;
-  height: 80rpx;
+  background-color: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.control-button::after {
-  border: none;
-}
-
-.control-button:active {
-  transform: scale(0.92);
-  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .control-button image {
-  width: 40rpx;
-  height: 40rpx;
-  filter: brightness(0) invert(1);
+  width: 100%;
+  height: 100%;
 }
 
 /* 左上角按钮定位 */
 .top-left {
   position: absolute;
-  left: 30rpx;
+  left: 0;
   top: 0;
 }
 
 /* 右上角按钮定位 */
 .top-right {
   position: absolute;
-  right: 30rpx;
+  right: 0;
   top: 0;
 }
 
@@ -92,243 +64,83 @@
 camera {
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 1; /* 在控制按钮下层 */
 }
 
 /* 底部按钮栏 */
 .bottom-buttons {
   position: absolute;
-  bottom: 80rpx;
+  bottom: 20px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 80rpx;
-  z-index: 999;
+  gap: 20px;
+  z-index: 999; /* 确保在最上层 */
 }
 
-/* 保存/上传按钮 */
-.action-button.no-style {
-  background-color: rgba(255, 255, 255, 0.12);
-  border: 1rpx solid rgba(255, 255, 255, 0.2);
-  width: 100rpx;
-  height: 100rpx;
-  padding: 0;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.action-button.no-style::after {
+/* 动作按钮样式 */
+.action-button {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
   border: none;
+  border-radius: 50%;
+  font-size: 16px;
 }
 
-.action-button.no-style:active {
-  transform: scale(0.92);
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
-.action-button.no-style image {
-  width: 44rpx;
-  height: 44rpx;
-  filter: brightness(0) invert(1);
-}
-
-/* 录制按钮外层容器 */
-.record-button-wrapper {
-  position: relative;
-  width: 140rpx;
-  height: 140rpx;
+/* 无样式按钮（保存/上传） */
+.no-style {
+  background-color: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 录制按钮 */
+.no-style image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 录制按钮容器（保持圆形） */
 .record-button {
-  width: 120rpx;
-  height: 120rpx;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  border: 4rpx solid rgba(255, 255, 255, 0.9);
+  border: 3px solid white;
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.record-button::after {
-  border: none;
-}
-
-/* 录制按钮内圈 */
-.record-button-inner {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
-  box-shadow: 0 4rpx 20rpx rgba(255, 71, 87, 0.4);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* 录制状态 - 外圈 */
-.record-button.recording {
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.05);
-}
-
-/* 录制状态 - 内圈变为方形 */
-.record-button.recording .recording-inner {
-  width: 50rpx;
-  height: 50rpx;
-  border-radius: 12rpx;
-  background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
-  box-shadow: 0 4rpx 20rpx rgba(255, 71, 87, 0.6);
-}
-
-/* 录制时的脉冲光环 */
-.record-button.recording::before {
-  content: '';
-  position: absolute;
-  inset: -10rpx;
-  border-radius: 50%;
-  border: 4rpx solid rgba(255, 71, 87, 0.5);
-  animation: recording-ring 1.5s ease-out infinite;
-}
-
-@keyframes recording-ring {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.5); opacity: 0; }
-}
-
-/* 录制时的脉冲光环2 */
-.record-button.recording::after {
-  content: '';
-  position: absolute;
-  inset: -10rpx;
-  border-radius: 50%;
-  border: 4rpx solid rgba(255, 71, 87, 0.5);
-  animation: recording-ring 1.5s ease-out infinite;
-  animation-delay: 0.75s;
-}
-
-/* 录制按钮悬停效果 */
-.record-button:not(.recording):active {
-  transform: scale(0.95);
-}
-
-.record-button:not(.recording):active .record-button-inner {
-  transform: scale(0.9);
-}
-
-/* 视频预览 */
-#recordedVideo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background: #000;
-}
-
-/* 录制提示文字 */
-.record-hint {
-  position: absolute;
-  bottom: 240rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.record-hint.show {
-  opacity: 1;
-}
-
-/* 顶部安全区域适配 */
-.top-controls {
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
-}
-
-/* 底部安全区域适配 */
-.bottom-buttons {
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* 对焦框动画 */
-.focus-frame {
-  position: absolute;
-  width: 120rpx;
-  height: 120rpx;
-  border: 2rpx solid rgba(255, 206, 84, 0.8);
-  border-radius: 8rpx;
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(1.2);
   transition: all 0.3s ease;
 }
 
-.focus-frame.active {
-  opacity: 1;
-  transform: scale(1);
-  animation: focus-pulse 0.5s ease;
+/* 录制按钮内部元素（默认圆形） */
+.record-button-inner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: red;
+  transition: all 0.3s ease;
 }
 
-@keyframes focus-pulse {
-  0% { transform: scale(1.2); opacity: 0; }
-  50% { transform: scale(0.95); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+/* 录制状态下的内部元素（变为方块） */
+.recording-inner {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background-color: red;
 }
 
-/* 网格线 - 辅助构图 */
-.grid-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.grid-overlay.show {
-  opacity: 0.3;
-}
-
-.grid-line-v,
-.grid-line-h {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.grid-line-v {
-  width: 2rpx;
-  height: 100%;
-  top: 0;
-}
-
-.grid-line-h {
-  height: 2rpx;
-  width: 100%;
-  left: 0;
-}
-
-.grid-line-v:nth-child(1) { left: 33.33%; }
-.grid-line-v:nth-child(2) { left: 66.66%; }
-.grid-line-h:nth-child(3) { top: 33.33%; }
-.grid-line-h:nth-child(4) { top: 66.66%; }
+/* 录制状态下按钮容器（保持圆形） */
+.recording {
+  /* 保持圆形外框样式不变 */
+  border: 3px solid white;
+  border-radius: 50%;
+}    

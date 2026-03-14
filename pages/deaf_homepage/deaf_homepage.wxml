@@ -1,63 +1,58 @@
-<view class="page-container">
-  <!-- 头部 Logo 区域 -->
-  <view class="header">
-    <view class="logo-section">
-      <image src="/images/logo.png" mode="aspectFill" class="logo-image"></image>
-      <view>
-        <view class="app-title">心语者</view>
-        <view class="app-subtitle">手语翻译助手</view>
-      </view>
-    </view>
+<view class="page-container" style="background-color: #fff8eb;"></view>
+<view style="position: absolute; top: 91rpx; left: 24rpx; z-index: 10; width: 179rpx; display: block; box-sizing: border-box">
+    <text style="font-family: 'Huati'; font-weight: bold; font-size: 20px; color: #5674a9; position: relative; left: 287rpx; top: 45rpx">心语者</text>
+    <image src="/images/logo.png" mode="widthFix" style="width: 100px; position: relative; left: -7rpx; top: -78rpx"></image>   
   </view>
-
-  <!-- 主容器 -->
-  <view class="container">
-    <!-- 快捷操作按钮 -->
-    <view class="quick-actions">
-      <view class="action-card camera" bindtap="openCamera">
-        <image src="/images/camera_all_white.svg" mode="aspectFit" class="action-icon"></image>
-        <text class="action-label">拍摄翻译</text>
+  
+  <view class="container" style="position: relative; left: NaNrpx; top: NaNrpx">
+    <view class="page-container">
+        <!-- 页面主体内容 -->
+        <custom-navbar is-deaf-mode="{{isDeafMode}}" bind:switchMode="handleSwitchMode"></custom-navbar>
+    </view>
+    <!-- 左上角切换图标 
+    <view class="switch-icon" bindtap="switchToOtherPage">
+      <image src="/images/switch_icon.svg" mode="aspectFit"></image>
+    </view>
+    -->
+    <view class="camera-button-wrapper" style="position: fixed; left: 375rpx; top: 112rpx; height: 254rpx; display: block; box-sizing: border-box">
+      <view class="camera-button" bindtap="openCamera" style="position: relative; left: -181rpx; top: 127rpx">
+        <image src="/images/camera_all_white.svg" mode="aspectFit" class="fixed-size-image"></image>
       </view>
-      <view class="action-card text" bindtap="openText">
-        <image src="/images/text.png" mode="aspectFit" class="action-icon"></image>
-        <text class="action-label">文字转视频</text>
+      <view class="camera-button" bindtap="openText" style="position: relative; left: 170rpx; top: -162rpx">
+        <image src="/images/text.png" mode="aspectFit" class="fixed-size-image"></image>
       </view>
     </view>
 
-    <!-- 常用语卡片 -->
-    <view class="phrase-card">
-      <view class="card-header">
-        <text class="card-title">常用语</text>
-        <text class="card-count">{{gifList.length || 0}} 条</text>
-      </view>
-
+    <view class="phrase-card" style="height: 829rpx; display: flex; box-sizing: border-box; left: 29rpx; top: 593rpx; position: fixed">
+      <view class="card-title">常用语</view>
       <view class="gif-scroll-container">
         <view class="gif-container">
           <block wx:for="{{chunkedGifList}}" wx:key="*this">
             <view class="gif-row">
-              <!-- 第一个位置 -->
               <block wx:if="{{item[0]}}">
-                <view class="gif-item card-stagger" bindlongpress="showDeletePrompt" data-index="{{index * 2}}">
-                  <image src="{{item[0].thumbPath}}" mode="aspectFill" bindtap="previewGif" data-videoPath="{{item[0].videoPath}}"></image>
+                <view class="gif-item" bindlongpress="showDeletePrompt" data-index="{{index * 2}}">
+                  <image src="{{item[0].thumbPath}}" mode="aspectFill" bindtap="previewGif" data-videoPath="{{item[0].videoPath}}" ></image>
                   <view class="time">{{item[0].translationResult}}</view>
                 </view>
               </block>
               <block wx:else>
-                <view class="gif-item add-btn" bindtap="chooseVideo">
-                  <image src="/images/plus_icon.svg" mode="aspectFit" class="plus-icon"></image>
+                <view class="gif-item" bindtap="chooseVideo">
+                  <view class="plus-icon-container">
+                    <image src="/images/plus_icon.svg" mode="aspectFit" class="plus-icon-small"></image>
+                  </view>
                 </view>
               </block>
-
-              <!-- 第二个位置 -->
               <block wx:if="{{item[1]}}">
-                <view class="gif-item card-stagger" bindlongpress="showDeletePrompt" data-index="{{index * 2 + 1}}">
+                <view class="gif-item" bindlongpress="showDeletePrompt" data-index="{{index * 2 + 1}}">
                   <image src="{{item[1].thumbPath}}" mode="aspectFill" bindtap="previewGif" data-videoPath="{{item[1].videoPath}}"></image>
                   <view class="time">{{item[1].translationResult}}</view>
                 </view>
               </block>
               <block wx:else>
-                <view class="gif-item add-btn" wx:if="{{item[0]}}" bindtap="chooseVideo">
-                  <image src="/images/plus_icon.svg" mode="aspectFit" class="plus-icon"></image>
+                <view class="gif-item" wx:if="{{item[0]}}" bindtap="chooseVideo">
+                  <view class="plus-icon-container">
+                    <image src="/images/plus_icon.svg" mode="aspectFit" class="plus-icon-small"></image>
+                  </view>
                 </view>
                 <view class="gif-item placeholder" wx:else></view>
               </block>
@@ -66,21 +61,14 @@
         </view>
       </view>
     </view>
-  </view>
-
-  <!-- 自定义导航栏 -->
-  <custom-navbar is-deaf-mode="{{isDeafMode}}" bind:switchMode="handleSwitchMode"></custom-navbar>
-
-  <!-- 删除确认弹窗 -->
-  <view class="overlay" wx:if="{{showPrompt}}" bindtap="hideDeletePrompt"></view>
-  <view class="delete-prompt" wx:if="{{showPrompt}}">
-    <view class="prompt-content">
-      <image src="/images/delete_icon.svg" mode="aspectFit" class="delete-icon"></image>
-      <text class="prompt-text">确定要删除这条常用语吗？</text>
-      <view class="prompt-buttons">
-        <view class="prompt-button confirm" bindtap="deleteGif" data-confirm="true">✓</view>
-        <view class="prompt-button cancel" bindtap="hideDeletePrompt">✕</view>
+    <!-- 删除提示框 -->
+    <view class="delete-prompt" wx:if="{{showPrompt}}">
+      <view class="prompt-content">
+        <image src="/images/delete_icon.svg" mode="aspectFit" class="delete-icon"></image>
+        <view class="prompt-buttons">
+          <view class="prompt-button" bindtap="deleteGif" data-confirm="true">✔</view>
+          <view class="prompt-button" bindtap="hideDeletePrompt">✖</view>
+        </view>
       </view>
     </view>
   </view>
-</view>
