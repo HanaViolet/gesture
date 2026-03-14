@@ -1,0 +1,26 @@
+<view class="container">
+  <!-- 进度条 -->
+  <progress style="position: relative; left: 0rpx; top: 43rpx" percent="{{progress}}" show-info="true" />
+
+  <!-- 可编辑的聊天文本 -->
+  <view class="chat-container" style="position: fixed; left: 375rpx; top: 116rpx">
+    <view class="chat-content" style="position: relative; left: 0rpx; top: 0rpx; height: 1158rpx; display: block; box-sizing: border-box">
+      <video id="localVideo" src="{{videoPath}}" controls autoplay binderror="videoErrorCallback" bindloadstart="videoLoadStartCallback" style="position: relative; left: -14rpx; top: -16rpx; margin-bottom: 50rpx">
+      </video>
+      <input type="text" bindinput="onTextInput" value="{{translationResult}}" placeholder="编辑聊天文本" />
+      <button bindtap="saveToCommonPhrases" style="position: relative; left: 0rpx; top: 90rpx">保存</button>
+      <button bindtap="confirmEdit" style="position: relative; left: 0rpx; top: 100rpx">生成语音</button>
+      <!-- 男声播放按钮 -->
+      <button bindtap="playMaleVoice" class="{{!maleAudioUrl? 'disabled-btn' : (selectedVoice ==='male'? 'male-btn-selected' :'male-btn')}}" disabled="{{!maleAudioUrl}}" style="position: relative; left: -147rpx; top: 129rpx; width: 256rpx; display: block; box-sizing: border-box; height: 304rpx">
+        <image src="/images/标准男声.png" mode="aspectFit" class="fixed-size-image" style="width: 174rpx; height: 218rpx; display: inline-block; box-sizing: border-box"></image>
+        男声播放
+      </button>
+      <!-- 女声播放按钮 -->
+      <button bindtap="playFemaleVoice" class="{{!femaleAudioUrl? 'disabled-btn' : (selectedVoice === 'female'? 'female-btn-selected' : 'female-btn')}}" disabled="{{!femaleAudioUrl}}" style="position: relative; left: 147rpx; top: -175rpx; width: 256rpx; display: block; box-sizing: border-box; height: 304rpx">
+        <image src="/images/标准女声.png" mode="aspectFit" class="fixed-size-image" style="width: 174rpx; height: 218rpx; display: inline-block; box-sizing: border-box"></image>
+        女声播放
+      </button>
+    </view>
+
+  </view>
+</view>

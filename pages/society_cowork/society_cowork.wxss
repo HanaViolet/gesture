@@ -1,0 +1,66 @@
+.container {
+  text-align: center;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(to right, #e0eddb, #bad8c1, #dcefeb);
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.phrase-card {
+  height: 40%; /* 原来是 calc(50% - 5px)，缩短一点 */
+  width: calc(100% - 30px);
+  margin: 0 auto;
+  background: linear-gradient(135deg, #ffffff 0%, #edf8fc 100%);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.content-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.small-block {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.small-block image {
+  width: 80px;
+  height: 60px;
+  margin-right: 10px;
+}
+
+.small-block text {
+  font-size: 14px;
+}
+
+/* 新增：底部按钮样式 */
+.community-button {
+  width: 90%;
+  margin: 10px auto 0;
+  padding: 12px 0;
+  background: #2e685a;
+  color: #b3dfc9;
+  font-size: 18px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}

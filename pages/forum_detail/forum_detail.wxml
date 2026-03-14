@@ -1,0 +1,27 @@
+<view class="detail-container" wx:if="{{post}}">
+  <view class="title">{{post.title}}</view>
+  <view class="author-time">
+    <text>{{post.author}}</text> · <text>{{post.time}}</text>
+  </view>
+  <view class="content">{{post.content}}</view>
+
+  <view class="post-images" wx:if="{{post.images.length}}">
+    <block wx:for="{{post.images}}" wx:key="*this">
+      <image src="{{item}}" mode="aspectFill" class="detail-img"></image>
+    </block>
+  </view>
+
+  <view class="comment-section">
+    <view class="comment-title">评论区</view>
+    <block wx:for="{{post.comments}}" wx:key="*this">
+      <view class="comment-item">
+        <text>{{item.user}}：</text>{{item.content}}
+      </view>
+    </block>
+  </view>
+
+  <view class="comment-input-area">
+    <input placeholder="请输入评论..." value="{{commentInput}}" bindinput="onCommentInput" />
+    <button bindtap="submitComment">发送</button>
+  </view>
+</view>

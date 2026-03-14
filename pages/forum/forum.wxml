@@ -1,0 +1,31 @@
+<view class="forum-container">
+  <scroll-view scroll-y="true" class="post-list">
+    <block wx:for="{{posts}}" wx:key="id">
+      <view class="post-card">
+        <view bindtap="viewPost" data-id="{{item.id}}">
+          <view class="post-title">{{item.title}}</view>
+          <view class="post-content">{{item.content}}</view>
+
+          <!-- 展示第一张图片 -->
+          <view wx:if="{{item.images.length}}">
+            <image src="{{item.images[0]}}" mode="aspectFill" class="post-image"></image>
+          </view>
+
+          <view class="post-footer">
+            <text>{{item.author}}</text>
+            <text>{{item.time}}</text>
+          </view>
+        </view>
+
+        <!-- 点赞按钮 -->
+        <view class="like-button" bindtap="likePost" data-id="{{item.id}}">
+          ❤️ {{item.likes}} 点赞
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+
+  <view class="new-post-button" bindtap="createPost">
+    发新帖
+  </view>
+</view>

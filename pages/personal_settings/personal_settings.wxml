@@ -1,0 +1,78 @@
+<view class="container">
+  <view class="avatar-wrapper">
+    <image class="avatar" src="{{avatar}}" mode="aspectFit"></image>
+  </view>
+
+  <view class="info-section">
+    <view class="info-row">
+      <text class="info-label">用户名：</text>
+      <text class="info-value">{{username}}</text>
+    </view>
+
+    <view class="info-row">
+      <text class="info-label">账号：</text>
+      <text class="info-value">{{account}}</text>
+    </view>
+
+    <view class="info-row">
+      <text class="info-label">语音性别：</text>
+      <picker class="info-value selectable" mode="selector" range="{{['男', '女']}}" value="{{genderIndex}}" bindchange="handleGenderChange">
+        <view>{{gender}}</view>
+      </picker>
+    </view>
+
+    <view class="info-row" bindtap="handlePasswordSetting">
+      <text class="info-label">密码设置：</text>
+      <text class="info-value selectable">
+        {{password ? (showPassword ? password : Array(password.length+1).join('*')) : '点击设置密码'}}
+      </text>
+    </view>
+
+
+    <view class="info-row" bindtap="handlePhoneBindClick">
+      <text class="info-label">手机号：</text>
+      <text class="info-value selectable">
+        {{phoneBound ? (phoneNumber.substr(0,3)+'****'+phoneNumber.substr(7)) : '点击绑定'}}
+      </text>
+    </view>
+
+    <view class="info-row" bindtap="handleLanguageChange">
+      <text class="info-label">语言选择：</text>
+      <text class="info-value selectable">{{language}}</text>
+    </view>
+  </view>
+
+  <view class="logout-button" bindtap="handleLogout">
+    <text>退出账号</text>
+  </view>
+
+  <!-- 密码设置弹窗 -->
+  <view wx:if="{{showPasswordModal}}" class="modal">
+    <view class="modal-content">
+      <input class="modal-input" type="password" placeholder="请输入原密码" value="{{oldPasswordInput}}" bindinput="handleOldPasswordInput" />
+      <input class="modal-input" type="password" placeholder="请输入新密码" value="{{newPasswordInput}}" bindinput="handleNewPasswordInput" />
+      <input class="modal-input" type="password" placeholder="确认新密码" value="{{confirmPasswordInput}}" bindinput="handleConfirmPasswordInput" />
+      <view class="modal-buttons">
+        <button class="confirm" bindtap="handlePasswordConfirm">确认修改</button>
+        <button class="cancel" bindtap="handlePasswordModalClose">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 绑定手机号弹窗 -->
+  <view wx:if="{{showPhoneModal}}" class="modal">
+    <view class="modal-content">
+      <input class="modal-input" placeholder="请输入手机号" value="{{inputPhone}}" bindinput="handlePhoneInput" />
+      <view class="code-row">
+        <input class="modal-input" placeholder="验证码" value="{{inputCode}}" bindinput="handleCodeInput" />
+        <button class="send-code" bindtap="handleSendCode" disabled="{{countdown>0}}">
+          {{countdown>0 ? countdown+'s' : '发送验证码'}}
+        </button>
+      </view>
+      <view class="modal-buttons">
+        <button class="confirm" bindtap="handlePhoneBindConfirm">绑定</button>
+        <button class="cancel" bindtap="handleModalClose">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,146 @@
+/* 相机容器样式 */
+.camera-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: black; /* 黑色背景 */
+}
+
+/* 顶部控制栏 */
+.top-controls {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 999; /* 确保在最上层 */
+}
+
+/* 倒计时样式 */
+.countdown-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.countdown {
+  font-size: 24px;
+  color: white;
+}
+
+/* 控制按钮基础样式 */
+.control-button {
+  background-color: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.control-button image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 左上角按钮定位 */
+.top-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* 右上角按钮定位 */
+.top-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* 相机组件样式 */
+camera {
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* 在控制按钮下层 */
+}
+
+/* 底部按钮栏 */
+.bottom-buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 999; /* 确保在最上层 */
+}
+
+/* 动作按钮样式 */
+.action-button {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+/* 无样式按钮（保存/上传） */
+.no-style {
+  background-color: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-style image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 录制按钮容器（保持圆形） */
+.record-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid white;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* 录制按钮内部元素（默认圆形） */
+.record-button-inner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: red;
+  transition: all 0.3s ease;
+}
+
+/* 录制状态下的内部元素（变为方块） */
+.recording-inner {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background-color: red;
+}
+
+/* 录制状态下按钮容器（保持圆形） */
+.recording {
+  /* 保持圆形外框样式不变 */
+  border: 3px solid white;
+  border-radius: 50%;
+}    

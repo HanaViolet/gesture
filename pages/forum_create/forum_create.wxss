@@ -1,0 +1,53 @@
+.create-container {
+  padding: 20px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.input-block {
+  margin-bottom: 20px;
+}
+
+.input-title {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.input-content {
+  width: 90%;
+  height: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.image-upload {
+  margin: 20px 0;
+}
+
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.preview-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+}
+
+.submit-button {
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: white;
+  font-size: 18px;
+  padding: 12px 0;
+  border-radius: 50px;
+  text-align: center;
+  margin-top: 30px;
+}

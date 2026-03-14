@@ -1,0 +1,28 @@
+<view class="container">
+  <!--跳过按钮 -->
+  <button class="back-btn" bindtap="switchToHome" style="position: absolute; left: 54rpx; top: 139rpx; width: 168rpx; display: flex; box-sizing: border-box; height: 56rpx">{{buttonText}}</button>
+  <!-- 全屏滑动容器 -->
+  <swiper 
+    class="swiper-container" 
+    indicator-dots="{{true}}"
+    indicator-color="rgba(0,0,0,0.2)"
+    indicator-active-color="#000000"
+    autoplay="{{false}}"
+    circular="{{true}}"
+    bindchange="swiperChange"
+  >
+    <swiper-item 
+      wx:for="{{9}}" 
+      wx:key="*this"
+      class="swiper-item"
+    >
+      <view class="white-frame" style="position: relative; left: 0rpx; top: 50rpx; height: 1299rpx">
+        <image 
+          src="/images/teach/图片{{index+1}}.png" 
+          mode="aspectFill"
+          class="content-image"
+          style="position: relative; left: 0rpx; height: 1299rpx; display: inline-block; box-sizing: border-box; top: 0rpx"></image>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>

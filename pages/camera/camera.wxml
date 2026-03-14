@@ -1,0 +1,40 @@
+<!-- 相机页面容器 -->
+<view class="camera-container">
+    <!-- 顶部控制区域 -->
+    <view class="top-controls">
+        <!-- 倒计时显示 -->
+        <view class="countdown-container">
+            <view class="countdown">{{countdown}}</view>
+        </view>
+        <!-- 闪光灯按钮 -->
+        <button bindtap="toggleFlashlight" class="control-button top-left">
+            <image src="{{flashMode === 'off'? '/images/flashlight_close.svg' : '/images/flashlight_open.svg'}}" mode="aspectFit"></image>
+        </button>
+        <!-- 切换摄像头按钮 -->
+        <button bindtap="switchCamera" class="control-button top-right">
+            <image src="/images/switch_camera.svg" mode="aspectFit"></image>
+        </button>
+    </view>
+
+    <!-- 相机组件 -->
+    <camera device-position="{{cameraPosition}}" flash="{{flashMode}}" binderror="error"></camera>
+
+    <!-- 底部操作按钮 -->
+    <view class="bottom-buttons">
+        <!-- 保存按钮 -->
+        <button bindtap="saveVideo" class="action-button no-style">
+            <image src="/images/save_icon.svg" mode="aspectFit"></image>
+        </button>
+        <!-- 录制按钮部分 -->
+        <button bindtap="toggleRecording" class="record-button {{isRecording ? 'recording' : ''}}">
+            <view class="record-button-inner {{isRecording ? 'recording-inner' : ''}}"></view>
+        </button>
+        <!-- 上传按钮 -->
+        <button bindtap="uploadVideo" class="action-button no-style">
+            <image src="/images/upload_icon.svg" mode="aspectFit"></image>
+        </button>
+    </view>
+
+    <!-- 视频预览 -->
+    <video id="recordedVideo" wx:if="{{playing && recordedVideoPath}}" src="{{recordedVideoPath}}" loop autoplay></video>
+</view>    

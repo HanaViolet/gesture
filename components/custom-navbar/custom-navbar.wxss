@@ -1,0 +1,39 @@
+.custom-navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffffff;
+  height: 80px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  /* 添加 margin-bottom 属性，将图标和文字整体向上移动 */
+  margin-bottom: 15px; 
+}
+
+.tab-image {
+  width: 30px;
+  height: 30px;
+}
+
+.tab-text {
+  font-size: 12px;
+}
+
+.option {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: #f0f0f0;
+}

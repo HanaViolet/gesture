@@ -1,0 +1,26 @@
+<view class="create-container">
+  <view class="input-block">
+    <input 
+      class="input-title" 
+      placeholder="请输入帖子标题" 
+      bindinput="onTitleChange" />
+  </view>
+
+  <view class="input-block">
+    <textarea 
+      class="input-content" 
+      placeholder="请输入帖子内容" 
+      bindinput="onContentChange" />
+  </view>
+
+  <view class="image-upload">
+    <button bindtap="chooseImage">选择图片</button>
+    <view class="image-preview">
+      <block wx:for="{{images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="preview-img"></image>
+      </block>
+    </view>
+  </view>
+
+  <button class="submit-button" bindtap="submitPost">发布帖子</button>
+</view>

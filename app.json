@@ -1,0 +1,32 @@
+{
+  "pages": [
+      "pages/index/index",
+      "pages/deaf_homepage/deaf_homepage",
+      "pages/normal_homepage/normal_homepage",
+      "pages/camera/camera",
+      "pages/analysis_result/analysis_result",
+      "pages/popularization/popularization",
+      "pages/teach/teach",
+      "pages/text_result/text_result",
+      "pages/get_detail/get_detail",
+      "pages/society_cowork/society_cowork",
+      "pages/personal_settings/personal_settings",
+      "pages/forum/forum",
+      "pages/forum_create/forum_create",
+      "pages/forum_detail/forum_detail",
+      "pages/live_translate/live_translate"
+  ],
+  "window": {
+      "disableScroll": false, 
+      "navigationBarTextStyle": "black",
+      "navigationBarTitleText": "Weixin",
+      "navigationBarBackgroundColor": "#ffffff"
+  },
+  "usingComponents": {
+    "custom-navbar": "/components/custom-navbar/custom-navbar"
+  },
+  "style": "v2",
+  "componentFramework": "exparser",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

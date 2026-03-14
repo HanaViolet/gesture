@@ -1,0 +1,15 @@
+<view class="popularization-container">
+
+  <!-- 手语知识内容 -->
+  <scroll-view scroll-y class="content-scroll">
+    <view class="section-card" wx:for="{{sections}}" wx:key="index">
+      <view class="section-header">
+        <text>{{item.title}}</text>
+      </view>
+      <view class="section-content">
+        <text>{{item.content}}</text>
+        <!-- 这里预留图片插入位置，目前未插入图片，可根据需要添加 -->
+      </view>
+    </view>
+  </scroll-view>
+</view>
