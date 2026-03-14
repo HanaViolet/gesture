@@ -1,5 +1,5 @@
 <view class="custom-navbar">
-    <view class="tab-item" bindtap="toggleHomePage">
+    <view class="tab-item active" bindtap="toggleHomePage">
         <image class="tab-image" src="/images/tabbar/home.png" mode="aspectFit"></image>
         <text class="tab-text">{{isDeafMode ? '听障首页' : '普通首页'}}</text>
     </view>
@@ -11,4 +11,4 @@
         <image class="tab-image" src="/images/tabbar/settings.png" mode="aspectFit"></image>
         <text class="tab-text">个人中心</text>
     </view>
-</view>    
+</view>

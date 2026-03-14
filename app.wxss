@@ -1,10 +1,97 @@
 /**app.wxss**/
+
+/* ===== 设计系统 ===== */
+page {
+  /* 品牌色 */
+  --brand: #1a1a2e;
+  --brand-light: #16213e;
+  --accent: #0f3460;
+
+  /* 中性色 */
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e8e8e8;
+  --text: #1a1a2e;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+
+  /* 功能色 */
+  --danger: #e74c3c;
+  --success: #27ae60;
+
+  /* 间距 - 8px 基准 */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+  --space-2xl: 64rpx;
+
+  /* 圆角 */
+  --radius: 12rpx;
+  --radius-lg: 20rpx;
+
+  /* 动画 */
+  --duration: 200ms;
+}
+
+/* ===== 基础 ===== */
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+/* ===== 通用容器 ===== */
 .container {
-  height: 100%;
+  padding: var(--space-lg);
+  padding-bottom: calc(var(--space-lg) + 120rpx);
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+/* ===== 按钮基础 ===== */
+.btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
-  box-sizing: border-box;
-} 
+  justify-content: center;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius);
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: transform var(--duration), opacity var(--duration);
+}
+
+.btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1rpx solid var(--border);
+}
+
+/* ===== 按压反馈 ===== */
+.press:active {
+  opacity: 0.7;
+}
+
+/* ===== 文字工具类 ===== */
+.text-lg { font-size: 36rpx; font-weight: 600; }
+.text-md { font-size: 30rpx; }
+.text-sm { font-size: 26rpx; color: var(--text-secondary); }
+.text-xs { font-size: 22rpx; color: var(--text-muted); }

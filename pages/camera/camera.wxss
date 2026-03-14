@@ -1,146 +1,152 @@
-/* 相机容器样式 */
+/* 相机容器 */
 .camera-container {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
-  background-color: black; /* 黑色背景 */
+  background: #000;
 }
 
-/* 顶部控制栏 */
-.top-controls {
+/* 顶部栏 */
+.top-bar {
   position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
-  z-index: 999; /* 确保在最上层 */
-}
-
-/* 倒计时样式 */
-.countdown-container {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
-.countdown {
-  font-size: 24px;
-  color: white;
-}
-
-/* 控制按钮基础样式 */
-.control-button {
-  background-color: transparent;
-  border: none;
-  width: 40px;
-  height: 40px;
-  padding: 0;
+  top: 60rpx;
+  left: 32rpx;
+  right: 32rpx;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  z-index: 100;
 }
 
-.control-button image {
-  width: 100%;
-  height: 100%;
+/* 图标按钮 */
+.btn-icon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms;
 }
 
-/* 左上角按钮定位 */
-.top-left {
-  position: absolute;
-  left: 0;
-  top: 0;
+.btn-icon:active {
+  background: rgba(255,255,255,0.25);
 }
 
-/* 右上角按钮定位 */
-.top-right {
-  position: absolute;
-  right: 0;
-  top: 0;
+.btn-icon image {
+  width: 36rpx;
+  height: 36rpx;
+  filter: brightness(0) invert(1);
 }
 
-/* 相机组件样式 */
+/* 倒计时 */
+.countdown {
+  font-size: 48rpx;
+  font-weight: 500;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 4rpx;
+}
+
+.countdown.recording {
+  color: #e74c3c;
+}
+
+/* 相机 */
 camera {
   width: 100%;
   height: 100%;
-  z-index: 1; /* 在控制按钮下层 */
 }
 
-/* 底部按钮栏 */
-.bottom-buttons {
+/* 底部栏 */
+.bottom-bar {
   position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
+  bottom: 80rpx;
+  left: 64rpx;
+  right: 64rpx;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  z-index: 999; /* 确保在最上层 */
+  z-index: 100;
 }
 
-/* 动作按钮样式 */
-.action-button {
-  width: 80px;
-  height: 80px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
+/* 圆形按钮 */
+.btn-round {
+  width: 88rpx;
+  height: 88rpx;
   border-radius: 50%;
-  font-size: 16px;
-}
-
-/* 无样式按钮（保存/上传） */
-.no-style {
-  background-color: transparent;
-  border: none;
-  width: 40px;
-  height: 40px;
-  padding: 0;
+  background: rgba(255,255,255,0.15);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  transition: background 200ms;
 }
 
-.no-style image {
-  width: 100%;
-  height: 100%;
+.btn-round:active {
+  background: rgba(255,255,255,0.25);
 }
 
-/* 录制按钮容器（保持圆形） */
-.record-button {
-  width: 60px;
-  height: 60px;
+.btn-round.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.btn-round image {
+  width: 40rpx;
+  height: 40rpx;
+  filter: brightness(0) invert(1);
+}
+
+/* 录制按钮 */
+.record-wrapper {
+  position: relative;
+  padding: 16rpx;
+}
+
+.record-wrapper.recording::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  border: 3px solid white;
-  background-color: transparent;
+  border: 4rpx solid #e74c3c;
+  animation: pulse 1.5s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.record-btn {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 6rpx solid #fff;
   display: flex;
-  justify-content: center;
   align-items: center;
-  transition: all 0.3s ease;
+  justify-content: center;
 }
 
-/* 录制按钮内部元素（默认圆形） */
-.record-button-inner {
-  width: 50px;
-  height: 50px;
+.record-inner {
+  width: 88rpx;
+  height: 88rpx;
   border-radius: 50%;
-  background-color: red;
-  transition: all 0.3s ease;
+  background: #e74c3c;
+  transition: all 200ms;
 }
 
-/* 录制状态下的内部元素（变为方块） */
-.recording-inner {
-  width: 30px;
-  height: 30px;
-  border-radius: 4px;
-  background-color: red;
+.record-inner.stop {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 8rpx;
+  background: #e74c3c;
 }
 
-/* 录制状态下按钮容器（保持圆形） */
-.recording {
-  /* 保持圆形外框样式不变 */
-  border: 3px solid white;
-  border-radius: 50%;
-}    
+/* 视频预览 */
+#recordedVideo {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+}
