@@ -4,14 +4,14 @@
     <view class="top-controls">
         <!-- 倒计时显示 -->
         <view class="countdown-container">
-            <view class="countdown">{{countdown}}</view>
+            <view class="countdown {{isRecording ? 'recording' : ''}}">{{countdown}}</view>
         </view>
         <!-- 闪光灯按钮 -->
-        <button bindtap="toggleFlashlight" class="control-button top-left">
+        <button bindtap="toggleFlashlight" class="control-button top-left btn-press">
             <image src="{{flashMode === 'off'? '/images/flashlight_close.svg' : '/images/flashlight_open.svg'}}" mode="aspectFit"></image>
         </button>
         <!-- 切换摄像头按钮 -->
-        <button bindtap="switchCamera" class="control-button top-right">
+        <button bindtap="switchCamera" class="control-button top-right btn-press">
             <image src="/images/switch_camera.svg" mode="aspectFit"></image>
         </button>
     </view>
@@ -22,19 +22,30 @@
     <!-- 底部操作按钮 -->
     <view class="bottom-buttons">
         <!-- 保存按钮 -->
-        <button bindtap="saveVideo" class="action-button no-style">
+        <button bindtap="saveVideo" class="action-button no-style btn-press" wx:if="{{recordedVideoPath}}">
             <image src="/images/save_icon.svg" mode="aspectFit"></image>
         </button>
+        <view wx:else style="width: 100rpx;"></view>
+
         <!-- 录制按钮部分 -->
-        <button bindtap="toggleRecording" class="record-button {{isRecording ? 'recording' : ''}}">
-            <view class="record-button-inner {{isRecording ? 'recording-inner' : ''}}"></view>
-        </button>
+        <view class="record-button-wrapper">
+            <button bindtap="toggleRecording" class="record-button {{isRecording ? 'recording' : ''}}">
+                <view class="record-button-inner {{isRecording ? 'recording-inner' : ''}}"></view>
+            </button>
+        </view>
+
         <!-- 上传按钮 -->
-        <button bindtap="uploadVideo" class="action-button no-style">
+        <button bindtap="uploadVideo" class="action-button no-style btn-press" wx:if="{{recordedVideoPath}}">
             <image src="/images/upload_icon.svg" mode="aspectFit"></image>
         </button>
+        <view wx:else style="width: 100rpx;"></view>
+    </view>
+
+    <!-- 录制提示 -->
+    <view class="record-hint {{isRecording ? 'show' : ''}}">
+        点击停止录制
     </view>
 
     <!-- 视频预览 -->
     <video id="recordedVideo" wx:if="{{playing && recordedVideoPath}}" src="{{recordedVideoPath}}" loop autoplay></video>
-</view>    
+</view>
