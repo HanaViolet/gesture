@@ -181,7 +181,7 @@ Page({
       icon: 'success'
     });
     wx.navigateTo({
-      url: '/pages/deaf_homepage/deaf_homepage',
+      url: '/pages/home/home',
     })
   }
 });

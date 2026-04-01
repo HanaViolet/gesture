@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "手语翻译界面"
+  "navigationBarTitleText": "翻译结果",
+  "navigationBarBackgroundColor": "#F8FAFF",
+  "navigationBarTextStyle": "black"
 }

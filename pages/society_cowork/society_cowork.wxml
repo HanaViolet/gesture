@@ -1,31 +1,30 @@
-<view class="page-container" style="background-color: #fff8eb;"></view>
-  <view class="container">
-    <view class="phrase-card" style="height: 558rpx; display: flex; box-sizing: border-box; width: 693rpx; position: relative; left: 0rpx; top: 20rpx">
-      <view class="card-title">听障学校宣传</view>
-      <view class="content-scroll">
-        <block wx:for="{{deafSchoolList}}" wx:key="*this">
-          <view class="small-block" bindtap="handleItemClick" data-type="deafSchool" data-index="{{index}}">
-            <image src="{{item.image}}" mode="aspectFit"></image>
-            <text>{{item.title}}</text>
-          </view>
-        </block>
-      </view>
-    </view>
-
-    <view class="phrase-card" style="position: relative; left: 0rpx; top: 20rpx">
-      <view class="card-title">社区帮助</view>
-      <view class="content-scroll">
-        <block wx:for="{{communityHelpList}}" wx:key="*this">
-          <view class="small-block" bindtap="handleItemClick" data-type="communityHelp" data-index="{{index}}">
-            <image src="{{item.image}}" mode="aspectFit"></image>
-            <text>{{item.title}}</text>
-          </view>
-        </block>
-      </view>
-    </view>
-
-    <!-- 新增：交流互动社区按钮 -->
-    <view class="community-button" bindtap="goToCommunityForum">
-      聋哑人交流互动社区
+<view class="container">
+  <view class="phrase-card">
+    <view class="card-title">听障学校宣传</view>
+    <view class="content-scroll">
+      <block wx:for="{{deafSchoolList}}" wx:key="*this">
+        <view class="small-block" bindtap="handleItemClick" data-type="deafSchool" data-index="{{index}}">
+          <image src="{{item.image}}" mode="aspectFit" lazy-load></image>
+          <text>{{item.title}}</text>
+        </view>
+      </block>
     </view>
   </view>
+
+  <view class="phrase-card">
+    <view class="card-title">社区帮助</view>
+    <view class="content-scroll">
+      <block wx:for="{{communityHelpList}}" wx:key="*this">
+        <view class="small-block" bindtap="handleItemClick" data-type="communityHelp" data-index="{{index}}">
+          <image src="{{item.image}}" mode="aspectFit" lazy-load></image>
+          <text>{{item.title}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 新增：交流互动社区按钮 -->
+  <view class="community-button" bindtap="goToCommunityForum">
+    聋哑人交流互动社区
+  </view>
+</view>

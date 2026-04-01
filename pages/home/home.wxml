@@ -1,0 +1,127 @@
+<view class="page-full home-page">
+  <!-- 状态栏占位 -->
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部布局：左侧入口 | 中间胶囊 | 右侧占位 -->
+  <view class="home-header">
+    <view class="header-left">
+      <text class="brand">心语者</text>
+      <view class="header-link press" bindtap="navigateToSocietyCowork">社区</view>
+      <view class="header-link press" bindtap="navigateToSettings">我的</view>
+    </view>
+    <mode-switcher mode="{{mode}}" bind:change="onModeChange"/>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- 内容区 -->
+  <view class="home-body {{contentVisible ? 'fade-in' : 'fade-out'}}">
+
+    <!-- ===== 健听人模式：翻译舱 ===== -->
+    <block wx:if="{{mode === 'normal'}}">
+      <!-- 主输入卡片 -->
+      <view class="normal-main card-shadow">
+        <view class="normal-main-hint">输入文字或说话</view>
+        <view class="normal-main-sub">转换为 3D 手语动画</view>
+        <textarea class="normal-textarea" placeholder="在此输入想表达的内容…" value="{{inputText}}" bindinput="onInputChange" maxlength="200"/>
+        <view class="normal-actions">
+          <view class="generate-btn btn-primary press" bindtap="generateSignLanguage">
+            <text>生成手语</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 次级卡片 -->
+      <view class="normal-secondary">
+        <view class="secondary-card press" bindtap="openCamera">
+          <view class="card-title">识别对方手语</view>
+          <view class="card-desc">拍摄视频，AI 翻译为文字</view>
+          <view class="card-badge camera-badge">
+            <text class="badge-icon">📷</text>
+          </view>
+        </view>
+        <view class="secondary-card press" bindtap="openPopularization">
+          <view class="card-title">手语科普与学习</view>
+          <view class="card-desc">了解手语文化，快速入门</view>
+          <view class="card-badge learn-badge">
+            <text class="badge-icon">📖</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- ===== 听障人士模式：表达矩阵 ===== -->
+    <block wx:if="{{mode === 'deaf'}}">
+      <!-- 即时发声区 -->
+      <view class="deaf-voice-area card-shadow">
+        <textarea class="deaf-textarea" placeholder="输入文字，一键播放声音…" value="{{deafInput}}" bindinput="onDeafInputChange" maxlength="200"/>
+        <view class="deaf-play-btn-wrapper">
+          <view class="deaf-play-btn btn-primary press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafVoice">
+            <text class="play-icon">🔊</text>
+            <text class="play-text">播放</text>
+          </view>
+          <view class="ripple-ring" wx:if="{{rippleActive}}"></view>
+          <view class="ripple-ring delay" wx:if="{{rippleActive}}"></view>
+        </view>
+      </view>
+
+      <!-- 快捷短语瀑布流 -->
+      <view class="deaf-phrases-section">
+        <view class="section-title">快捷短语</view>
+        <view class="phrase-flow">
+          <block wx:for="{{quickPhrases}}" wx:key="text">
+            <view class="phrase-chip {{item.type}} press" bindtap="playPhrase" data-text="{{item.text}}">
+              <text>{{item.text}}</text>
+            </view>
+          </block>
+          <view class="phrase-chip add press" bindtap="addQuickPhrase">
+            <text>+ 添加</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 常用语 -->
+      <view class="deaf-phrases-section">
+        <view class="section-title">我的常用语</view>
+        <view class="phrase-flow">
+          <block wx:for="{{chunkedGifList}}" wx:for-item="row" wx:for-index="ridx" wx:key="ridx">
+            <block wx:for="{{row}}" wx:for-item="item" wx:for-index="cidx" wx:key="cidx">
+              <block wx:if="{{item}}">
+                <view class="phrase-chip daily press" bindlongpress="showDeletePrompt" data-index="{{ridx * 2 + cidx}}" bindtap="previewGif" data-videoPath="{{item.videoPath}}">
+                  <text>{{item.translationResult || '常用语'}}</text>
+                </view>
+              </block>
+              <block wx:else>
+                <view class="phrase-chip add press" bindtap="addCommonPhrase">
+                  <text>+ 添加</text>
+                </view>
+              </block>
+            </block>
+          </block>
+        </view>
+      </view>
+
+      <!-- 悬浮相机 -->
+      <view class="fab-camera press" bindtap="openCamera">
+        <text class="fab-icon">📷</text>
+      </view>
+    </block>
+
+  </view>
+
+  <!-- 添加常用语弹窗 -->
+  <view class="add-modal-mask" wx:if="{{showAddModal}}" bindtap="hideAddModal"></view>
+  <view class="add-modal {{showAddModal ? 'show' : ''}}">
+    <view class="add-modal-title">{{addModalTitle}}</view>
+    <view class="add-options">
+      <view class="add-option press" bindtap="onKeyboardAdd">
+        <view class="add-icon">⌨️</view>
+        <view class="add-label">键盘输入</view>
+        <view class="add-desc">手动输入文字</view>
+      </view>
+    </view>
+    <view class="add-cancel press" bindtap="hideAddModal">取消</view>
+  </view>
+
+  <!-- SMPL 沉浸视窗 -->
+  <smpl-viewer wx:if="{{showViewer}}" text="{{viewerText}}" bind:close="closeViewer"/>
+</view>

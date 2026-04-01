@@ -1,3 +1,5 @@
+const app = getApp();
+
 Page({
   data: {
       inputText: '',
@@ -7,14 +9,25 @@ Page({
       audioContext: null,
       progress: 0,
       maleAudioUrl: null,
-      femaleAudioUrl: null
+      femaleAudioUrl: null,
+      saveAsPhrase: false,
+      quickMode: false
   },
+
+  onLoad(options) {
+    this.setData({
+      saveAsPhrase: options.saveAsPhrase === '1',
+      quickMode: options.mode === 'quick'
+    });
+  },
+
   onTextInput: function(e) {
       const newText = e.detail.value;
       this.setData({
           inputText: newText
       });
   },
+
   confirmEdit: function() {
       this.setData({
           maleAudioUrl: null,
@@ -22,10 +35,48 @@ Page({
           selectedVoice: null
       });
       const cleanedText= this.data.inputText.replace(/[？?]/g,'');
+      if (!cleanedText.trim()) {
+        wx.showToast({ title: '请输入文字', icon: 'none' });
+        return;
+      }
       this.generateBothVoices(cleanedText);
   },
+
+  saveAsCommonPhrase() {
+    const text = this.data.inputText.trim();
+    if (!text) {
+      wx.showToast({ title: '请先输入文字', icon: 'none' });
+      return;
+    }
+    app.globalData.gifList.push({
+      thumbPath: '',
+      videoPath: '',
+      translationResult: text,
+      maleAudioUrl: this.data.maleAudioUrl || '',
+      femaleAudioUrl: this.data.femaleAudioUrl || ''
+    });
+    wx.showToast({ title: '已保存为常用语', icon: 'success' });
+    setTimeout(() => {
+      wx.navigateBack({ delta: 1 });
+    }, 600);
+  },
+
+  saveQuickPhrase() {
+    const text = this.data.inputText.trim();
+    if (!text) {
+      wx.showToast({ title: '请先输入文字', icon: 'none' });
+      return;
+    }
+    const custom = wx.getStorageSync('customPhrases') || [];
+    custom.push({ text, type: 'daily' });
+    wx.setStorageSync('customPhrases', custom);
+    wx.showToast({ title: '已保存为快捷短语', icon: 'success' });
+    setTimeout(() => {
+      wx.navigateBack({ delta: 1 });
+    }, 600);
+  },
+
   generateBothVoices: function(text) {
-      const that = this;
       this.setData({ progress: 20 });
       // 生成男声语音
       this.callTextToSpeech(text,'male', (maleUrl) => {
@@ -43,22 +94,14 @@ Page({
   },
   callTextToSpeech: function(text, voiceType, callback) {
       const voiceValue = voiceType ==='male'? '6652' : '1983';
+      const formData = `text=${encodeURIComponent(text)}&prompt=&voice=${voiceValue}&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
       wx.request({
           url: 'http://127.0.0.1:9966/tts',
           method: 'POST',
           header: {
               'Content-Type': 'application/x-www-form-urlencoded'
           },
-          data: {
-              text: text,
-              prompt: "",
-              voice: voiceValue,
-              temperature: 0.1,
-              top_p: 0.7,
-              top_k: 20,
-              skip_refine: 1,
-              custom_voice: 0
-          },
+          data: formData,
           success: (res) => {
               if (res.data.code === 0) {
                   wx.showToast({
@@ -71,14 +114,14 @@ Page({
                   }
               } else {
                   wx.showToast({
-                      title: `${voiceType ==='male'? '男声' : '女声'}语音合成失败:` + res.data.msg,
+                      title: `${voiceType ==='male'? '男声' : '女声'}语音合成失败:` + (res.data.msg || '未知错误'),
                       icon: 'none'
                   });
               }
           },
           fail: (err) => {
               wx.showToast({
-                  title: `${voiceType ==='male'? '男声' : '女声'}请求失败:` + err.errMsg,
+                  title: `${voiceType ==='male'? '男声' : '女声'}请求失败:` + (err.errMsg || '网络错误'),
                   icon: 'none'
               });
           }

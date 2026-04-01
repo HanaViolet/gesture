@@ -6,10 +6,55 @@
   background: #000;
 }
 
+/* 自定义导航栏 */
+.camera-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 110;
+}
+
+.camera-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 24rpx;
+}
+
+.nav-back {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-back:active {
+  background: rgba(255,255,255,0.25);
+}
+
+.back-arrow {
+  font-size: 36rpx;
+  color: #fff;
+}
+
+.nav-title {
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.nav-placeholder {
+  width: 72rpx;
+}
+
 /* 顶部栏 */
 .top-bar {
   position: absolute;
-  top: 60rpx;
+  top: 200rpx;
   left: 32rpx;
   right: 32rpx;
   display: flex;
@@ -69,6 +114,7 @@ camera {
   justify-content: space-between;
   align-items: center;
   z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* 圆形按钮 */

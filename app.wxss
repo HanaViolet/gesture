@@ -1,38 +1,51 @@
 /**app.wxss**/
 
-/* ===== 设计系统 ===== */
+/* ===== 设计系统：原子化、医疗级极简、温暖科技感 ===== */
 page {
-  /* 品牌色 */
-  --brand: #1a1a2e;
-  --brand-light: #16213e;
-  --accent: #0f3460;
+  /* 背景与表面 */
+  --bg: #F8FAFF;
+  --surface: #FFFFFF;
+  --surface-glass: rgba(255, 255, 255, 0.92);
 
-  /* 中性色 */
-  --bg: #fafafa;
-  --surface: #ffffff;
-  --border: #e8e8e8;
-  --text: #1a1a2e;
+  /* 品牌色 */
+  --primary: #007AFF;
+  --primary-light: #E3F2FD;
+  --primary-soft: rgba(0, 122, 255, 0.08);
+
+  /* 文字色 */
+  --text: #1A1A2E;
   --text-secondary: #666666;
   --text-muted: #999999;
 
   /* 功能色 */
-  --danger: #e74c3c;
-  --success: #27ae60;
+  --danger: #E74C3C;
+  --success: #27AE60;
 
-  /* 间距 - 8px 基准 */
+  /* 紧急/日常/业务分类色（听障模式） */
+  --urgent-bg: #1A3A5C;
+  --urgent-text: #FFFFFF;
+  --daily-bg: #E3F2FD;
+  --daily-text: #1A3A5C;
+  --biz-bg: #FFFFFF;
+  --biz-text: #007AFF;
+
+  /* 间距 - 8rpx 基准 */
   --space-xs: 8rpx;
   --space-sm: 16rpx;
   --space-md: 24rpx;
   --space-lg: 32rpx;
-  --space-xl: 48rpx;
-  --space-2xl: 64rpx;
+  --space-xl: 40rpx;
+  --space-2xl: 48rpx;
+  --space-3xl: 64rpx;
 
   /* 圆角 */
-  --radius: 12rpx;
-  --radius-lg: 20rpx;
+  --radius: 32rpx;
+  --radius-lg: 40rpx;
+  --radius-sm: 16rpx;
 
   /* 动画 */
   --duration: 200ms;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ===== 基础 ===== */
@@ -40,21 +53,23 @@ page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--text);
   background: var(--bg);
-  line-height: 1.6;
+  line-height: 1.5;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* ===== 通用容器 ===== */
-.container {
-  padding: var(--space-lg);
-  padding-bottom: calc(var(--space-lg) + 120rpx);
-}
-
-/* ===== 卡片 ===== */
-.card {
+/* ===== 弥散阴影卡片 ===== */
+.card-shadow {
   background: var(--surface);
   border-radius: var(--radius);
-  padding: var(--space-lg);
-  margin-bottom: var(--space-md);
+  box-shadow: 0 8rpx 40rpx rgba(0, 122, 255, 0.08);
+}
+
+/* ===== 玻璃拟态 ===== */
+.glass {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
 }
 
 /* ===== 按钮基础 ===== */
@@ -62,7 +77,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) var(--space-xl);
+  padding: var(--space-md) var(--space-2xl);
   border-radius: var(--radius);
   font-size: 28rpx;
   font-weight: 500;
@@ -70,28 +85,48 @@ page {
 }
 
 .btn:active {
-  transform: scale(0.98);
-  opacity: 0.9;
+  transform: scale(0.96);
+  opacity: 0.85;
 }
 
 .btn-primary {
-  background: var(--brand);
+  background: var(--primary);
   color: #fff;
+  box-shadow: 0 8rpx 32rpx rgba(0, 122, 255, 0.25);
 }
 
 .btn-secondary {
-  background: var(--bg);
+  background: var(--surface);
   color: var(--text);
-  border: 1rpx solid var(--border);
+  box-shadow: 0 4rpx 24rpx rgba(0, 122, 255, 0.08);
 }
 
 /* ===== 按压反馈 ===== */
 .press:active {
   opacity: 0.7;
+  transform: scale(0.98);
+  transition: all 120ms ease;
 }
 
 /* ===== 文字工具类 ===== */
+.text-xl { font-size: 48rpx; font-weight: 600; }
 .text-lg { font-size: 36rpx; font-weight: 600; }
 .text-md { font-size: 30rpx; }
 .text-sm { font-size: 26rpx; color: var(--text-secondary); }
 .text-xs { font-size: 22rpx; color: var(--text-muted); }
+
+/* ===== 全屏容器 ===== */
+.page-full {
+  min-height: 100vh;
+  background: var(--bg);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ===== 隐藏滚动条 ===== */
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+}

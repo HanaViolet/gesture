@@ -34,9 +34,9 @@ Page({
         const data = JSON.parse(res.data);
         if (data.predictions) {
           console.log('手语翻译结果:', data.predictions);
-          const newChatTexts = [...that.data.chatTexts, data.predictions];
+          const resultText = Array.isArray(data.predictions) ? data.predictions.join('') : String(data.predictions || '');
           that.setData({
-            chatTexts: newChatTexts,
+            chatTexts: resultText,
             progress: 50
           });
           // 自动进行男声和女声的语音生成
@@ -165,7 +165,7 @@ Page({
       icon: 'success'
     });
     wx.navigateTo({
-      url: '/pages/deaf_homepage/deaf_homepage',
+      url: '/pages/home/home',
     })
   },
   confirmEdit: function (e) {

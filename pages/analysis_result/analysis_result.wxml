@@ -1,35 +1,36 @@
-<view class="container">
+<view class="page-full result-page">
   <!-- 进度条 -->
-  <progress style="position: relative; left: 0rpx; top: 43rpx" percent="{{progress}}" show-info="true" />
-  <!-- 可编辑的聊天文本 -->
-  <view class="chat-container" style="position: fixed; left: 375rpx; top: 116rpx">
-    <view class="chat-content" style="position: relative; left: 0rpx; top: 0rpx;">
-      <view class="chat-text" style=" margin-bottom: 70rpx">{{convertingText}}</view> 
-      <view style="height: 941rpx; display: block; box-sizing: border-box; left: 0rpx; top: 0rpx">
-        <input style="height: 202rpx; display: block; box-sizing: border-box" type="text" bindinput="onChatTextInput" value="{{chatTexts}}" placeholder="编辑聊天文本"/>
-        <button bindtap="saveToCommonPhrases" style="position: relative; left: 0rpx; top: 230rpx">保存至常用语</button>
-        <button bindtap="confirmEdit" style="position: relative; left: 0rpx; top: 256rpx">生成语音</button>
-        <!-- 男声播放按钮 -->
-        <button 
-          bindtap="playMaleVoice" 
-          class="{{!maleAudioUrl? 'disabled-btn' : (selectedVoice ==='male'? 'male-btn-selected' :'male-btn')}}"
-          disabled="{{!maleAudioUrl}}"
-          style="position: relative; left: -153rpx; top: 281rpx; width: 256rpx; display: block; box-sizing: border-box; height: 304rpx"
-        >
-        <image src="/images/标准男声.png" mode="aspectFit" class="fixed-size-image" style="width: 174rpx; height: 218rpx; display: inline-block; box-sizing: border-box"></image>
-          男声播放
-        </button>
-        <!-- 女声播放按钮 -->
-        <button 
-          bindtap="playFemaleVoice" 
-          class="{{!femaleAudioUrl? 'disabled-btn' : (selectedVoice === 'female'? 'female-btn-selected' : 'female-btn')}}"
-          disabled="{{!femaleAudioUrl}}"
-          style="position: relative; left: 153rpx; top: -24rpx; width: 256rpx; display: block; box-sizing: border-box; height: 304rpx"
-        >
-        <image src="/images/标准女声.png" mode="aspectFit" class="fixed-size-image" style="width: 174rpx; height: 218rpx; display: inline-block; box-sizing: border-box"></image>
-          女声播放
-        </button>
+  <view class="progress-wrapper">
+    <progress percent="{{progress}}" stroke-width="8" activeColor="#007AFF" backgroundColor="#E3F2FD" show-info="{{false}}"/>
+    <text class="progress-text" wx:if="{{progress < 100}}">翻译中 {{progress}}%</text>
+    <text class="progress-text done" wx:else>翻译完成</text>
+  </view>
+
+  <!-- 主卡片 -->
+  <view class="result-card card-shadow">
+    <view class="result-hint">{{convertingText}}</view>
+    <textarea class="result-textarea" placeholder="翻译结果将显示在这里，您可以编辑..." value="{{chatTexts}}" bindinput="onChatTextInput" maxlength="500"/>
+
+    <!-- 语音选择 -->
+    <view class="voice-actions">
+      <view class="voice-btn male {{!maleAudioUrl ? 'disabled' : (selectedVoice === 'male' ? 'active' : '')}}" bindtap="playMaleVoice">
+        <image src="/images/male_icon.svg" mode="aspectFit" class="voice-icon-img"/>
+        <text>男声</text>
       </view>
+      <view class="voice-btn female {{!femaleAudioUrl ? 'disabled' : (selectedVoice === 'female' ? 'active' : '')}}" bindtap="playFemaleVoice">
+        <image src="/images/female_icon.svg" mode="aspectFit" class="voice-icon-img"/>
+        <text>女声</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="result-footer">
+    <view class="footer-btn btn-secondary press" bindtap="saveToCommonPhrases">
+      <text>保存至常用语</text>
+    </view>
+    <view class="footer-btn btn-primary press" bindtap="confirmEdit">
+      <text>生成语音</text>
     </view>
   </view>
 </view>

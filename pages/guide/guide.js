@@ -158,8 +158,8 @@ Page({
           });
       } else {
           // 跳转到 deaf_homepage 页面
-          wx.switchTab({
-              url: '/pages/deaf_homepage/deaf_homepage'
+          wx.navigateTo({
+              url: '/pages/home/home'
           });
       }
   }

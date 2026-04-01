@@ -1,154 +1,111 @@
-.container {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #f0f8ff;
-  padding: 0;
-  margin: 0;
-}
-
-.chat-container {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-  height: calc(100vh - 120px);
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  z-index: 10;
-  overflow: hidden;
+.result-page {
+  padding: 32rpx;
   display: flex;
   flex-direction: column;
 }
 
-.chat-content {
-  padding: 20px;
+.progress-wrapper {
+  margin-bottom: 24rpx;
+}
+
+.progress-wrapper progress {
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.progress-text {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-top: 12rpx;
+}
+
+.result-card {
   flex: 1;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  box-sizing: border-box;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
 }
 
-.chat-text {
-  margin-bottom: 15px;
-  padding: 12px 16px;
-  border-radius: 18px;
-  background-color: #f5f5f5;
-  font-size: 15px;
-  line-height: 1.5;
-  display: inline-block; /* 使消息气泡根据内容自适应 */
-  max-width: 85%; /* 留出边距 */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto; /* 支持连字符换行 */
-  box-sizing: border-box;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-.disabled-btn {
-  background-color: #ccc;
-  color: #666;
+.result-hint {
+  font-size: 26rpx;
+  color: var(--text-muted);
+  margin-bottom: 16rpx;
 }
 
-.male-btn {
-  background-color: #d4f3fd; /* 淡蓝色 */
-  color: #000;
+.result-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 160rpx;
+  font-size: 32rpx;
+  color: var(--text);
+  line-height: 1.6;
+  background: transparent;
 }
 
-.male-btn-selected {
-  background-color: #1a69fa; /* 深蓝色 */
+.voice-actions {
+  display: flex;
+  gap: 32rpx;
+  margin-top: 24rpx;
+}
+
+.voice-btn {
+  flex: 1;
+  height: 144rpx;
+  border-radius: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 200ms ease;
+}
+
+.voice-btn.male {
+  background: #E3F2FD;
+  color: #1A3A5C;
+}
+
+.voice-btn.male.active {
+  background: #1A3A5C;
   color: #fff;
 }
 
-.female-btn {
-  background-color: #fce7ea; /* 淡粉色 */
-  color: #000;
+.voice-btn.female {
+  background: #FCE4EC;
+  color: #880E4F;
 }
 
-.female-btn-selected {
-  background-color: #fd72bc; /* 深粉色 */
+.voice-btn.female.active {
+  background: #C2185B;
   color: #fff;
 }
-/* 美化滚动条 */
-.chat-content::-webkit-scrollbar {
-  width: 6px;
-}
-.chat-content::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+
+.voice-btn.disabled {
+  background: #F5F5F5;
+  color: #BBB;
+  pointer-events: none;
 }
 
-.button-container {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
+.voice-icon-img {
+  width: 48rpx;
+  height: 48rpx;
 }
 
-.voice-button {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6a8cff 0%, #4a6cff 100%);
-  box-shadow: 0 4px 15px rgba(74, 108, 255, 0.3);
-  border: none;
+.result-footer {
   display: flex;
-  justify-content: center;
+  gap: 24rpx;
+  margin-top: 32rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.footer-btn {
+  flex: 1;
+  height: 96rpx;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: flex;
   align-items: center;
-  transition: all 0.2s ease;
-}
-
-.voice-button:active {
-  transform: scale(0.95);
-}
-
-.voice-button image {
-  width: 32px;
-  height: 32px;
-  filter: brightness(0) invert(1);
-}
-
-.voice-options {
-  position: absolute;
-  top: -150px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: white;
-  border-radius: 18px;
-  padding: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  display: flex;
-  gap: 20px;
-}
-
-.voice-option {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background-color: #f9f9f9;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  transition: all 0.2s ease;
-}
-
-.voice-option:active {
-  background-color: #f0f0f0;
-  box-shadow: 0 4px 15px rgba(74, 108, 255, 0.6);
-}
-
-.voice-option image {
-  width: 28px;
-  height: 28px;
-}
-
-.voice-option.selected {
-  background: linear-gradient(135deg, #6a8cff 0%, #4a6cff 100%);
-}
-
-.voice-option.selected image {
-  filter: brightness(0) invert(1);
 }

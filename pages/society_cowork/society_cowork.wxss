@@ -1,15 +1,14 @@
 .container {
   text-align: center;
-  height: 100vh;
-  overflow: hidden;
   background: linear-gradient(to right, #e0eddb, #bad8c1, #dcefeb);
   display: flex;
   flex-direction: column;
   padding: 15px;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .phrase-card {
-  height: 40%; /* 原来是 calc(50% - 5px)，缩短一点 */
   width: calc(100% - 30px);
   margin: 0 auto;
   background: linear-gradient(135deg, #ffffff 0%, #edf8fc 100%);
@@ -18,9 +17,6 @@
   padding: 15px;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  overflow-y: auto;
   margin-bottom: 10px;
 }
 

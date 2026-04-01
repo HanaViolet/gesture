@@ -1,0 +1,9 @@
+<view class="mode-capsule glass">
+  <view class="mode-highlight {{animating ? 'spring' : ''}} {{mode === 'deaf' ? 'right' : ''}}"></view>
+  <view class="mode-item {{mode === 'normal' ? 'active' : ''}}" data-mode="normal" bindtap="toggleMode">
+    <text>健听人</text>
+  </view>
+  <view class="mode-item {{mode === 'deaf' ? 'active' : ''}}" data-mode="deaf" bindtap="toggleMode">
+    <text>听障人士</text>
+  </view>
+</view>

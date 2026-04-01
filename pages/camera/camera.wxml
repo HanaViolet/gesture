@@ -1,5 +1,17 @@
 <!-- 相机页面容器 -->
 <view class="camera-container">
+  <!-- 状态栏 + 返回 -->
+  <view class="camera-header">
+    <view class="status-bar-placeholder" style="height: {{statusBarHeight}}px;"></view>
+    <view class="camera-nav">
+      <view class="nav-back" bindtap="goBack">
+        <text class="back-arrow">←</text>
+      </view>
+      <view class="nav-title">拍摄手语</view>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
+
   <!-- 顶部控制区域 -->
   <view class="top-bar">
     <view class="btn-icon" bindtap="toggleFlashlight">

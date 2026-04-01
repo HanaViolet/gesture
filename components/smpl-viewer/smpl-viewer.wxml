@@ -1,0 +1,32 @@
+<view class="smpl-mask" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd" style="transform: translateY({{translateY}}px); transition: {{pulling ? 'none' : 'transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1)'}};">
+  <!-- 顶部 Handle -->
+  <view class="smpl-top-bar">
+    <view class="smpl-handle"><view class="handle-bar"></view></view>
+  </view>
+
+  <!-- Loading State -->
+  <view class="loading-layer" wx:if="{{loading}}">
+    <view class="ripple-group">
+      <view class="water-ripple"></view>
+      <view class="water-ripple delay-1"></view>
+      <view class="water-ripple delay-2"></view>
+    </view>
+    <view class="loading-text">AI 正在为您构建手语序列…</view>
+  </view>
+
+  <!-- 3D Canvas -->
+  <canvas wx:if="{{!loading}}" type="webgl" id="webgl" class="webgl-canvas" bindready="onCanvasReady"></canvas>
+
+  <!-- Text Bubble -->
+  <view class="text-bubble glass" wx:if="{{!loading}}">
+    <text class="bubble-text">{{text}}</text>
+  </view>
+
+  <!-- Bottom Controls -->
+  <view class="viewer-controls" wx:if="{{!loading}}">
+    <view class="control-btn press back" bindtap="closeViewer"><text>返回</text></view>
+    <view class="control-btn press" bindtap="changeSpeed"><text>0.5x 慢放</text></view>
+    <view class="control-btn press" bindtap="replay"><text>重播</text></view>
+    <view class="control-btn press" bindtap="share"><text>分享</text></view>
+  </view>
+</view>

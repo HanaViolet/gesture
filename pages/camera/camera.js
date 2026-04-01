@@ -7,11 +7,17 @@ Page({
       recording: false,
       recordedVideoPath: '',
       countdownInterval: null,
-      convertedGifPath: ''
+      convertedGifPath: '',
+      statusBarHeight: 44
   },
 
   onLoad() {
-      // 初始化时不启动倒计时
+      const windowInfo = wx.getWindowInfo();
+      this.setData({ statusBarHeight: windowInfo.statusBarHeight });
+  },
+
+  goBack() {
+      wx.navigateBack({ delta: 1 });
   },
 
   toggleRecording() {
@@ -109,34 +115,16 @@ Page({
 
   saveVideo() {
       if (this.data.recordedVideoPath) {
-          wx.navigateBack({
-              success: () => {
-                  // 获取上一页实例
-                  const pages = getCurrentPages();
-                  const prevPage = pages[pages.length - 2];
-                  // 创建新GIF对象
-                  const newGif = {
-                      url: this.data.recordedVideoPath,
-                      time: new Date().toLocaleDateString()
-                  };
-                  // 找到第一个加号框的位置
-                  const gifList = prevPage.data.gifList;
-                  const firstEmptyIndex = gifList.findIndex(item => !item);
-                  if (firstEmptyIndex!== -1) {
-                      // 如果存在加号框，将新GIF插入到该位置
-                      gifList[firstEmptyIndex] = newGif;
-                  } else {
-                      // 如果不存在加号框，添加到列表末尾
-                      gifList.push(newGif);
-                  }
-                  // 更新上一页的GIF列表
-                  prevPage.setData({
-                      gifList: gifList
-                  }, () => {
-                      prevPage.chunkGifList();
-                  });
-              }
+          const app = getApp();
+          app.globalData.gifList.push({
+              thumbPath: '',
+              videoPath: this.data.recordedVideoPath,
+              translationResult: '未命名视频',
+              maleAudioUrl: '',
+              femaleAudioUrl: ''
           });
+          wx.showToast({ title: '已保存', icon: 'success' });
+          wx.navigateTo({ url: '/pages/home/home' });
       } else {
           console.log('没有录制的视频');
       }
@@ -172,36 +160,18 @@ Page({
 
   convertAndSaveGif() {
       if (this.data.recordedVideoPath) {
-          // 模拟视频转GIF
+          const app = getApp();
           const convertedGifPath = this.convertVideoToGif(this.data.recordedVideoPath);
-          this.setData({
-              convertedGifPath: convertedGifPath
+          this.setData({ convertedGifPath });
+          app.globalData.gifList.push({
+              thumbPath: '',
+              videoPath: convertedGifPath,
+              translationResult: '未命名视频',
+              maleAudioUrl: '',
+              femaleAudioUrl: ''
           });
-
-          // 保存到首页
-          const pages = getCurrentPages();
-          pages.forEach(page => {
-              if (page.route.includes('deaf_homepage') || page.route.includes('normal_homepage')) {
-                  const newGif = {
-                      url: convertedGifPath,
-                      time: new Date().toLocaleDateString()
-                  };
-                  const gifList = page.data.gifList;
-                  const firstEmptyIndex = gifList.findIndex(item => !item);
-                  if (firstEmptyIndex!== -1) {
-                      // 如果存在加号框，将新GIF插入到该位置
-                      gifList[firstEmptyIndex] = newGif;
-                  } else {
-                      // 如果不存在加号框，添加到列表末尾
-                      gifList.push(newGif);
-                  }
-                  page.setData({
-                      gifList: gifList
-                  }, () => {
-                      page.chunkGifList();
-                  });
-              }
-          });
+          wx.showToast({ title: '已保存', icon: 'success' });
+          wx.navigateTo({ url: '/pages/home/home' });
       } else {
           console.log('没有录制的视频');
       }
