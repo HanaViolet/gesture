@@ -23,8 +23,8 @@
     </view>
   </view>
 
-  <!-- 新增：交流互动社区按钮 -->
+  <!-- 交流互动社区按钮 -->
   <view class="community-button" bindtap="goToCommunityForum">
-    聋哑人交流互动社区
+    听障人士交流互动社区
   </view>
 </view>

@@ -1,53 +1,159 @@
 .create-container {
-  padding: 20px;
-  background: #ffffff;
   min-height: 100vh;
+  background: var(--bg-primary, #FAF9F7);
+  padding: 24rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));
 }
 
+/* 输入区块 */
 .input-block {
-  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.06);
+}
+
+.input-label {
+  font-size: 26rpx;
+  color: var(--text-secondary, #5A5A5A);
+  margin-bottom: 16rpx;
+  display: block;
 }
 
 .input-title {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+  width: 100%;
+  height: 80rpx;
+  font-size: 32rpx;
+  color: var(--text-primary, #2D2D2D);
+  font-weight: 600;
 }
 
 .input-content {
-  width: 90%;
-  height: 200px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+  width: 100%;
+  height: 400rpx;
+  font-size: 30rpx;
+  color: var(--text-primary, #2D2D2D);
+  line-height: 1.6;
 }
 
+/* 分类选择 */
+.category-section {
+  margin-bottom: 24rpx;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.category-item {
+  padding: 16rpx 32rpx;
+  background: var(--bg-secondary, #F2F0ED);
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary, #5A5A5A);
+  transition: all 200ms ease;
+}
+
+.category-item.active {
+  background: var(--morandi-blue, #7A8B99);
+  color: #fff;
+}
+
+/* 图片上传 */
 .image-upload {
-  margin: 20px 0;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.06);
+}
+
+.upload-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border: 2rpx dashed var(--text-tertiary, #CCC);
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.upload-btn:active {
+  border-color: var(--morandi-blue, #7A8B99);
+  background: var(--bg-secondary, #F2F0ED);
+}
+
+.upload-icon {
+  width: 48rpx;
+  height: 48rpx;
+  opacity: 0.5;
+}
+
+.upload-text {
+  font-size: 24rpx;
+  color: var(--text-tertiary, #8A8A8A);
 }
 
 .image-preview {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.preview-item {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
 }
 
 .preview-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  border-radius: 16rpx;
 }
 
+.preview-delete {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: #ff4d4f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24rpx;
+}
+
+/* 发布按钮 */
 .submit-button {
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  color: white;
-  font-size: 18px;
-  padding: 12px 0;
-  border-radius: 50px;
-  text-align: center;
-  margin-top: 30px;
+  width: 100%;
+  height: 96rpx;
+  background: var(--gradient-daily);
+  border-radius: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 32rpx rgba(122, 139, 153, 0.25);
+  margin-top: 48rpx;
+}
+
+.submit-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(122, 139, 153, 0.15);
+}
+
+.submit-button.disabled {
+  background: var(--text-tertiary, #CCC);
+  box-shadow: none;
 }

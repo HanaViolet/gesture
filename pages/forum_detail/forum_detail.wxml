@@ -1,27 +1,81 @@
 <view class="detail-container" wx:if="{{post}}">
-  <view class="title">{{post.title}}</view>
-  <view class="author-time">
-    <text>{{post.author}}</text> · <text>{{post.time}}</text>
-  </view>
-  <view class="content">{{post.content}}</view>
-
-  <view class="post-images" wx:if="{{post.images.length}}">
-    <block wx:for="{{post.images}}" wx:key="*this">
-      <image src="{{item}}" mode="aspectFill" class="detail-img"></image>
-    </block>
-  </view>
-
-  <view class="comment-section">
-    <view class="comment-title">评论区</view>
-    <block wx:for="{{post.comments}}" wx:key="*this">
-      <view class="comment-item">
-        <text>{{item.user}}：</text>{{item.content}}
+  <!-- 帖子头部 -->
+  <view class="post-header">
+    <view class="category-tag">{{post.category || '分享'}}</view>
+    <view class="title">{{post.title}}</view>
+    <view class="author-info">
+      <view class="author-avatar"></view>
+      <view class="author-meta">
+        <view class="author-name">{{post.author}}</view>
+        <view class="author-time">{{post.time}}</view>
       </view>
-    </block>
+    </view>
   </view>
 
+  <!-- 帖子内容 -->
+  <view class="content-section">
+    <view class="content">{{post.content}}</view>
+
+    <view class="post-images" wx:if="{{post.images.length}}">
+      <block wx:for="{{post.images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="detail-img" bindtap="previewImage" data-url="{{item}}"/>
+      </block>
+    </view>
+  </view>
+
+  <!-- 互动栏 -->
+  <view class="interaction-bar">
+    <view class="interaction-btn {{isLiked ? 'active' : ''}}" bindtap="likePost">
+      <image src="/icons/heart{{isLiked ? '-fill' : ''}}.svg" mode="aspectFit" class="interaction-icon"/>
+      <text class="interaction-text">{{post.likes || 0}}</text>
+    </view>
+    <view class="interaction-btn">
+      <image src="/icons/message.svg" mode="aspectFit" class="interaction-icon"/>
+      <text class="interaction-text">{{post.commentCount}}</text>
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comment-section">
+    <view class="comment-header">
+      评论
+      <text class="comment-count">({{post.commentCount}})</text>
+    </view>
+
+    <view class="comment-list">
+      <block wx:if="{{post.commentCount == 0}}">
+        <view class="comment-empty">
+          <text>暂无评论，来说两句吧～</text>
+        </view>
+      </block>
+
+      <block wx:for="{{post.comments}}" wx:key="id">
+        <view class="comment-item">
+          <view class="comment-avatar"></view>
+          <view class="comment-body">
+            <view>
+              <text class="comment-author">{{item.user || '匿名'}}</text>
+              <text class="comment-time">{{item.time}}</text>
+            </view>
+            <view class="comment-content">{{item.content}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 评论输入 -->
   <view class="comment-input-area">
-    <input placeholder="请输入评论..." value="{{commentInput}}" bindinput="onCommentInput" />
-    <button bindtap="submitComment">发送</button>
+    <input
+      class="comment-input"
+      placeholder="请输入评论..."
+      value="{{commentInput}}"
+      bindinput="onCommentInput"
+      confirm-type="send"
+      bindconfirm="submitComment"
+    />
+    <view class="send-btn {{!commentInput ? 'disabled' : ''}}" bindtap="submitComment">
+      发送
+    </view>
   </view>
 </view>

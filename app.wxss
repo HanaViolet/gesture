@@ -1,126 +1,780 @@
 /**app.wxss**/
 
-/* ===== 设计系统：原子化、医疗级极简、温暖科技感 ===== */
+/* ===== 莫兰迪色系设计系统：克制高级感、温暖无障碍 ===== */
 page {
-  /* 背景与表面 */
-  --bg: #F8FAFF;
-  --surface: #FFFFFF;
-  --surface-glass: rgba(255, 255, 255, 0.92);
+  /* 莫兰迪背景层 - 暖灰调，提升高级感 */
+  --bg-warm: #FAF9F7;           /* 极淡暖灰，替代纯白 */
+  --bg-primary: var(--bg-warm);
+  --bg-secondary: #F2F0ED;      /* 次级背景 */
+  --bg-elevated: #FFFFFF;       /* 卡片表面 */
+  --bg-card: #FFFFFF;
 
-  /* 品牌色 */
-  --primary: #007AFF;
-  --primary-light: #E3F2FD;
-  --primary-soft: rgba(0, 122, 255, 0.08);
+  /* 莫兰迪品牌色系 */
+  --morandi-blue: #7A8B99;      /* 主品牌色 - 灰蓝 */
+  --morandi-blue-light: #B8C4CE;/* 浅灰蓝 */
+  --morandi-blue-dark: #5A6B79; /* 深灰蓝 */
+
+  --morandi-amber: #D4A373;     /* 强调色 - 琥珀 */
+  --morandi-amber-light: #E8D4B8;/* 浅琥珀 */
+  --morandi-amber-dark: #B8935F;/* 深琥珀 */
+
+  --morandi-gray: #9A9A9A;      /* 中性灰 */
+  --morandi-gray-light: #C5C5C5;/* 浅灰 */
+
+  /* 兼容性映射 */
+  --brand: var(--morandi-blue);
+  --brand-light: var(--morandi-blue-light);
+  --brand-dark: var(--morandi-blue-dark);
+  --accent: var(--morandi-amber);
+
+  /* 功能渐变色 */
+  --gradient-urgent: linear-gradient(135deg, #D4A373 0%, #C9956A 100%);
+  --gradient-daily: linear-gradient(135deg, #7A8B99 0%, #6A7B89 100%);
+  --gradient-biz: linear-gradient(135deg, #9A9A9A 0%, #8A8A8A 100%);
+  --gradient-voice: linear-gradient(135deg, #7A8B99 0%, #5A6B79 100%);
 
   /* 文字色 */
-  --text: #1A1A2E;
-  --text-secondary: #666666;
-  --text-muted: #999999;
+  --text-primary: #2D2D2D;      /* 深灰，非纯黑 */
+  --text-secondary: #5A5A5A;    /* 次级 */
+  --text-tertiary: #8A8A8A;     /* 辅助 */
+  --text-inverse: #FFFFFF;      /* 反白 */
+  --text-muted: #AAAAAA;        /* 占位 */
 
-  /* 功能色 */
-  --danger: #E74C3C;
-  --success: #27AE60;
-
-  /* 紧急/日常/业务分类色（听障模式） */
-  --urgent-bg: #1A3A5C;
-  --urgent-text: #FFFFFF;
-  --daily-bg: #E3F2FD;
-  --daily-text: #1A3A5C;
-  --biz-bg: #FFFFFF;
-  --biz-text: #007AFF;
+  /* 听障模式专用 - 莫兰迪调 */
+  --deaf-urgent: #C9956A;       /* 紧急 - 琥珀 */
+  --deaf-daily: #7A8B99;        /* 日常 - 灰蓝 */
+  --deaf-biz: #9A9A9A;          /* 业务 - 灰 */
 
   /* 间距 - 8rpx 基准 */
-  --space-xs: 8rpx;
-  --space-sm: 16rpx;
-  --space-md: 24rpx;
-  --space-lg: 32rpx;
-  --space-xl: 40rpx;
-  --space-2xl: 48rpx;
-  --space-3xl: 64rpx;
+  --space-1: 8rpx;
+  --space-2: 16rpx;
+  --space-3: 24rpx;
+  --space-4: 32rpx;
+  --space-5: 48rpx;
+  --space-6: 64rpx;
 
-  /* 圆角 */
-  --radius: 32rpx;
-  --radius-lg: 40rpx;
-  --radius-sm: 16rpx;
+  /* 圆角 - 更克制 */
+  --radius-sm: 8rpx;
+  --radius: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+
+  /* 阴影 - 更克制的Elevation */
+  --shadow-sm: 0 1rpx 3rpx rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4rpx 16rpx rgba(91, 123, 163, 0.08);
+  --shadow-lg: 0 8rpx 32rpx rgba(91, 123, 163, 0.12);
 
   /* 动画 */
-  --duration: 200ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+
+  /* 字体系统 - 极致克制 */
+  --font-display: 36rpx;        /* 页面标题，字重600 */
+  --font-body: 30rpx;           /* 正文内容，字重400 */
+  --font-caption: 24rpx;        /* 辅助说明，字重400 */
+
+  /* 听障模式专用字号 */
+  --font-deaf-body: 34rpx;      /* 大字号正文 */
+  --font-deaf-display: 40rpx;   /* 大标题 */
+  --leading-deaf: 1.8;          /* 宽松行高 */
+
+  /* 兼容性映射（旧变量名） */
+  --text-display: var(--font-display);
+  --text-body: var(--font-body);
+  --text-caption: var(--font-caption);
+  --text-deaf-body: var(--font-deaf-body);
+  --text-deaf-display: var(--font-deaf-display);
+
+  /* 无障碍 */
+  --touch-min: 88rpx;           /* 最小触摸区域 */
 }
 
 /* ===== 基础 ===== */
 page {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  line-height: 1.6;
   min-height: 100vh;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ===== 弥散阴影卡片 ===== */
-.card-shadow {
-  background: var(--surface);
+/* ===== 边框卡片（克制版，替代阴影卡片） ===== */
+.card {
+  background: var(--bg-elevated);
   border-radius: var(--radius);
-  box-shadow: 0 8rpx 40rpx rgba(0, 122, 255, 0.08);
+  border-bottom: 1rpx solid #F0F0F0;
+  padding: var(--space-4);
+  transition: transform var(--duration-normal), box-shadow var(--duration-normal);
 }
 
-/* ===== 玻璃拟态 ===== */
+.card-hover:active {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2rpx);
+}
+
+/* ===== 弥散阴影卡片（仅用于悬浮元素） ===== */
+.card-shadow {
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== 玻璃拟态（克制版） ===== */
 .glass {
-  background: var(--surface-glass);
-  backdrop-filter: blur(20rpx);
-  -webkit-backdrop-filter: blur(20rpx);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-lg);
 }
 
-/* ===== 按钮基础 ===== */
+/* ===== 莫兰迪按钮系统 ===== */
+
+/* 基础胶囊按钮 */
+.btn-capsule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  border-radius: 44rpx;  /* 大圆角胶囊 */
+  padding: 0 48rpx;
+  font-size: var(--font-body);
+  font-weight: 500;
+  transition: all var(--duration-fast);
+  border: none;
+}
+
+.btn-capsule:active {
+  transform: scale(0.96);
+}
+
+/* 紧急按钮 - 琥珀渐变 */
+.btn-urgent {
+  background: var(--gradient-urgent);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(212, 163, 115, 0.3);
+}
+
+.btn-urgent:active {
+  box-shadow: 0 2rpx 8rpx rgba(212, 163, 115, 0.2);
+}
+
+/* 日常按钮 - 灰蓝渐变 */
+.btn-daily {
+  background: var(--gradient-daily);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(122, 139, 153, 0.25);
+}
+
+.btn-daily:active {
+  box-shadow: 0 2rpx 8rpx rgba(122, 139, 153, 0.15);
+}
+
+/* 业务按钮 - 中性灰 */
+.btn-biz {
+  background: var(--gradient-biz);
+  color: #fff;
+}
+
+/* ===== 正圆语音按钮（普通版核心） ===== */
+.voice-btn {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;  /* 必须正圆 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-voice);
+  box-shadow: 0 8rpx 32rpx rgba(122, 139, 153, 0.35);
+  transition: all var(--duration-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent);
+  border-radius: 50%;
+}
+
+.voice-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 16rpx rgba(122, 139, 153, 0.25);
+}
+
+/* 录音中动画 */
+.voice-btn.recording {
+  animation: voicePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 8rpx 32rpx rgba(122, 139, 153, 0.35); }
+  50% { box-shadow: 0 8rpx 48rpx rgba(122, 139, 153, 0.55); }
+}
+
+/* ===== 胶囊模式切换器 ===== */
+.mode-switcher {
+  height: 64rpx;
+  border-radius: 32rpx;
+  background: rgba(122, 139, 153, 0.1);
+  padding: 4rpx;
+  display: flex;
+  position: relative;
+}
+
+.mode-option {
+  flex: 1;
+  height: 56rpx;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  transition: all var(--duration-normal);
+  z-index: 1;
+}
+
+.mode-option.active {
+  background: #fff;
+  color: var(--text-primary);
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
+  font-weight: 500;
+}
+
+/* ===== 旧按钮系统（兼容性保留） ===== */
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) var(--space-2xl);
-  border-radius: var(--radius);
-  font-size: 28rpx;
+  padding: var(--space-3) var(--space-5);
+  border-radius: 48rpx;
+  font-size: var(--text-body);
   font-weight: 500;
-  transition: transform var(--duration), opacity var(--duration);
+  transition: all var(--duration-fast);
+  min-height: 88rpx; /* WCAG触摸目标 */
 }
 
 .btn:active {
-  transform: scale(0.96);
   opacity: 0.85;
+  transform: scale(0.98);
 }
 
+/* 主按钮 - 克制版 */
 .btn-primary {
-  background: var(--primary);
+  background: var(--brand);
   color: #fff;
-  box-shadow: 0 8rpx 32rpx rgba(0, 122, 255, 0.25);
 }
 
+.btn-primary:active {
+  background: rgba(91, 123, 163, 0.9);
+}
+
+/* 次级按钮 */
 .btn-secondary {
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: 0 4rpx 24rpx rgba(0, 122, 255, 0.08);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1rpx solid #E5E5E5;
+}
+
+.btn-secondary:active {
+  background: var(--bg-secondary);
+}
+
+/* 文字按钮 */
+.btn-text {
+  background: transparent;
+  color: var(--brand);
+  padding: var(--space-2) var(--space-3);
+  min-height: auto;
+}
+
+/* 听障模式大按钮 */
+.btn-deaf {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  font-size: var(--text-deaf-body);
+  min-height: 140rpx;
+}
+
+/* ===== 输入框（去边框设计） ===== */
+.input-minimal {
+  border: none;
+  border-bottom: 1rpx solid #E5E5E5;
+  border-radius: 0;
+  padding: var(--space-3) 0;
+  font-size: var(--text-body);
+  color: var(--text-primary);
+  background: transparent;
+  transition: border-color var(--duration-normal);
+  width: 100%;
+}
+
+.input-minimal:focus {
+  border-bottom-color: var(--brand);
+}
+
+.input-minimal::placeholder {
+  color: var(--text-muted);
+}
+
+/* 听障模式大输入框 */
+.input-deaf {
+  font-size: var(--text-deaf-body);
+  line-height: var(--leading-deaf);
+  min-height: 160rpx;
+}
+
+/* ===== 标签/芯片 ===== */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 18rpx 28rpx;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: transform var(--duration-fast);
+}
+
+.chip:active {
+  transform: scale(0.96);
+}
+
+.chip-urgent {
+  background: var(--deaf-urgent);
+  color: #fff;
+}
+
+.chip-daily {
+  background: var(--deaf-daily);
+  color: var(--deaf-urgent);
+}
+
+.chip-biz {
+  background: var(--deaf-biz);
+  color: var(--brand);
+  border: 1rpx solid rgba(91, 123, 163, 0.15);
+}
+
+.chip-add {
+  background: #f0f0f0;
+  color: var(--text-tertiary);
+}
+
+/* ===== 图标规范 ===== */
+.icon {
+  width: 48rpx;
+  height: 48rpx;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-large {
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.icon-small {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+/* ===== 文字工具类 ===== */
+.text-display { font-size: var(--font-display); font-weight: 600; line-height: 1.4; }
+.text-body { font-size: var(--font-body); line-height: 1.6; }
+.text-caption { font-size: var(--font-caption); color: var(--text-secondary); }
+.text-tertiary { font-size: var(--font-caption); color: var(--text-tertiary); }
+
+/* 听障模式文字 */
+.text-deaf-display { font-size: var(--font-deaf-display); font-weight: 600; line-height: 1.4; }
+.text-deaf-body { font-size: var(--font-deaf-body); line-height: var(--leading-deaf); }
+
+/* ===== 全屏容器 ===== */
+.page-full {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: var(--space-4);
+}
+
+/* ===== 页面转场动画 ===== */
+.page-enter {
+  animation: fadeSlideUp var(--duration-slow) ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-exit {
+  animation: fadeSlideDown var(--duration-normal) ease-in forwards;
+}
+
+@keyframes fadeSlideDown {
+  to {
+    opacity: 0;
+    transform: translateY(10rpx);
+  }
+}
+
+/* ===== 脉冲加载动画（克制版） ===== */
+.loading-pulse {
+  position: relative;
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.loading-pulse::before,
+.loading-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  opacity: 0.3;
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+.loading-pulse::after {
+  animation-delay: 1s;
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+/* ===== 波纹效果（听障模式视觉反馈） ===== */
+.ripple-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--brand);
+  opacity: 0.4;
+  animation: rippleExpand 800ms ease-out forwards;
+}
+
+@keyframes rippleExpand {
+  to {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
 }
 
 /* ===== 按压反馈 ===== */
 .press:active {
   opacity: 0.7;
   transform: scale(0.98);
-  transition: all 120ms ease;
+  transition: all var(--duration-fast) ease;
 }
 
-/* ===== 文字工具类 ===== */
-.text-xl { font-size: 48rpx; font-weight: 600; }
-.text-lg { font-size: 36rpx; font-weight: 600; }
-.text-md { font-size: 30rpx; }
-.text-sm { font-size: 26rpx; color: var(--text-secondary); }
-.text-xs { font-size: 22rpx; color: var(--text-muted); }
+/* ===== 弹性布局工具类 ===== */
+.flex { display: flex; }
+.flex-inline { display: inline-flex; }
 
-/* ===== 全屏容器 ===== */
-.page-full {
-  min-height: 100vh;
-  background: var(--bg);
+.flex-row { flex-direction: row; }
+.flex-col { flex-direction: column; }
+
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+.flex-1 { flex: 1; }
+.flex-auto { flex: auto; }
+.flex-none { flex: none; }
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-around {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+.items-stretch { align-items: stretch; }
+
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+
+/* ===== 间距工具类 ===== */
+.m-1 { margin: var(--space-1); }
+.m-2 { margin: var(--space-2); }
+.m-3 { margin: var(--space-3); }
+.m-4 { margin: var(--space-4); }
+.m-5 { margin: var(--space-5); }
+.m-6 { margin: var(--space-6); }
+
+.mt-1 { margin-top: var(--space-1); }
+.mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); }
+.mt-4 { margin-top: var(--space-4); }
+.mt-5 { margin-top: var(--space-5); }
+.mt-6 { margin-top: var(--space-6); }
+
+.mb-1 { margin-bottom: var(--space-1); }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-5 { margin-bottom: var(--space-5); }
+.mb-6 { margin-bottom: var(--space-6); }
+
+.ml-1 { margin-left: var(--space-1); }
+.ml-2 { margin-left: var(--space-2); }
+.ml-3 { margin-left: var(--space-3); }
+.ml-4 { margin-left: var(--space-4); }
+.ml-5 { margin-left: var(--space-5); }
+.ml-6 { margin-left: var(--space-6); }
+
+.mr-1 { margin-right: var(--space-1); }
+.mr-2 { margin-right: var(--space-2); }
+.mr-3 { margin-right: var(--space-3); }
+.mr-4 { margin-right: var(--space-4); }
+.mr-5 { margin-right: var(--space-5); }
+.mr-6 { margin-right: var(--space-6); }
+
+.mx-1 { margin-left: var(--space-1); margin-right: var(--space-1); }
+.mx-2 { margin-left: var(--space-2); margin-right: var(--space-2); }
+.mx-3 { margin-left: var(--space-3); margin-right: var(--space-3); }
+.mx-4 { margin-left: var(--space-4); margin-right: var(--space-4); }
+.mx-5 { margin-left: var(--space-5); margin-right: var(--space-5); }
+.mx-6 { margin-left: var(--space-6); margin-right: var(--space-6); }
+
+.my-1 { margin-top: var(--space-1); margin-bottom: var(--space-1); }
+.my-2 { margin-top: var(--space-2); margin-bottom: var(--space-2); }
+.my-3 { margin-top: var(--space-3); margin-bottom: var(--space-3); }
+.my-4 { margin-top: var(--space-4); margin-bottom: var(--space-4); }
+.my-5 { margin-top: var(--space-5); margin-bottom: var(--space-5); }
+.my-6 { margin-top: var(--space-6); margin-bottom: var(--space-6); }
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+.p-5 { padding: var(--space-5); }
+.p-6 { padding: var(--space-6); }
+
+.pt-1 { padding-top: var(--space-1); }
+.pt-2 { padding-top: var(--space-2); }
+.pt-3 { padding-top: var(--space-3); }
+.pt-4 { padding-top: var(--space-4); }
+.pt-5 { padding-top: var(--space-5); }
+.pt-6 { padding-top: var(--space-6); }
+
+.pb-1 { padding-bottom: var(--space-1); }
+.pb-2 { padding-bottom: var(--space-2); }
+.pb-3 { padding-bottom: var(--space-3); }
+.pb-4 { padding-bottom: var(--space-4); }
+.pb-5 { padding-bottom: var(--space-5); }
+.pb-6 { padding-bottom: var(--space-6); }
+
+.pl-1 { padding-left: var(--space-1); }
+.pl-2 { padding-left: var(--space-2); }
+.pl-3 { padding-left: var(--space-3); }
+.pl-4 { padding-left: var(--space-4); }
+.pl-5 { padding-left: var(--space-5); }
+.pl-6 { padding-left: var(--space-6); }
+
+.pr-1 { padding-right: var(--space-1); }
+.pr-2 { padding-right: var(--space-2); }
+.pr-3 { padding-right: var(--space-3); }
+.pr-4 { padding-right: var(--space-4); }
+.pr-5 { padding-right: var(--space-5); }
+.pr-6 { padding-right: var(--space-6); }
+
+.px-1 { padding-left: var(--space-1); padding-right: var(--space-1); }
+.px-2 { padding-left: var(--space-2); padding-right: var(--space-2); }
+.px-3 { padding-left: var(--space-3); padding-right: var(--space-3); }
+.px-4 { padding-left: var(--space-4); padding-right: var(--space-4); }
+.px-5 { padding-left: var(--space-5); padding-right: var(--space-5); }
+.px-6 { padding-left: var(--space-6); padding-right: var(--space-6); }
+
+.py-1 { padding-top: var(--space-1); padding-bottom: var(--space-1); }
+.py-2 { padding-top: var(--space-2); padding-bottom: var(--space-2); }
+.py-3 { padding-top: var(--space-3); padding-bottom: var(--space-3); }
+.py-4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+.py-5 { padding-top: var(--space-5); padding-bottom: var(--space-5); }
+.py-6 { padding-top: var(--space-6); padding-bottom: var(--space-6); }
+
+/* ===== 安全区域适配 ===== */
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+/* ===== 响应式布局策略 ===== */
+
+/* 基础响应式：使用流式布局 */
+.container {
+  width: 100%;
+  max-width: 750rpx;
+  margin: 0 auto;
+  padding: var(--space-4);
   box-sizing: border-box;
+}
+
+/* 网格布局 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 calc(-1 * var(--space-2));
+}
+
+.grid-item {
+  flex: 0 0 calc(50% - var(--space-4));
+  margin: var(--space-2);
+}
+
+/* 三列网格 */
+.grid-3 {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 calc(-1 * var(--space-2));
+}
+
+.grid-3 .grid-item {
+  flex: 0 0 calc(33.333% - var(--space-4));
+  margin: var(--space-2);
+}
+
+/* 字体放大适配策略 */
+@media (min-font-size: 150%) {
+  page {
+    --font-body: 32rpx;
+    --font-display: 38rpx;
+  }
+
+  .grid-item,
+  .grid-3 .grid-item {
+    flex: 0 0 calc(100% - var(--space-4));
+  }
+
+  .card {
+    padding: var(--space-5);
+  }
+}
+
+@media (min-font-size: 200%) {
+  page {
+    --font-body: 34rpx;
+    --font-display: 40rpx;
+  }
+
+  /* 听障模式下保持单列布局 */
+  page.mode-deaf .grid-item,
+  page.mode-deaf .grid-3 .grid-item {
+    flex: 0 0 calc(100% - var(--space-4));
+    margin: var(--space-3) var(--space-2);
+  }
+}
+
+/* 弹性文字容器：防止文字溢出 */
+.text-wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* 文字截断 */
+.text-ellipsis {
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 最小触摸区域 */
+.touch-target {
+  min-width: 88rpx;
+  min-height: 88rpx;
+}
+
+/* 全宽按钮 */
+.btn-block {
+  width: 100%;
+}
+
+/* 隐藏元素 */
+.hidden { display: none !important; }
+.invisible { visibility: hidden; }
+
+/* 屏幕阅读器专用（ visually hidden but accessible ） */
+.sr-only {
+  position: absolute;
+  width: 1rpx;
+  height: 1rpx;
+  padding: 0;
+  margin: -1rpx;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ===== 隐藏滚动条 ===== */
@@ -129,4 +783,193 @@ page {
   width: 0;
   height: 0;
   color: transparent;
+}
+
+/* ===== 无障碍：减少动画 ===== */
+@media (prefers-reduced-motion: reduce) {
+  page,
+  view,
+  text,
+  button,
+  image,
+  scroll-view,
+  swiper,
+  swiper-item,
+  movable-area,
+  movable-view,
+  cover-view,
+  cover-image {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 手动减少动画模式（通过类名） */
+page.reduce-motion,
+page.reduce-motion view,
+page.reduce-motion text,
+page.reduce-motion image,
+page.reduce-motion button,
+page.reduce-motion scroll-view,
+page.reduce-motion swiper,
+page.reduce-motion swiper-item,
+page.reduce-motion movable-area,
+page.reduce-motion movable-view,
+page.reduce-motion cover-view,
+page.reduce-motion cover-image,
+page.reduce-motion ::before,
+page.reduce-motion ::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ===== 高对比度模式 ===== */
+@media (prefers-contrast: high) {
+  page {
+    --text-primary: #000000 !important;
+    --text-secondary: #333333 !important;
+    --text-tertiary: #666666 !important;
+    --bg-primary: #FFFFFF !important;
+    --bg-secondary: #F0F0F0 !important;
+    --brand: #0044AA !important;
+    --brand-light: #E6F2FF !important;
+    --accent: #FF6600 !important;
+    --border: #000000 !important;
+  }
+
+  .card {
+    border: 2rpx solid #000000 !important;
+    box-shadow: none !important;
+  }
+
+  .btn-primary {
+    border: 2rpx solid #000000 !important;
+  }
+}
+
+/* 手动高对比度模式（通过类名） */
+page.high-contrast {
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-tertiary: #666666;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F0F0F0;
+  --brand: #0044AA;
+  --brand-light: #E6F2FF;
+  --accent: #FF6600;
+  --border: #000000;
+}
+
+page.high-contrast .card {
+  border: 2rpx solid #000000;
+  box-shadow: none;
+}
+
+page.high-contrast .btn-primary {
+  border: 2rpx solid #000000;
+}
+
+/* ===== 字体放大适配（200%） ===== */
+@media (min-font-size: 200%) {
+  page {
+    --font-body: 34rpx;
+    --font-display: 40rpx;
+  }
+}
+
+/* ===== 听障模式全局样式 ===== */
+page.mode-deaf {
+  --font-body: var(--font-deaf-body);
+  --font-display: var(--font-deaf-display);
+}
+
+page.mode-deaf .text-body {
+  font-size: var(--font-deaf-body);
+  line-height: var(--leading-deaf);
+}
+
+page.mode-deaf .text-display {
+  font-size: var(--font-deaf-display);
+  line-height: 1.4;
+}
+
+page.mode-deaf .text-caption {
+  font-size: 28rpx;
+  line-height: var(--leading-deaf);
+}
+
+/* 听障模式按钮增大 */
+page.mode-deaf .btn {
+  min-height: 96rpx;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-deaf-body);
+}
+
+page.mode-deaf .btn-large {
+  min-height: 120rpx;
+  font-size: var(--font-deaf-display);
+  border-radius: 60rpx;
+}
+
+/* 听障模式卡片增大间距 */
+page.mode-deaf .card {
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+/* 听障模式输入框 */
+page.mode-deaf .input-minimal {
+  font-size: var(--font-deaf-body);
+  min-height: 120rpx;
+}
+
+page.mode-deaf .input-deaf {
+  font-size: var(--font-deaf-display);
+  line-height: var(--leading-deaf);
+  min-height: 200rpx;
+}
+
+/* 听障模式图标增大 */
+page.mode-deaf .icon {
+  width: 56rpx;
+  height: 56rpx;
+}
+
+page.mode-deaf .icon-large {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+/* 听障模式芯片 */
+page.mode-deaf .chip {
+  padding: 24rpx 36rpx;
+  font-size: 30rpx;
+  border-radius: 40rpx;
+}
+
+/* 听障模式列表项 */
+page.mode-deaf .list-item {
+  padding: var(--space-4) 0;
+  min-height: 120rpx;
+}
+
+/* 听障模式导航 */
+page.mode-deaf .nav-item {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-deaf-body);
+}
+
+/* 听障模式标签 */
+page.mode-deaf .label {
+  font-size: var(--font-deaf-body);
+  margin-bottom: var(--space-3);
+}
+
+/* 听障模式分隔 */
+page.mode-deaf .divider {
+  margin: var(--space-4) 0;
+  height: 2rpx;
 }

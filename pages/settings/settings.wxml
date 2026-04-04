@@ -1,0 +1,176 @@
+<view class="container">
+  <!-- 通用设置 -->
+  <view class="section">
+    <view class="section-title">{{t('settings.general') || '通用设置'}}</view>
+
+    <view class="list">
+      <!-- 语言 -->
+      <view class="list-item" bindtap="showLanguagePicker">
+        <view class="list-item-left">
+          <text class="icon">🌐</text>
+          <text class="label">{{t('settings.language') || '语言'}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="value">{{languageName}}</text>
+          <text class="arrow">></text>
+        </view>
+      </view>
+
+      <!-- 字体大小 -->
+      <view class="list-item" bindtap="showFontPicker">
+        <view class="list-item-left">
+          <text class="icon">🔤</text>
+          <text class="label">{{t('settings.fontSize') || '字体大小'}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="value">{{fontSizeName}}</text>
+          <text class="arrow">></text>
+        </view>
+      </view>
+
+      <!-- 使用模式 -->
+      <view class="list-item" bindtap="showModePicker">
+        <view class="list-item-left">
+          <text class="icon">👤</text>
+          <text class="label">{{t('settings.mode') || '使用模式'}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="value">{{modeName}}</text>
+          <text class="arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无障碍 -->
+  <view class="section">
+    <view class="section-title">{{t('settings.accessibility') || '无障碍'}}</view>
+
+    <view class="list">
+      <!-- 高对比度 -->
+      <view class="list-item">
+        <view class="list-item-left">
+          <text class="icon">◐</text>
+          <text class="label">{{t('settings.highContrast') || '高对比度'}}</text>
+        </view>
+        <view class="list-item-right">
+          <switch checked="{{settings.highContrast}}" bindchange="onHighContrastChange" color="#6da4df"/>
+        </view>
+      </view>
+
+      <!-- 减少动画 -->
+      <view class="list-item">
+        <view class="list-item-left">
+          <text class="icon">✓</text>
+          <text class="label">{{t('settings.reduceMotion') || '减少动画'}}</text>
+        </view>
+        <view class="list-item-right">
+          <switch checked="{{settings.reduceMotion}}" bindchange="onReduceMotionChange" color="#6da4df"/>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 帮助 -->
+  <view class="section">
+    <view class="section-title">{{t('settings.help') || '帮助'}}</view>
+
+    <view class="list">
+      <!-- 使用教程 -->
+      <view class="list-item" bindtap="openTutorial">
+        <view class="list-item-left">
+          <text class="icon">📖</text>
+          <text class="label">{{t('settings.tutorial') || '使用教程'}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="section">
+    <view class="section-title">{{t('settings.about') || '关于'}}</view>
+
+    <view class="list">
+      <!-- 关于语见 -->
+      <view class="list-item" bindtap="showAbout">
+        <view class="list-item-left">
+          <text class="icon">ℹ️</text>
+          <text class="label">{{t('settings.aboutApp') || '关于语见'}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 语言选择器 -->
+<view class="picker-mask {{showLangPicker ? 'show' : ''}}" bindtap="hideLanguagePicker">
+  <view class="picker-content {{showLangPicker ? 'show' : ''}}" catchtap="preventBubble">
+    <view class="picker-header">
+      <text class="picker-title">{{t('settings.selectLanguage') || '选择语言'}}</text>
+      <text class="picker-close" bindtap="hideLanguagePicker">✕</text>
+    </view>
+    <view class="picker-list">
+      <view
+        class="picker-item {{settings.language === item.code ? 'active' : ''}}"
+        wx:for="{{languages}}"
+        wx:key="code"
+        data-code="{{item.code}}"
+        bindtap="selectLanguage"
+      >
+        <text class="picker-item-text">{{item.nativeName}}</text>
+        <text class="picker-item-check" wx:if="{{settings.language === item.code}}">✓</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 字体大小选择器 -->
+<view class="picker-mask {{showFontPicker ? 'show' : ''}}" bindtap="hideFontPicker">
+  <view class="picker-content {{showFontPicker ? 'show' : ''}}" catchtap="preventBubble">
+    <view class="picker-header">
+      <text class="picker-title">{{t('settings.selectFontSize') || '选择字体大小'}}</text>
+      <text class="picker-close" bindtap="hideFontPicker">✕</text>
+    </view>
+    <view class="picker-list">
+      <view
+        class="picker-item {{settings.fontSize === item.value ? 'active' : ''}}"
+        wx:for="{{fontSizes}}"
+        wx:key="value"
+        data-value="{{item.value}}"
+        bindtap="selectFontSize"
+      >
+        <text class="picker-item-text">{{item.label}}</text>
+        <text class="picker-item-check" wx:if="{{settings.fontSize === item.value}}">✓</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 使用模式选择器 -->
+<view class="picker-mask {{showModePicker ? 'show' : ''}}" bindtap="hideModePicker">
+  <view class="picker-content {{showModePicker ? 'show' : ''}}" catchtap="preventBubble">
+    <view class="picker-header">
+      <text class="picker-title">{{t('settings.selectMode') || '选择使用模式'}}</text>
+      <text class="picker-close" bindtap="hideModePicker">✕</text>
+    </view>
+    <view class="picker-list">
+      <view
+        class="picker-item {{settings.mode === item.value ? 'active' : ''}}"
+        wx:for="{{modes}}"
+        wx:key="value"
+        data-value="{{item.value}}"
+        bindtap="selectMode"
+      >
+        <text class="picker-item-text">{{item.label}}</text>
+        <text class="picker-item-desc">{{item.desc}}</text>
+        <text class="picker-item-check" wx:if="{{settings.mode === item.value}}">✓</text>
+      </view>
+    </view>
+  </view>
+</view>

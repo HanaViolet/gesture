@@ -1,26 +1,62 @@
 <view class="create-container">
+  <!-- 分类选择 -->
   <view class="input-block">
-    <input 
-      class="input-title" 
-      placeholder="请输入帖子标题" 
-      bindinput="onTitleChange" />
+    <text class="input-label">选择分类</text>
+    <view class="category-list">
+      <view
+        wx:for="{{categories}}"
+        wx:key="value"
+        class="category-item {{selectedCategory === item.value ? 'active' : ''}}"
+        bindtap="selectCategory"
+        data-value="{{item.value}}"
+      >
+        {{item.label}}
+      </view>
+    </view>
   </view>
 
+  <!-- 标题输入 -->
   <view class="input-block">
-    <textarea 
-      class="input-content" 
-      placeholder="请输入帖子内容" 
-      bindinput="onContentChange" />
+    <text class="input-label">标题</text>
+    <input
+      class="input-title"
+      placeholder="请输入帖子标题"
+      bindinput="onTitleChange"
+      value="{{title}}"
+    />
   </view>
 
+  <!-- 内容输入 -->
+  <view class="input-block">
+    <text class="input-label">内容</text>
+    <textarea
+      class="input-content"
+      placeholder="请输入帖子内容，分享您的需求或经验..."
+      bindinput="onContentChange"
+      value="{{content}}"
+      maxlength="1000"
+    />
+  </view>
+
+  <!-- 图片上传 -->
   <view class="image-upload">
-    <button bindtap="chooseImage">选择图片</button>
+    <text class="input-label">添加图片（可选）</text>
     <view class="image-preview">
+      <view class="upload-btn" bindtap="chooseImage">
+        <image src="/icons/camera.svg" mode="aspectFit" class="upload-icon"/>
+        <text class="upload-text">添加图片</text>
+      </view>
       <block wx:for="{{images}}" wx:key="*this">
-        <image src="{{item}}" mode="aspectFill" class="preview-img"></image>
+        <view class="preview-item">
+          <image src="{{item}}" mode="aspectFill" class="preview-img"/>
+          <view class="preview-delete" bindtap="deleteImage" data-index="{{index}}">×</view>
+        </view>
       </block>
     </view>
   </view>
 
-  <button class="submit-button" bindtap="submitPost">发布帖子</button>
+  <!-- 发布按钮 -->
+  <button class="submit-button {{!canSubmit ? 'disabled' : ''}}" bindtap="submitPost">
+    发布帖子
+  </button>
 </view>

@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/index/index",
+    "pages/onboarding/onboarding",
     "pages/home/home",
     "pages/camera/camera",
     "pages/analysis_result/analysis_result",
@@ -9,21 +9,21 @@
     "pages/text_result/text_result",
     "pages/get_detail/get_detail",
     "pages/society_cowork/society_cowork",
-    "pages/personal_settings/personal_settings",
+    "pages/settings/settings",
     "pages/forum/forum",
     "pages/forum_create/forum_create",
     "pages/forum_detail/forum_detail"
   ],
   "window": {
-    "disableScroll": false,
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "心语者",
-    "navigationBarBackgroundColor": "#F8FAFF",
-    "backgroundColor": "#F8FAFF"
+    "navigationBarTitleText": "语见",
+    "navigationBarBackgroundColor": "#FAFBFC",
+    "backgroundColor": "#FAFBFC"
   },
   "usingComponents": {
     "mode-switcher": "/components/mode-switcher/mode-switcher",
-    "smpl-viewer": "/components/smpl-viewer/smpl-viewer"
+    "smpl-viewer": "/components/smpl-viewer/smpl-viewer",
+    "custom-btn": "/components/button/button"
   },
   "style": "v2",
   "componentFramework": "exparser",

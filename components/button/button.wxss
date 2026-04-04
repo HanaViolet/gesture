@@ -1,0 +1,169 @@
+/* components/button/button.wxss */
+
+.custom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  transition: all 120ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-btn::after {
+  border: none;
+}
+
+/* ===== 按钮类型 ===== */
+
+/* 主按钮 - 克制版灰蓝 */
+.btn-primary {
+  background: var(--brand, #5B7BA3);
+  color: #fff;
+  border-radius: 48rpx;
+  min-height: 88rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.btn-primary:active:not(.btn-disabled) {
+  opacity: 0.85;
+  transform: scale(0.98);
+  background: rgba(91, 123, 163, 0.9);
+}
+
+/* 次级按钮 - 透明底+边框 */
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary, #1A1A1A);
+  border: 1rpx solid #E5E5E5;
+  border-radius: 48rpx;
+  min-height: 88rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.btn-secondary:active:not(.btn-disabled) {
+  background: var(--bg-secondary, #F0F2F5);
+  transform: scale(0.98);
+}
+
+/* 文字按钮 */
+.btn-text {
+  background: transparent;
+  color: var(--brand, #5B7BA3);
+  min-height: auto;
+  padding: 16rpx 24rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.btn-text:active:not(.btn-disabled) {
+  opacity: 0.7;
+}
+
+/* 听障模式大按钮 - 圆形 */
+.btn-deaf {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: var(--brand, #5B7BA3);
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 500;
+  box-shadow: 0 8rpx 32rpx rgba(91, 123, 163, 0.25);
+}
+
+.btn-deaf:active:not(.btn-disabled) {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 16rpx rgba(91, 123, 163, 0.2);
+}
+
+/* ===== 按钮尺寸 ===== */
+
+.btn-small {
+  min-height: 64rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+}
+
+.btn-normal {
+  min-height: 88rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+}
+
+.btn-large {
+  min-height: 104rpx;
+  padding: 28rpx 64rpx;
+  font-size: 32rpx;
+}
+
+/* ===== 状态样式 ===== */
+
+.btn-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.btn-loading {
+  pointer-events: none;
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+/* 加载动画 */
+.btn-spinner {
+  width: 32rpx;
+  height: 32rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== 波纹效果（听障模式） ===== */
+
+.ripple-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 140rpx;
+  height: 140rpx;
+  margin-left: -70rpx;
+  margin-top: -70rpx;
+  border-radius: 50%;
+  background: var(--brand, #5B7BA3);
+  opacity: 0.4;
+  animation: rippleExpand 800ms ease-out forwards;
+  pointer-events: none;
+}
+
+.ripple-ring.delay {
+  animation-delay: 150ms;
+}
+
+@keyframes rippleExpand {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}

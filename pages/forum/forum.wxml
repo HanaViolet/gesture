@@ -1,31 +1,55 @@
 <view class="forum-container">
-  <scroll-view scroll-y="true" class="post-list">
+  <!-- 头部 -->
+  <view class="forum-header">
+    <text class="forum-title">听障人士交流社区</text>
+    <text class="forum-subtitle">分享经验、寻求帮助、交流互动</text>
+  </view>
+
+  <!-- 帖子列表 -->
+  <scroll-view scroll-y="true" class="post-list" bindscrolltolower="loadMore">
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!posts.length}}">
+      <image src="/icons/empty.svg" mode="aspectFit" class="empty-icon"/>
+      <text class="empty-text">暂无帖子，快来发布第一条吧</text>
+    </view>
+
     <block wx:for="{{posts}}" wx:key="id">
-      <view class="post-card">
-        <view bindtap="viewPost" data-id="{{item.id}}">
-          <view class="post-title">{{item.title}}</view>
-          <view class="post-content">{{item.content}}</view>
+      <view class="post-card" bindtap="viewPost" data-id="{{item.id}}">
+        <!-- 分类标签 -->
+        <view class="post-category">{{item.category || '分享'}}</view>
 
-          <!-- 展示第一张图片 -->
-          <view wx:if="{{item.images.length}}">
-            <image src="{{item.images[0]}}" mode="aspectFill" class="post-image"></image>
-          </view>
+        <view class="post-title">{{item.title}}</view>
+        <view class="post-content">{{item.content}}</view>
 
-          <view class="post-footer">
-            <text>{{item.author}}</text>
-            <text>{{item.time}}</text>
-          </view>
+        <!-- 展示第一张图片 -->
+        <view wx:if="{{item.images.length}}">
+          <image src="{{item.images[0]}}" mode="aspectFill" class="post-image"/>
         </view>
 
-        <!-- 点赞按钮 -->
-        <view class="like-button" bindtap="likePost" data-id="{{item.id}}">
-          ❤️ {{item.likes}} 点赞
+        <view class="post-footer">
+          <view class="post-author">{{item.author}}</view>
+          <view class="post-stats">
+            <view class="stat-item">
+              <image src="/icons/heart.svg" mode="aspectFit" class="stat-icon"/>
+              <text>{{item.likes || 0}}</text>
+            </view>
+            <view class="stat-item">
+              <image src="/icons/message.svg" mode="aspectFit" class="stat-icon"/>
+              <text>{{item.commentCount}}</text>
+            </view>
+          </view>
         </view>
+        <view class="post-time">{{item.time}}</view>
       </view>
     </block>
+
+    <!-- 加载更多 -->
+    <view class="loading-more" wx:if="{{posts.length >= 10}}">加载更多...</view>
   </scroll-view>
 
+  <!-- 发帖按钮 -->
   <view class="new-post-button" bindtap="createPost">
-    发新帖
+    <image src="/icons/plus.svg" mode="aspectFit" class="new-post-icon"/>
+    <text class="new-post-text">发帖</text>
   </view>
 </view>

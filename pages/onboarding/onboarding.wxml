@@ -1,0 +1,83 @@
+<!-- 首次启动引导页面 -->
+<view class="onboarding-page">
+  <!-- 状态栏占位 -->
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部欢迎区域 -->
+  <view class="welcome-section">
+    <view class="welcome-icon">
+      <view class="icon-circle">
+        <text class="icon-text">心</text>
+      </view>
+    </view>
+    <text class="welcome-title">欢迎使用 语见</text>
+    <text class="welcome-subtitle">打破沟通障碍，连接无声世界</text>
+  </view>
+
+  <!-- 语言选择区域 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">选择语言</text>
+      <text class="section-desc">Select Language</text>
+    </view>
+    <view class="language-selector">
+      <view
+        class="lang-option {{selectedLang === item.code ? 'active' : ''}}"
+        wx:for="{{languages}}"
+        wx:key="code"
+        data-code="{{item.code}}"
+        bindtap="onSelectLanguage"
+      >
+        <text class="lang-name">{{item.name}}</text>
+        <text class="lang-local">{{item.localName}}</text>
+        <view class="check-icon" wx:if="{{selectedLang === item.code}}">
+          <view class="check-dot"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 使用模式选择区域 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">选择使用模式</text>
+      <text class="section-desc">选择最适合您需求的交互方式</text>
+    </view>
+    <view class="mode-selector">
+      <view
+        class="mode-card {{selectedMode === item.id ? 'active' : ''}}"
+        wx:for="{{modes}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onSelectMode"
+      >
+        <view class="mode-icon-wrapper" style="background: {{item.iconBg}};">
+          <image class="mode-icon" src="{{item.icon}}" mode="aspectFit"/>
+        </view>
+        <view class="mode-content">
+          <text class="mode-title">{{item.title}}</text>
+          <text class="mode-desc">{{item.description}}</text>
+        </view>
+        <view class="mode-check">
+          <view class="check-circle {{selectedMode === item.id ? 'checked' : ''}}">
+            <view class="check-mark" wx:if="{{selectedMode === item.id}}"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作区域 -->
+  <view class="footer-section">
+    <view
+      class="enter-btn {{!selectedLang || !selectedMode ? 'disabled' : ''}}"
+      bindtap="onEnterApp"
+    >
+      <text class="btn-text">进入应用</text>
+    </view>
+    <text class="footer-hint">稍后在设置中可更改这些选项</text>
+  </view>
+
+  <!-- 安全区域占位 -->
+  <view class="safe-area" style="height: {{safeAreaBottom}}px;"></view>
+</view>

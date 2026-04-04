@@ -1,5 +1,4 @@
 {
-  "navigationBarTitleText": "心语者",
   "navigationStyle": "custom",
   "usingComponents": {
     "mode-switcher": "/components/mode-switcher/mode-switcher",

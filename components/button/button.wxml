@@ -1,0 +1,18 @@
+<button
+  class="custom-btn btn-{{type}} btn-{{size}} {{disabled ? 'btn-disabled' : ''}} {{loading ? 'btn-loading' : ''}}"
+  disabled="{{disabled || loading}}"
+  open-type="{{openType}}"
+  bindtap="onTap"
+  bindgetuserinfo="onGetUserInfo"
+  bindgetphonenumber="onGetPhoneNumber"
+  aria-label="{{ariaLabel}}"
+>
+  <view class="btn-content">
+    <view wx:if="{{loading}}" class="btn-spinner"></view>
+    <slot></slot>
+  </view>
+
+  <!-- 波纹效果（听障模式） -->
+  <view wx:if="{{showRipple && type === 'deaf'}}" class="ripple-ring"></view>
+  <view wx:if="{{showRipple && type === 'deaf'}}" class="ripple-ring delay"></view>
+</button>

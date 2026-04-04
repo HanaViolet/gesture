@@ -1,73 +1,138 @@
+const { API_BASE, ENDPOINTS } = require('../../utils/api');
+
 Page({
   data: {
     title: '',
     content: '',
-    images: []
+    images: [],
+    selectedCategory: 'help',
+    categories: [
+      { value: 'help', label: '求助' },
+      { value: 'share', label: '分享' },
+      { value: 'job', label: '就业' },
+      { value: 'life', label: '生活' }
+    ],
+    canSubmit: false,
+    isSubmitting: false
+  },
+
+  onLoad() {
+    this.checkCanSubmit();
   },
 
   onTitleChange(e) {
-    this.setData({
-      title: e.detail.value
-    });
+    this.setData({ title: e.detail.value });
+    this.checkCanSubmit();
   },
 
   onContentChange(e) {
-    this.setData({
-      content: e.detail.value
-    });
+    this.setData({ content: e.detail.value });
+    this.checkCanSubmit();
+  },
+
+  selectCategory(e) {
+    this.setData({ selectedCategory: e.currentTarget.dataset.value });
+  },
+
+  checkCanSubmit() {
+    const { title, content } = this.data;
+    const canSubmit = title.trim().length > 0 && content.trim().length > 0;
+    this.setData({ canSubmit });
   },
 
   chooseImage() {
-    wx.chooseImage({
-      count: 9,
+    const remaining = 9 - this.data.images.length;
+    if (remaining <= 0) {
+      wx.showToast({ title: '最多添加9张图片', icon: 'none' });
+      return;
+    }
+
+    wx.chooseMedia({
+      count: remaining,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
       success: (res) => {
+        const newImages = res.tempFiles.map(f => f.tempFilePath);
         this.setData({
-          images: res.tempFilePaths
+          images: [...this.data.images, ...newImages]
         });
       }
     });
   },
 
-  submitPost() {
-    const { title, content, images } = this.data;
-    if (!title.trim() || !content.trim()) {
-      wx.showToast({
-        title: '标题和内容不能为空',
-        icon: 'none'
-      });
-      return;
-    }
+  deleteImage(e) {
+    const index = e.currentTarget.dataset.index;
+    const images = [...this.data.images];
+    images.splice(index, 1);
+    this.setData({ images });
+  },
 
+  // 提交帖子（带API预留）
+  async submitPost() {
+    if (!this.data.canSubmit || this.data.isSubmitting) return;
+
+    this.setData({ isSubmitting: true });
+    wx.showLoading({ title: '发布中...' });
+
+    const { title, content, images, selectedCategory } = this.data;
+
+    // TODO: 后端API对接时替换为真实接口调用
+    // const result = await this.submitToServer({ title, content, images, category: selectedCategory });
+
+    // 临时本地存储方案
     const newPost = {
       id: Date.now(),
-      title,
-      content,
+      title: title.trim(),
+      content: content.trim(),
       images,
-      author: "匿名",
+      category: selectedCategory,
+      author: "我",
       time: this.formatTime(new Date()),
       likes: 0,
-      comments: []
+      comments: [],
+      commentCount: 0
     };
 
     let posts = wx.getStorageSync('posts') || [];
     posts.unshift(newPost);
     wx.setStorageSync('posts', posts);
 
-    wx.showToast({
-      title: '发布成功！',
-      icon: 'success'
-    });
+    wx.hideLoading();
+    wx.showToast({ title: '发布成功', icon: 'success' });
 
     setTimeout(() => {
       wx.navigateBack();
-    }, 1000);
+    }, 800);
+  },
+
+  // 预留：提交到服务器
+  submitToServer(data) {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${API_BASE}${ENDPOINTS.COMMUNITY_CREATE}`,
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${wx.getStorageSync('token')}`
+        },
+        data,
+        success: (res) => {
+          if (res.data.code === 0) {
+            resolve(res.data);
+          } else {
+            reject(res.data);
+          }
+        },
+        fail: reject
+      });
+    });
   },
 
   formatTime(date) {
-    const m = date.getMonth() + 1;
-    const d = date.getDate();
-    const h = date.getHours();
-    const min = date.getMinutes();
-    return `${m}-${d} ${h}:${min < 10 ? '0' + min : min}`;
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const h = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${m}-${d} ${h}:${min}`;
   }
 });

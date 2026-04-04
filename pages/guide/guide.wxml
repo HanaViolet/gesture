@@ -1,7 +1,0 @@
-<view class="guide-container">
-    <view class="spotlight" style="left: {{spotlightPosition.left}}px; top: {{spotlightPosition.top}}px; {{guideSteps[currentStep - 1].spotlightStyle | json}}"></view>
-    <view class="guide-content" style="left: {{spotlightPosition.left + 90}}px; top: {{spotlightPosition.top}}px; position: absolute;">
-        <text class="guide-text">{{guideSteps[currentStep - 1].content}}</text>
-    </view>
-    <button class="next-step-button" bindtap="nextStep">下一步</button>
-</view>

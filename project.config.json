@@ -36,6 +36,6 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "touristappid",
-  "simulatorPluginLibVersion": {}
+  "appid": "tourist appid",
+  "_comment": "请将上方appid替换为你自己的小程序AppID"
 }
