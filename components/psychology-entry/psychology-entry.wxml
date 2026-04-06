@@ -1,0 +1,13 @@
+<!-- 心理健康入口卡片组件 -->
+<view class="psychology-entry-card press" bindtap="navigateToPsychology">
+  <view class="card-icon-wrapper">
+    <text class="card-icon">💚</text>
+  </view>
+  <view class="card-content">
+    <text class="card-title">心理健康助手</text>
+    <text class="card-desc">AI陪伴，倾听你的心声</text>
+  </view>
+  <view class="card-arrow">
+    <image src="/icons/arrow-right.svg" class="arrow-icon" mode="aspectFit"/>
+  </view>
+</view>

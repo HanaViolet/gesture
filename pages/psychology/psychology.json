@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "心理健康助手",
+  "navigationBarBackgroundColor": "#E3F2FD",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F0F7FF",
+  "enablePullDownRefresh": false,
+  "disableScroll": true
+}

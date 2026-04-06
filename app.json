@@ -2,6 +2,7 @@
   "pages": [
     "pages/onboarding/onboarding",
     "pages/home/home",
+    "pages/psychology/psychology",
     "pages/camera/camera",
     "pages/analysis_result/analysis_result",
     "pages/popularization/popularization",
@@ -24,7 +25,9 @@
   "usingComponents": {
     "mode-switcher": "/components/mode-switcher/mode-switcher",
     "smpl-viewer": "/components/smpl-viewer/smpl-viewer",
-    "custom-btn": "/components/button/button"
+    "custom-btn": "/components/button/button",
+    "psychology-entry": "/components/psychology-entry/psychology-entry",
+    "bear-float": "/components/bear-float/bear-float"
   },
   "style": "v2",
   "componentFramework": "exparser",

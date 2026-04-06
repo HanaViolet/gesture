@@ -67,7 +67,19 @@ const ENDPOINTS = {
 
   // 文件上传
   UPLOAD_VIDEO: '/upload/video',
-  UPLOAD_IMAGE: '/upload/image'
+  UPLOAD_IMAGE: '/upload/image',
+
+  // 心理健康AI对话
+  PSYCHOLOGY_CHAT: '/psychology/chat',
+  PSYCHOLOGY_HISTORY: '/psychology/history',
+
+  // 手语视频生成（文本转手语）
+  TEXT_TO_SIGN: '/text-to-sign/generate',
+  TEXT_TO_SIGN_STATUS: '/text-to-sign/status',
+
+  // 手语识别（视频转文本）
+  SIGN_TO_TEXT: '/sign-to-text/recognize',
+  SIGN_TO_TEXT_STATUS: '/sign-to-text/status'
 };
 
 // 请求超时配置（毫秒）

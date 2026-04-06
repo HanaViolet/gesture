@@ -1,0 +1,512 @@
+/* ============================
+   整体容器
+   ============================ */
+.page-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F2F6FB;
+  overflow: hidden;
+}
+
+/* ============================
+   对话区
+   ============================ */
+.chat-area {
+  flex: 1;
+  min-height: 0;
+}
+
+.chat-list {
+  padding: 28rpx 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+/* 消息组：头像 + 内容列 */
+.msg-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.ai-group {
+  flex-direction: row;
+}
+
+.user-group {
+  flex-direction: row-reverse;
+}
+
+/* AI 头像 */
+.ai-avatar {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 3rpx solid #fff;
+  box-shadow: 0 4rpx 12rpx rgba(66,165,245,0.2);
+}
+
+/* 内容列 */
+.msg-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10rpx;
+  max-width: 72%;
+}
+
+.user-col {
+  align-items: flex-end;
+}
+
+/* ============================
+   气泡
+   ============================ */
+.bubble {
+  padding: 22rpx 26rpx;
+  border-radius: 20rpx;
+  word-break: break-all;
+}
+
+/* AI气泡：白色卡片，左下角尖 */
+.ai-bubble {
+  background: #FFFFFF;
+  border-bottom-left-radius: 4rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.07);
+}
+
+/* 用户气泡：蓝色渐变，右下角尖 */
+.user-bubble {
+  background: linear-gradient(135deg, #5BB8FF 0%, #3D8EF0 100%);
+  border-bottom-right-radius: 4rpx;
+  box-shadow: 0 4rpx 16rpx rgba(61,142,240,0.35);
+}
+
+.bubble-text {
+  font-size: 30rpx;
+  line-height: 1.8;
+  display: block;
+  letter-spacing: 0.5rpx;
+}
+
+.ai-bubble .bubble-text {
+  color: #2C3E50;
+}
+
+.user-bubble .bubble-text {
+  color: #FFFFFF;
+}
+
+/* ============================
+   手语 chip（气泡下方）
+   ============================ */
+.sign-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding-left: 4rpx;
+}
+
+.sign-chip {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: #FFF3E0;
+  border: 1.5rpx solid #FFCC80;
+  border-radius: 32rpx;
+  padding: 10rpx 22rpx 10rpx 16rpx;
+  transition: all 0.15s;
+}
+
+.sign-chip:active {
+  background: #FFE0B2;
+  transform: scale(0.95);
+}
+
+.sign-chip-emoji {
+  font-size: 30rpx;
+  line-height: 1;
+}
+
+.sign-chip-text {
+  font-size: 24rpx;
+  color: #E65100;
+  font-weight: 600;
+  letter-spacing: 0.5rpx;
+}
+
+/* ============================
+   时间戳
+   ============================ */
+.msg-time {
+  font-size: 22rpx;
+  color: #B0BEC5;
+}
+
+.time-right {
+  text-align: right;
+}
+
+/* ============================
+   输入中动画
+   ============================ */
+.typing-bubble {
+  padding: 24rpx 28rpx;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 10rpx;
+  align-items: center;
+}
+
+.dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #90CAF9;
+  animation: dotBounce 1.2s infinite ease-in-out;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+  30% { transform: translateY(-10rpx); opacity: 1; }
+}
+
+/* ============================
+   摄像头区
+   ============================ */
+.camera-area {
+  flex-shrink: 0;
+  height: 33vh;
+  margin: 0 20rpx 16rpx;
+  border-radius: 28rpx;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.14);
+}
+
+.camera-view {
+  width: 100%;
+  height: 100%;
+}
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+}
+
+/* 录制徽章 */
+.record-badge {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  padding: 12rpx 26rpx;
+  border-radius: 48rpx;
+  border: 1rpx solid rgba(255,255,255,0.15);
+}
+
+.record-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.record-badge.is-recording .record-dot {
+  background: #FF5252;
+  animation: blink 0.9s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+
+.record-text {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 识别结果 */
+.recog-result {
+  width: 100%;
+  background: rgba(255,255,255,0.94);
+  border-radius: 18rpx;
+  padding: 16rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.recog-label {
+  font-size: 22rpx;
+  color: #90A4AE;
+}
+
+.recog-text {
+  font-size: 30rpx;
+  color: #1565C0;
+  font-weight: 700;
+}
+
+/* 占位 */
+.camera-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  background: linear-gradient(145deg, #E8F4FD 0%, #EDE7F6 100%);
+  position: relative;
+}
+
+/* 脉冲动画圆环 */
+.camera-pulse-ring {
+  position: absolute;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(66,165,245,0.25);
+  animation: pulseRing 2s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.7); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.camera-icon {
+  font-size: 88rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.camera-hint {
+  font-size: 28rpx;
+  color: #78909C;
+  font-weight: 500;
+  letter-spacing: 1rpx;
+}
+
+/* ============================
+   底部输入栏
+   ============================ */
+.input-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 1rpx solid #EEF2F7;
+  box-shadow: 0 -6rpx 24rpx rgba(0,0,0,0.05);
+}
+
+.input-wrap {
+  flex: 1;
+  background: #F2F6FB;
+  border-radius: 44rpx;
+  border: 2rpx solid #E3ECF5;
+  overflow: hidden;
+}
+
+.text-input {
+  width: 100%;
+  height: 84rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  color: #2C3E50;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.send-btn {
+  flex-shrink: 0;
+  height: 84rpx;
+  padding: 0 36rpx;
+  background: #E3ECF5;
+  color: #B0BEC5;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 84rpx;
+  transition: all 0.2s;
+}
+
+.send-btn::after { border: none; }
+
+.send-btn.send-active {
+  background: linear-gradient(135deg, #5BB8FF 0%, #3D8EF0 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(61,142,240,0.4);
+}
+
+.send-btn:active { transform: scale(0.95); }
+
+/* ============================
+   手语浮层
+   ============================ */
+.sign-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 999;
+}
+
+.sign-modal-box {
+  width: 100%;
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  overflow: hidden;
+  box-shadow: 0 -8rpx 40rpx rgba(0,0,0,0.2);
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.sign-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx 16rpx;
+}
+
+/* 顶部拖拽指示条 */
+.sign-modal-header::before {
+  content: '';
+  position: absolute;
+  top: 14rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64rpx;
+  height: 8rpx;
+  background: #E0E0E0;
+  border-radius: 4rpx;
+}
+
+.sign-modal-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2C3E50;
+}
+
+.sign-modal-close {
+  width: 56rpx;
+  height: 56rpx;
+  background: #F5F5F5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-modal-close:active { background: #E0E0E0; }
+
+.close-icon {
+  font-size: 26rpx;
+  color: #757575;
+  line-height: 1;
+}
+
+.sign-video {
+  width: 100%;
+  height: 440rpx;
+  background: #000;
+}
+
+.sign-loading {
+  width: 100%;
+  height: 440rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  background: #F8F9FA;
+}
+
+.sign-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 5rpx solid #E3ECF5;
+  border-top-color: #5BB8FF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.sign-loading-text {
+  font-size: 28rpx;
+  color: #90A4AE;
+}
+
+.sign-original-text {
+  display: block;
+  padding: 20rpx 32rpx 32rpx;
+  font-size: 26rpx;
+  color: #90A4AE;
+  line-height: 1.6;
+  border-top: 1rpx solid #F0F0F0;
+}
+
+/* 确认开始按钮（摄像头开启后显示） */
+.confirm-start-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.confirm-start-btn {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: rgba(61, 142, 240, 0.88);
+  padding: 24rpx 48rpx;
+  border-radius: 64rpx;
+  border: 2rpx solid rgba(255,255,255,0.3);
+  box-shadow: 0 8rpx 32rpx rgba(61,142,240,0.4);
+}
+
+.confirm-btn-icon {
+  font-size: 32rpx;
+  color: #fff;
+  line-height: 1;
+}
+
+.confirm-btn-text {
+  font-size: 30rpx;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}

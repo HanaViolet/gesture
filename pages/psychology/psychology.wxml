@@ -1,0 +1,163 @@
+<!-- 心理健康AI对话页面 -->
+<view class="page-container">
+
+  <!-- 对话区 -->
+  <scroll-view
+    class="chat-area"
+    scroll-y
+    scroll-into-view="{{scrollToView}}"
+    scroll-with-animation
+    enhanced
+    bounces
+  >
+    <view class="chat-list">
+
+      <!-- 欢迎气泡 -->
+      <view class="msg-group ai-group" wx:if="{{messages.length === 0}}">
+        <image class="ai-avatar" src="/images/logo.png" mode="aspectFill"/>
+        <view class="msg-col">
+          <view class="bubble ai-bubble">
+            <text class="bubble-text">你好，我是你的心理健康助手。你可以用手语或文字和我交流，我会认真倾听你的感受。🌿</text>
+          </view>
+          <view class="sign-chip-row">
+            <view class="sign-chip" bindtap="onShowSign" data-text="你好，我是你的心理健康助手。你可以用手语或文字和我交流，我会认真倾听你的感受。">
+              <text class="sign-chip-emoji">🤟</text>
+              <text class="sign-chip-text">查看手语</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 消息列表 -->
+      <block wx:for="{{messages}}" wx:key="id">
+
+        <!-- AI 消息 -->
+        <view wx:if="{{item.role === 'ai'}}" class="msg-group ai-group" id="msg-{{item.id}}">
+          <image class="ai-avatar" src="/images/logo.png" mode="aspectFill"/>
+          <view class="msg-col">
+            <view class="bubble ai-bubble">
+              <text class="bubble-text">{{item.content}}</text>
+            </view>
+            <view class="sign-chip-row">
+              <view class="sign-chip" bindtap="onShowSign" data-text="{{item.content}}">
+                <text class="sign-chip-emoji">🤟</text>
+                <text class="sign-chip-text">查看手语</text>
+              </view>
+              <text class="msg-time">{{item.time}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 用户消息 -->
+        <view wx:if="{{item.role === 'user'}}" class="msg-group user-group" id="msg-{{item.id}}">
+          <view class="msg-col user-col">
+            <view class="bubble user-bubble">
+              <text class="bubble-text">{{item.content}}</text>
+            </view>
+            <text class="msg-time time-right">{{item.time}}</text>
+          </view>
+        </view>
+
+      </block>
+
+      <!-- AI 正在输入 -->
+      <view class="msg-group ai-group" wx:if="{{aiTyping}}">
+        <image class="ai-avatar" src="/images/logo.png" mode="aspectFill"/>
+        <view class="bubble ai-bubble typing-bubble">
+          <view class="typing-dots">
+            <view class="dot"></view>
+            <view class="dot"></view>
+            <view class="dot"></view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </scroll-view>
+
+  <!-- 摄像头区 -->
+  <view class="camera-area">
+    <camera
+      wx:if="{{cameraOn}}"
+      class="camera-view"
+      device-position="front"
+      flash="off"
+      binderror="onCameraError"
+    >
+      <cover-view class="camera-overlay">
+        <!-- 录制中状态 -->
+        <cover-view wx:if="{{recording}}">
+          <cover-view class="record-badge is-recording">
+            <cover-view class="record-dot"></cover-view>
+            <cover-view class="record-text">识别中…</cover-view>
+          </cover-view>
+        </cover-view>
+        <!-- 未录制：显示确认开始按钮 -->
+        <cover-view wx:else class="confirm-start-wrap">
+          <cover-view class="confirm-start-btn" bindtap="onToggleRecording">
+            <cover-view class="confirm-btn-icon">▶</cover-view>
+            <cover-view class="confirm-btn-text">确认开始手语对话</cover-view>
+          </cover-view>
+        </cover-view>
+        <!-- 识别结果 -->
+        <cover-view class="recog-result" wx:if="{{recognizedText}}">
+          <cover-view class="recog-label">已识别</cover-view>
+          <cover-view class="recog-text">{{recognizedText}}</cover-view>
+        </cover-view>
+      </cover-view>
+    </camera>
+
+    <!-- 摄像头未开启：占位 -->
+    <view wx:else class="camera-placeholder" bindtap="onToggleRecording">
+      <view class="camera-pulse-ring"></view>
+      <text class="camera-icon">📹</text>
+      <text class="camera-hint">点击开启手语输入</text>
+    </view>
+  </view>
+
+  <!-- 底部输入栏 -->
+  <view class="input-bar">
+    <view class="input-wrap">
+      <input
+        class="text-input"
+        placeholder="说点什么…"
+        placeholder-style="color:#B0BEC5"
+        value="{{textInput}}"
+        bindinput="onTextInput"
+        confirm-type="send"
+        bindconfirm="onSendText"
+        adjust-position
+      />
+    </view>
+    <button
+      class="send-btn {{textInput ? 'send-active' : ''}}"
+      bindtap="onSendText"
+      disabled="{{!textInput}}"
+    ><text style="line-height:normal">发送</text></button>
+  </view>
+
+  <!-- 手语浮层 -->
+  <view class="sign-modal" wx:if="{{showSignModal}}" bindtap="onHideSign">
+    <view class="sign-modal-box" catchtap="noop">
+      <view class="sign-modal-header">
+        <text class="sign-modal-title">手语播放</text>
+        <view class="sign-modal-close" bindtap="onHideSign">
+          <text class="close-icon">✕</text>
+        </view>
+      </view>
+      <view class="sign-loading" wx:if="{{signLoading}}">
+        <view class="sign-spinner"></view>
+        <text class="sign-loading-text">正在生成手语视频…</text>
+      </view>
+      <video
+        wx:else
+        class="sign-video"
+        src="{{signVideoUrl}}"
+        autoplay loop controls
+        show-center-play-btn="{{false}}"
+      ></video>
+      <text class="sign-original-text">{{currentSignText}}</text>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,90 @@
+<!-- 悬浮熊猫组件 -->
+
+<!-- 气泡弹窗（放在组件最外层，避免 pointer-events 问题） -->
+<view
+  class="popup-mask"
+  wx:if="{{showPopup}}"
+  bindtap="onCancel"
+>
+  <view class="bubble-popup" catchtap="noop">
+    <text class="popup-msg">{{currentMsg}}</text>
+    <view class="popup-actions">
+      <view class="popup-btn btn-cancel" bindtap="onCancel">
+        <text>下次吧</text>
+      </view>
+      <view class="popup-btn btn-confirm" bindtap="onConfirm">
+        <text>好呀！</text>
+      </view>
+    </view>
+  </view>
+  <!-- 气泡箭头指向右下角熊猫 -->
+  <view class="popup-tail"></view>
+</view>
+
+<!-- 悬浮熊猫按钮 -->
+<view
+  class="panda-float {{wobble ? 'wobble' : ''}}"
+  bindtap="onBearTap"
+>
+  <!-- 红点提示 -->
+  <view class="panda-badge" wx:if="{{showBadge}}"></view>
+
+  <!-- 熊猫 SVG（内嵌，精致设计） -->
+  <view class="panda-body">
+
+    <!-- 耳朵 -->
+    <view class="ear ear-l">
+      <view class="ear-inner"></view>
+    </view>
+    <view class="ear ear-r">
+      <view class="ear-inner"></view>
+    </view>
+
+    <!-- 脸 -->
+    <view class="face">
+
+      <!-- 眼眶（黑色大圆） -->
+      <view class="eye-patch eye-patch-l">
+        <!-- 眼白 -->
+        <view class="eyeball">
+          <!-- 瞳孔 -->
+          <view class="pupil">
+            <view class="highlight"></view>
+          </view>
+        </view>
+      </view>
+      <view class="eye-patch eye-patch-r">
+        <view class="eyeball">
+          <view class="pupil">
+            <view class="highlight"></view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 鼻子 -->
+      <view class="nose"></view>
+
+      <!-- 嘴巴 -->
+      <view class="mouth-wrap">
+        <view class="mouth-l"></view>
+        <view class="mouth-r"></view>
+      </view>
+
+      <!-- 腮红 -->
+      <view class="blush blush-l"></view>
+      <view class="blush blush-r"></view>
+
+    </view>
+
+    <!-- 竹子装饰 -->
+    <view class="bamboo">
+      <view class="bamboo-stem">
+        <view class="bamboo-node"></view>
+        <view class="bamboo-node"></view>
+      </view>
+      <view class="bamboo-leaf leaf-1"></view>
+      <view class="bamboo-leaf leaf-2"></view>
+    </view>
+
+  </view>
+</view>

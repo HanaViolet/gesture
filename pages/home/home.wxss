@@ -1382,3 +1382,58 @@
   z-index: 1000;
   background: #F8FAFF;
 }
+
+/* ===== 心理健康入口（听障版） ===== */
+.psychology-entry-section {
+  padding: 16rpx 32rpx;
+}
+
+.psychology-entry-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
+  border-radius: 20rpx;
+  padding: 28rpx 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(76, 175, 80, 0.12);
+}
+
+.psychology-entry-icon {
+  font-size: 56rpx;
+  margin-right: 24rpx;
+}
+
+.psychology-entry-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.psychology-entry-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2E7D32;
+}
+
+.psychology-entry-desc {
+  font-size: 24rpx;
+  color: #558B2F;
+}
+
+.psychology-entry-arrow {
+  font-size: 48rpx;
+  color: #81C784;
+  font-weight: 300;
+}
+
+/* ===== 心理助手按钮（普通版底部） ===== */
+.psychology-btn {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%) !important;
+  color: #2E7D32 !important;
+}
+
+.psychology-btn-icon {
+  font-size: 36rpx;
+  display: block;
+  margin-bottom: 4rpx;
+}

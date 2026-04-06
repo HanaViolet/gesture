@@ -840,6 +840,10 @@ Page({
     wx.navigateTo({ url: '/pages/settings/settings' });
   },
 
+  navigateToPsychology() {
+    wx.navigateTo({ url: '/pages/psychology/psychology' });
+  },
+
   navigateToSocietyCowork() {
     wx.navigateTo({ url: '/pages/society_cowork/society_cowork' });
   },

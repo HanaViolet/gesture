@@ -1,0 +1,370 @@
+/* ============================
+   全屏遮罩（用于捕获点击关闭弹窗）
+   ============================ */
+.popup-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  /* 透明遮罩，点击关闭 */
+}
+
+/* ============================
+   气泡弹窗
+   ============================ */
+.bubble-popup {
+  position: fixed;
+  right: 148rpx;
+  bottom: 200rpx;
+  width: 300rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx 24rpx 20rpx;
+  box-shadow: 0 8rpx 40rpx rgba(0,0,0,0.18);
+  z-index: 999;
+  animation: popupIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom right;
+}
+
+@keyframes popupIn {
+  from { opacity: 0; transform: scale(0.7) translateY(20rpx); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 气泡小尾巴（右下指向熊猫） */
+.popup-tail {
+  position: fixed;
+  right: 140rpx;
+  bottom: 188rpx;
+  width: 0;
+  height: 0;
+  border-top: 16rpx solid #FFFFFF;
+  border-left: 14rpx solid transparent;
+  border-right: 0px solid transparent;
+  z-index: 999;
+  filter: drop-shadow(2rpx 3rpx 4rpx rgba(0,0,0,0.08));
+}
+
+.popup-msg {
+  font-size: 28rpx;
+  color: #2C3E50;
+  line-height: 1.75;
+  display: block;
+  margin-bottom: 22rpx;
+  font-weight: 500;
+  letter-spacing: 0.3rpx;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.popup-btn {
+  flex: 1;
+  height: 68rpx;
+  border-radius: 34rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.popup-btn:active {
+  transform: scale(0.93);
+}
+
+.btn-cancel {
+  background: #F5F5F5;
+  color: #9E9E9E;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 14rpx rgba(67,160,71,0.35);
+}
+
+/* ============================
+   悬浮熊猫主体
+   ============================ */
+.panda-float {
+  position: fixed;
+  right: -10rpx;
+  bottom: 200rpx;
+  z-index: 900;
+  width: 128rpx;
+  height: 140rpx;
+  cursor: pointer;
+  animation: pandaFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes pandaFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%       { transform: translateY(-14rpx) rotate(2deg); }
+}
+
+.panda-float.wobble {
+  animation: pandaWobble 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes pandaWobble {
+  0%   { transform: rotate(0deg) scale(1); }
+  15%  { transform: rotate(-14deg) scale(1.14); }
+  30%  { transform: rotate(12deg) scale(1.09); }
+  45%  { transform: rotate(-9deg) scale(1.05); }
+  60%  { transform: rotate(6deg) scale(1.03); }
+  75%  { transform: rotate(-3deg) scale(1.01); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+/* ============================
+   红点提示
+   ============================ */
+.panda-badge {
+  position: absolute;
+  top: 4rpx;
+  right: 14rpx;
+  width: 24rpx;
+  height: 24rpx;
+  background: #FF5252;
+  border-radius: 50%;
+  border: 3rpx solid #fff;
+  z-index: 10;
+  animation: badgePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.25); }
+}
+
+/* ============================
+   熊猫身体（头部）
+   ============================ */
+.panda-body {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 108rpx;
+  height: 108rpx;
+}
+
+/* ============================
+   耳朵
+   ============================ */
+.ear {
+  position: absolute;
+  width: 38rpx;
+  height: 38rpx;
+  background: #1A1A1A;
+  border-radius: 50%;
+  top: -16rpx;
+  z-index: 1;
+}
+
+.ear-l { left: 6rpx; }
+.ear-r { right: 6rpx; }
+
+.ear-inner {
+  position: absolute;
+  width: 18rpx;
+  height: 18rpx;
+  background: #3A3A3A;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ============================
+   脸部（白色圆形）
+   ============================ */
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 108rpx;
+  height: 108rpx;
+  background: #F8F8F8;
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow:
+    0 6rpx 20rpx rgba(0,0,0,0.18),
+    inset 0 -4rpx 8rpx rgba(0,0,0,0.05);
+}
+
+/* ============================
+   眼眶（大黑圈）
+   ============================ */
+.eye-patch {
+  position: absolute;
+  width: 36rpx;
+  height: 32rpx;
+  background: #1A1A1A;
+  border-radius: 50%;
+  top: 28rpx;
+  z-index: 3;
+}
+
+.eye-patch-l {
+  left: 12rpx;
+  transform: rotate(-12deg);
+}
+
+.eye-patch-r {
+  right: 12rpx;
+  transform: rotate(12deg);
+}
+
+/* 眼白 */
+.eyeball {
+  position: absolute;
+  width: 22rpx;
+  height: 22rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+}
+
+/* 瞳孔 */
+.pupil {
+  position: absolute;
+  width: 13rpx;
+  height: 14rpx;
+  background: #1A1A1A;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -48%);
+}
+
+/* 高光 */
+.highlight {
+  position: absolute;
+  width: 5rpx;
+  height: 5rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+  top: 2rpx;
+  left: 2rpx;
+}
+
+/* ============================
+   鼻子
+   ============================ */
+.nose {
+  position: absolute;
+  width: 18rpx;
+  height: 12rpx;
+  background: #1A1A1A;
+  border-radius: 50%;
+  top: 58rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+/* ============================
+   嘴巴（W形微笑）
+   ============================ */
+.mouth-wrap {
+  position: absolute;
+  top: 68rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38rpx;
+  height: 16rpx;
+  display: flex;
+  z-index: 3;
+}
+
+.mouth-l {
+  width: 19rpx;
+  height: 12rpx;
+  border-bottom: 3.5rpx solid #333333;
+  border-left: 0;
+  border-right: 3.5rpx solid #333333;
+  border-radius: 0 0 12rpx 0;
+}
+
+.mouth-r {
+  width: 19rpx;
+  height: 12rpx;
+  border-bottom: 3.5rpx solid #333333;
+  border-left: 3.5rpx solid #333333;
+  border-right: 0;
+  border-radius: 0 0 0 12rpx;
+}
+
+/* ============================
+   腮红
+   ============================ */
+.blush {
+  position: absolute;
+  width: 24rpx;
+  height: 13rpx;
+  background: rgba(255, 153, 153, 0.45);
+  border-radius: 50%;
+  top: 64rpx;
+  z-index: 3;
+}
+
+.blush-l { left: 8rpx; }
+.blush-r { right: 8rpx; }
+
+/* ============================
+   竹子装饰
+   ============================ */
+.bamboo {
+  position: absolute;
+  left: -18rpx;
+  bottom: 12rpx;
+  width: 22rpx;
+  height: 68rpx;
+  z-index: 1;
+}
+
+.bamboo-stem {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10rpx;
+  height: 100%;
+  background: linear-gradient(180deg, #6DBE6D 0%, #4CAF50 100%);
+  border-radius: 5rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.bamboo-node {
+  width: 14rpx;
+  height: 4rpx;
+  background: #388E3C;
+  border-radius: 2rpx;
+}
+
+.bamboo-leaf {
+  position: absolute;
+  width: 28rpx;
+  height: 14rpx;
+  background: linear-gradient(135deg, #81C784 0%, #4CAF50 100%);
+  border-radius: 50% 0 50% 0;
+}
+
+.leaf-1 {
+  top: 8rpx;
+  left: 6rpx;
+  transform: rotate(-30deg);
+}
+
+.leaf-2 {
+  top: 32rpx;
+  left: -12rpx;
+  transform: rotate(20deg) scaleX(-1);
+}

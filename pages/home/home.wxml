@@ -91,6 +91,18 @@
         </view>
       </view>
 
+      <!-- 心理健康入口 -->
+      <view class="psychology-entry-section">
+        <view class="psychology-entry-card press" bindtap="navigateToPsychology">
+          <text class="psychology-entry-icon">💚</text>
+          <view class="psychology-entry-text">
+            <text class="psychology-entry-title">心理健康助手</text>
+            <text class="psychology-entry-desc">AI陪伴，倾听你的心声</text>
+          </view>
+          <text class="psychology-entry-arrow">›</text>
+        </view>
+      </view>
+
       <!-- 快捷短语按钮网格 - 莫兰迪胶囊按钮 -->
       <view class="deaf-quick-phrases">
         <view class="phrase-grid">
@@ -211,6 +223,10 @@
           <image src="/icons/keyboard.svg" mode="aspectFit" class="btn-icon"/>
           <text>{{texts.type}}</text>
         </button>
+        <button class="bottom-btn psychology-btn press" bindtap="navigateToPsychology">
+          <text class="psychology-btn-icon">💚</text>
+          <text>心理助手</text>
+        </button>
       </view>
     </block>
 
@@ -280,4 +296,8 @@
   <view class="viewer-fullscreen" wx:if="{{showViewer}}">
     <smpl-viewer text="{{viewerText}}" bind:close="closeViewer" />
   </view>
+
+  <!-- 悬浮小熊心理助手入口 -->
+  <bear-float />
+
 </view>
