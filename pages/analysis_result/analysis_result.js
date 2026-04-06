@@ -29,96 +29,81 @@ Page({
   callSignLanguageTranslation: function () {
     const that = this;
     const videoPath = this.data.videoPath;
-    this.setData({
-      progress: 20
-    });
+    this.setData({ progress: 20 });
     wx.uploadFile({
       url: `${API_BASE}${ENDPOINTS.SIGN_RECOGNITION}`,
       filePath: videoPath,
-      name: 'video',
+      name: 'file',
       success: (res) => {
-        const data = JSON.parse(res.data);
-        // API文档格式: { success: true, text: "翻译结果", message: "..." }
+        let data;
+        try { data = JSON.parse(res.data); } catch (e) {
+          wx.showToast({ title: '解析响应失败', icon: 'none' });
+          return;
+        }
         if (data.success && data.text) {
           console.log('手语翻译结果:', data.text);
           const resultText = data.text;
-          that.setData({
-            chatTexts: resultText,
-            progress: 50
-          });
-          // 自动进行男声和女声的语音生成
+          that.setData({ chatTexts: resultText, progress: 50 });
           const cleanedText = resultText.replace(/[？?]/g, '');
           that.generateBothVoices(cleanedText);
         } else {
           wx.showToast({
-            title: '手语翻译失败:' + (data.message || data.error || '未知错误'),
+            title: '手语翻译失败: ' + (data.message || '未知错误'),
             icon: 'none'
           });
         }
       },
       fail: (err) => {
-        wx.showToast({
-          title: '上传视频失败:' + err.errMsg,
-          icon: 'none'
-        });
+        wx.showToast({ title: '上传视频失败: ' + err.errMsg, icon: 'none' });
       }
     });
   },
+
   generateBothVoices: function (text) {
-    // 生成男声语音
-    this.callTextToSpeech(text, 'male', (maleUrl) => {
-      this.setData({
-        maleAudioUrl: maleUrl
-      });
-      // 生成女声语音
-      this.callTextToSpeech(text, 'female', (femaleUrl) => {
-        this.setData({
-          femaleAudioUrl: femaleUrl,
-          progress: 100
-        });
-      });
+    // 男声、女声并发请求（voice id 参考API文档音色列表）
+    this.callTextToSpeech(text, '4444', (maleUrl) => {
+      this.setData({ maleAudioUrl: maleUrl });
+    });
+    this.callTextToSpeech(text, '2222', (femaleUrl) => {
+      this.setData({ femaleAudioUrl: femaleUrl, progress: 100 });
     });
   },
-  callTextToSpeech: function (text, voiceType, callback) {
-    const voiceValue = voiceType ==='male'? '6652' : '1983';
+
+  // 新API: POST /tts，multipart/form-data，直接返回 WAV 音频流
+  // 微信小程序用 wx.request + responseType:'arraybuffer' + writeFile 写入临时路径
+  callTextToSpeech: function (text, voice, callback) {
+    const label = voice === '4444' ? '男声' : '女声';
     wx.request({
       url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: {
-        text: text,
-        prompt: "",
-        voice: voiceValue,
-        temperature: 0.1,
-        top_p: 0.7,
-        top_k: 20,
-        skip_refine: 1,
-        custom_voice: 0
-      },
+      header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: `text=${encodeURIComponent(text)}&voice=${voice}&speed=5`,
+      responseType: 'arraybuffer',
       success: (res) => {
-        if (res.data.code === 0) {
-          wx.showToast({
-            title: `${voiceType ==='male'? '男声' : '女声'}语音已合成`,
-            icon: 'success'
-          });
-          console.log(`${voiceType ==='male'? '男声' : '女声'}音频文件URL:`, res.data.audio_files[0].url);
-          if (callback) {
-            callback(res.data.audio_files[0].url);
-          }
-        } else {
-          wx.showToast({
-            title: `${voiceType ==='male'? '男声' : '女声'}语音合成失败:` + res.data.msg,
-            icon: 'none'
-          });
+        if (res.statusCode !== 200 || !res.data) {
+          wx.showToast({ title: `${label}语音合成失败`, icon: 'none' });
+          return;
         }
+        // 将 arraybuffer 写入临时文件
+        const fs = wx.getFileSystemManager();
+        const tmpPath = `${wx.env.USER_DATA_PATH}/tts_${voice}_${Date.now()}.wav`;
+        fs.writeFile({
+          filePath: tmpPath,
+          data: res.data,
+          encoding: 'binary',
+          success: () => {
+            console.log(`${label}音频已保存:`, tmpPath);
+            if (callback) callback(tmpPath);
+          },
+          fail: (err) => {
+            wx.showToast({ title: `${label}保存音频失败`, icon: 'none' });
+            console.error('writeFile失败:', err);
+          }
+        });
       },
       fail: (err) => {
-        wx.showToast({
-          title: `${voiceType ==='male'? '男声' : '女声'}请求失败:` + err.errMsg,
-          icon: 'none'
-        });
+        wx.showToast({ title: `${label}请求失败`, icon: 'none' });
+        console.error('TTS请求失败:', err);
       }
     });
   },

@@ -112,6 +112,7 @@ function chunkGifList() {
 Page({
   data: {
     mode: 'normal',
+    swiperIndex: 1,  // 0=听障，1=普通，与 mode 保持同步
     settings: {},
     texts: {},
     fontStyleVars: '',
@@ -178,6 +179,7 @@ Page({
     const settings = settingsManager.getSettings();
     this.setData({
       mode: settings.mode,
+      swiperIndex: settings.mode === 'deaf' ? 0 : 1,
       settings
     });
 
@@ -347,21 +349,25 @@ Page({
     });
   },
 
-  // 切换模式
+  // 切换模式（顶部胶囊点击）
   switchMode() {
     const newMode = this.data.mode === 'normal' ? 'deaf' : 'normal';
-    this.setData({ contentVisible: false });
-    setTimeout(() => {
-      // 保存设置到 settingsManager
-      settingsManager.set('mode', newMode);
-      this.setData({ mode: newMode, contentVisible: true });
-      this.updateTexts();
-      this.updateFontStyles();
-      wx.showToast({
-        title: newMode === 'normal' ? '已切换到普通模式' : '已切换到听障模式',
-        icon: 'none'
-      });
-    }, 180);
+    const newIndex = newMode === 'deaf' ? 0 : 1;
+    settingsManager.set('mode', newMode);
+    this.setData({ mode: newMode, swiperIndex: newIndex });
+    this.updateTexts();
+    this.updateFontStyles();
+  },
+
+  // 滑动切换（swiper 滑动完成后同步 mode）
+  onSwiperChange(e) {
+    const idx = e.detail.current;
+    const newMode = idx === 0 ? 'deaf' : 'normal';
+    if (newMode === this.data.mode) return;
+    settingsManager.set('mode', newMode);
+    this.setData({ mode: newMode, swiperIndex: idx });
+    this.updateTexts();
+    this.updateFontStyles();
   },
 
   onModeChange(e) {
@@ -421,20 +427,7 @@ Page({
     wx.vibrateShort({ type: 'light' });
 
     // 自动播放语音
-    const formData = `text=${encodeURIComponent(phrase.replace(/[？?]/g, ''))}&prompt=&voice=6652&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
-    wx.request({
-      url: `${API_BASE}${ENDPOINTS.TTS}`,
-      method: 'POST',
-      header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: formData,
-      success: (res) => {
-        if (res.data.code === 0 && res.data.audio_files && res.data.audio_files[0]) {
-          const audio = wx.createInnerAudioContext();
-          audio.src = res.data.audio_files[0].url;
-          audio.play();
-        }
-      }
-    });
+    this._playTTS(phrase);
   },
 
   // 发送文字
@@ -471,31 +464,10 @@ Page({
     this.saveDeafOutput(text);
 
     // 显示在当前输出区域
-    this.setData({
-      currentOutput: text,
-      inputText: ''  // 清空输入框
-    });
+    this.setData({ currentOutput: text, inputText: '' });
 
-    // TTS播放逻辑
-    const formData = `text=${encodeURIComponent(text.replace(/[？?]/g, ''))}&prompt=&voice=6652&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
-    wx.request({
-      url: `${API_BASE}${ENDPOINTS.TTS}`,
-      method: 'POST',
-      header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: formData,
-      success: (res) => {
-        if (res.data.code === 0 && res.data.audio_files && res.data.audio_files[0]) {
-          const audio = wx.createInnerAudioContext();
-          audio.src = res.data.audio_files[0].url;
-          audio.play();
-        } else {
-          wx.showToast({ title: '语音合成失败', icon: 'none' });
-        }
-      },
-      fail: () => {
-        wx.showToast({ title: '请求失败', icon: 'none' });
-      }
-    });
+    // 调用新TTS API
+    this._playTTS(text);
   },
 
   // 保存听障版输出到历史记录
@@ -524,24 +496,44 @@ Page({
     this.setData({ currentOutput: item.text });
 
     wx.vibrateShort({ type: 'light' });
+    this._playTTS(item.text);
+  },
 
-    const formData = `text=${encodeURIComponent(item.text.replace(/[？?]/g, ''))}&prompt=&voice=6652&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
+  // ===== 公共TTS播放（新API: POST /tts，返回WAV音频流）=====
+  _playTTS(text) {
+    const cleanText = text.replace(/[？?]/g, '').trim();
+    if (!cleanText) return;
     wx.request({
       url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: formData,
+      data: `text=${encodeURIComponent(cleanText)}&voice=2222&speed=5`,
+      responseType: 'arraybuffer',
       success: (res) => {
-        if (res.data.code === 0 && res.data.audio_files && res.data.audio_files[0]) {
-          const audio = wx.createInnerAudioContext();
-          audio.src = res.data.audio_files[0].url;
-          audio.play();
-        } else {
+        if (res.statusCode !== 200 || !res.data) {
           wx.showToast({ title: '语音合成失败', icon: 'none' });
+          return;
         }
+        const fs = wx.getFileSystemManager();
+        const tmpPath = `${wx.env.USER_DATA_PATH}/tts_${Date.now()}.wav`;
+        fs.writeFile({
+          filePath: tmpPath,
+          data: res.data,
+          encoding: 'binary',
+          success: () => {
+            const audio = wx.createInnerAudioContext();
+            audio.src = tmpPath;
+            audio.play();
+            audio.onError((e) => console.error('音频播放失败:', e));
+          },
+          fail: (err) => {
+            wx.showToast({ title: '保存音频失败', icon: 'none' });
+            console.error('writeFile失败:', err);
+          }
+        });
       },
       fail: () => {
-        wx.showToast({ title: '请求失败', icon: 'none' });
+        wx.showToast({ title: '语音请求失败', icon: 'none' });
       }
     });
   },

@@ -1,7 +1,10 @@
 .home-page {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg-primary, #f5f7fa);
+  overflow: hidden;
 }
 
 /* 生成手语按钮 - 白底黑字 */
@@ -26,11 +29,13 @@
 }
 
 .status-bar {
+  flex-shrink: 0;
   width: 100%;
 }
 
 /* ===== 顶部栏 ===== */
 .home-header {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -189,6 +194,26 @@
   color: var(--text-primary);
   box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
   font-weight: 500;
+}
+
+.home-swiper {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.swiper-page {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-scroll {
+  width: 100%;
+  height: 100%;
+}
+
+.home-body-inner {
+  padding: 0 32rpx 40rpx;
 }
 
 .home-body {

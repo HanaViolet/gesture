@@ -9,7 +9,7 @@
       <view class="brand-text">语见</view>
     </view>
     <view class="header-center">
-      <!-- 胶囊模式切换器 -->
+    <!-- 胶囊模式切换器 -->
       <view class="mode-switcher" bindtap="switchMode">
         <view class="mode-option {{mode === 'normal' ? 'active' : ''}}">
           <text>{{texts.normalMode}}</text>
@@ -31,232 +31,247 @@
     </view>
   </view>
 
-  <!-- 内容区 -->
-  <view class="home-body {{contentVisible ? 'fade-in' : 'fade-out'}}">
+  <!-- 内容区：swiper 实现左右滑动切换 -->
+  <!-- index 0 = 听障版，index 1 = 普通版 -->
+  <swiper
+    class="home-swiper"
+    current="{{swiperIndex}}"
+    bindchange="onSwiperChange"
+    duration="300"
+    easing-function="easeInOutCubic"
+  >
 
-    <!-- ===== 听障版 (mode === 'deaf') ===== -->
-    <block wx:if="{{mode === 'deaf'}}">
-      <!-- 当前输出显示区域 -->
-      <view class="deaf-output-area">
-        <view class="output-card">
-          <text class="output-label">{{texts.currentOutput}}</text>
-          <text class="output-text {{currentOutput ? 'has-content' : ''}}">{{currentOutput || texts.outputHint}}</text>
-        </view>
-      </view>
+    <!-- ===== swiper-item[0]：听障版 ===== -->
+    <swiper-item class="swiper-page">
+      <scroll-view class="swiper-scroll" scroll-y enhanced bounces>
+        <view class="home-body-inner">
 
-      <!-- 输入框区域 + 相机按钮 -->
-      <view class="deaf-input-area">
-        <view class="input-wrapper">
-          <input
-            class="deaf-input"
-            placeholder="{{texts.inputPlaceholder}}"
-            placeholder-class="input-placeholder"
-            value="{{inputText}}"
-            bindinput="onInputChange"
-            maxlength="200"
-            aria-label="{{texts.type}}"
-          />
-        </view>
-        <view class="input-actions">
-          <button class="action-btn camera-btn press" bindtap="openCameraForDeaf" aria-label="{{texts.shoot}}">
-            <image src="/icons/camera.svg" mode="aspectFit" class="btn-icon"/>
-            <text>{{texts.shoot}}</text>
-          </button>
-          <button class="action-btn tts-btn press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafTTS" aria-label="{{texts.play}}">
-            <image src="/icons/volume.svg" mode="aspectFit" class="btn-icon"/>
-            <text>{{texts.play}}</text>
-          </button>
-        </view>
-      </view>
+          <!-- 当前输出显示区域 -->
+          <view class="deaf-output-area">
+            <view class="output-card">
+              <text class="output-label">{{texts.currentOutput}}</text>
+              <text class="output-text {{currentOutput ? 'has-content' : ''}}">{{currentOutput || texts.outputHint}}</text>
+            </view>
+          </view>
 
-      <!-- 历史记录区域（最近3条） -->
-      <view class="deaf-history-area">
-        <text class="deaf-history-title">{{texts.recentUse}}（{{deafOutputHistory.length}}/3）</text>
-        <view class="deaf-history-list">
-          <block wx:for="{{[0, 1, 2]}}" wx:key="*this">
-            <view class="deaf-history-item {{!deafOutputHistory[item] ? 'empty' : ''}}">
-              <block wx:if="{{deafOutputHistory[item]}}">
-                <text class="deaf-history-text">{{deafOutputHistory[item].text}}</text>
-                <view class="deaf-history-actions">
-                  <view class="deaf-history-btn" bindtap="playHistoryItem" data-index="{{item}}">
-                    <image src="/icons/volume.svg" mode="aspectFit" class="deaf-history-icon"/>
-                    <text>{{texts.play}}</text>
+          <!-- 输入框区域 + 相机按钮 -->
+          <view class="deaf-input-area">
+            <view class="input-wrapper">
+              <input
+                class="deaf-input"
+                placeholder="{{texts.inputPlaceholder}}"
+                placeholder-class="input-placeholder"
+                value="{{inputText}}"
+                bindinput="onInputChange"
+                maxlength="200"
+                aria-label="{{texts.type}}"
+              />
+            </view>
+            <view class="input-actions">
+              <button class="action-btn camera-btn press" bindtap="openCameraForDeaf" aria-label="{{texts.shoot}}">
+                <image src="/icons/camera.svg" mode="aspectFit" class="btn-icon"/>
+                <text>{{texts.shoot}}</text>
+              </button>
+              <button class="action-btn tts-btn press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafTTS" aria-label="{{texts.play}}">
+                <image src="/icons/volume.svg" mode="aspectFit" class="btn-icon"/>
+                <text>{{texts.play}}</text>
+              </button>
+            </view>
+          </view>
+
+          <!-- 历史记录区域（最近3条） -->
+          <view class="deaf-history-area">
+            <text class="deaf-history-title">{{texts.recentUse}}（{{deafOutputHistory.length}}/3）</text>
+            <view class="deaf-history-list">
+              <block wx:for="{{[0, 1, 2]}}" wx:key="*this">
+                <view class="deaf-history-item {{!deafOutputHistory[item] ? 'empty' : ''}}">
+                  <block wx:if="{{deafOutputHistory[item]}}">
+                    <text class="deaf-history-text">{{deafOutputHistory[item].text}}</text>
+                    <view class="deaf-history-actions">
+                      <view class="deaf-history-btn" bindtap="playHistoryItem" data-index="{{item}}">
+                        <image src="/icons/volume.svg" mode="aspectFit" class="deaf-history-icon"/>
+                        <text>{{texts.play}}</text>
+                      </view>
+                    </view>
+                  </block>
+                  <block wx:else>
+                    <text class="deaf-history-text" style="color: #ccc;">-</text>
+                  </block>
+                </view>
+              </block>
+            </view>
+          </view>
+
+          <!-- 心理健康入口 -->
+          <view class="psychology-entry-section">
+            <view class="psychology-entry-card press" bindtap="navigateToPsychology">
+              <text class="psychology-entry-icon">💚</text>
+              <view class="psychology-entry-text">
+                <text class="psychology-entry-title">心理健康助手</text>
+                <text class="psychology-entry-desc">AI陪伴，倾听你的心声</text>
+              </view>
+              <text class="psychology-entry-arrow">›</text>
+            </view>
+          </view>
+
+          <!-- 快捷短语按钮网格 -->
+          <view class="deaf-quick-phrases">
+            <view class="phrase-grid">
+              <block wx:for="{{quickPhrases}}" wx:key="id">
+                <button
+                  class="btn-capsule {{item.type === 'urgent' ? 'btn-urgent' : (item.type === 'biz' ? 'btn-biz' : 'btn-daily')}} press {{isEditingPhrases ? 'editing' : ''}}"
+                  bindtap="{{isEditingPhrases ? 'deleteQuickPhrase' : 'selectQuickPhrase'}}"
+                  data-phrase="{{item.text}}"
+                  data-type="{{item.type}}"
+                  data-index="{{index}}"
+                  aria-label="{{item.text}}"
+                >
+                  <text class="btn-text">{{isEditingPhrases ? '× ' : ''}}{{item.text}}</text>
+                </button>
+              </block>
+              <button class="btn-capsule btn-add-phrase press" bindtap="showAddPhraseModal" wx:if="{{!isEditingPhrases}}">
+                <text class="btn-text">+</text>
+              </button>
+            </view>
+            <view class="phrase-edit-bar">
+              <text class="edit-hint" wx:if="{{isEditingPhrases}}">点击删除快捷短语</text>
+              <button class="edit-toggle-btn press" bindtap="toggleEditPhrases">
+                <text>{{isEditingPhrases ? '完成' : '管理'}}</text>
+              </button>
+            </view>
+          </view>
+
+        </view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- ===== swiper-item[1]：普通版 ===== -->
+    <swiper-item class="swiper-page">
+      <scroll-view class="swiper-scroll" scroll-y enhanced bounces>
+        <view class="home-body-inner">
+
+          <!-- 文本输入 + 生成手语区域 -->
+          <view class="normal-main card">
+            <text class="text-secondary normal-main-hint">{{texts.normalHint}}</text>
+            <text class="text-caption text-tertiary normal-main-sub">{{texts.normalSubHint}}</text>
+            <textarea
+              class="normal-textarea"
+              placeholder="{{texts.inputPlaceholder}}"
+              value="{{inputText}}"
+              bindinput="onInputChange"
+              maxlength="200"
+            />
+            <view class="normal-actions">
+              <button class="btn-capsule btn-brand press" bindtap="generateSignLanguage">
+                <image src="/icons/hand.svg" mode="aspectFit" class="btn-icon"/>
+                <text>{{texts.generateSign}}</text>
+              </button>
+            </view>
+          </view>
+
+          <view class="normal-secondary">
+            <view class="secondary-card card press" bindtap="openCamera">
+              <text class="card-title text-body">{{texts.signRecognition}}</text>
+              <text class="card-desc text-caption text-secondary">{{texts.signRecognitionDesc}}</text>
+              <view class="card-badge camera-badge">
+                <image src="/icons/camera.svg" mode="aspectFit" class="icon-small"/>
+              </view>
+            </view>
+            <view class="secondary-card card press" bindtap="openPopularization">
+              <text class="card-title text-body">{{texts.popularization}}</text>
+              <text class="card-desc text-caption text-secondary">{{texts.popularizationDesc}}</text>
+              <view class="card-badge learn-badge">
+                <image src="/icons/book.svg" mode="aspectFit" class="icon-small"/>
+              </view>
+            </view>
+          </view>
+
+          <!-- 正圆语音按钮区域 -->
+          <view class="normal-record-area">
+            <view class="record-wrapper">
+              <button
+                class="voice-btn {{isRecording ? 'recording' : ''}} press"
+                bindtouchstart="startRecording"
+                bindtouchend="stopRecording"
+                aria-label="{{texts.holdToSpeak}}"
+              >
+                <image src="/icons/mic.svg" mode="aspectFit" class="voice-icon"/>
+              </button>
+              <text class="record-hint">{{isRecording ? texts.releaseToSend : texts.holdToSpeak}}</text>
+            </view>
+          </view>
+
+          <!-- 最近使用记录区域 -->
+          <view class="normal-history-area">
+            <view class="history-header">
+              <text class="history-title">{{texts.recentUse}}</text>
+              <text class="history-subtitle">{{texts.maxRecords}}</text>
+              <view class="refresh-btn" bindtap="fetchBackendTasks">
+                <text>刷新</text>
+              </view>
+            </view>
+            <scroll-view class="history-list" scroll-y="true">
+              <block wx:if="{{backendTasks.length > 0}}">
+                <view class="task-section-title">云端历史</view>
+                <block wx:for="{{backendTasks}}" wx:key="id">
+                  <view class="history-item press" bindtap="viewBackendTask" data-task="{{item}}">
+                    <view class="history-content">
+                      <text class="history-text">{{item.text}}</text>
+                      <text class="history-time">{{item.time}}</text>
+                    </view>
+                    <view class="history-action">
+                      <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
+                      <text class="history-action-text">{{texts.view}}</text>
+                    </view>
                   </view>
+                </block>
+                <view class="divider" wx:if="{{smplHistory.length > 0}}"></view>
+              </block>
+
+              <block wx:if="{{smplHistory.length === 0 && backendTasks.length === 0}}">
+                <view class="history-empty">
+                  <text>{{texts.emptyHistory}}</text>
                 </view>
               </block>
-              <block wx:else>
-                <text class="deaf-history-text" style="color: #ccc;">-</text>
+              <block wx:if="{{smplHistory.length > 0}}">
+                <view class="task-section-title" wx:if="{{backendTasks.length > 0}}">本机最近</view>
+                <block wx:for="{{smplHistory}}" wx:key="id">
+                  <view class="history-item press" bindtap="viewHistoryItem" data-index="{{index}}">
+                    <view class="history-content">
+                      <text class="history-text">{{item.text}}</text>
+                      <text class="history-time">{{item.time}}</text>
+                    </view>
+                    <view class="history-action">
+                      <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
+                      <text class="history-action-text">{{texts.view}}</text>
+                    </view>
+                  </view>
+                </block>
               </block>
-            </view>
-          </block>
-        </view>
-      </view>
-
-      <!-- 心理健康入口 -->
-      <view class="psychology-entry-section">
-        <view class="psychology-entry-card press" bindtap="navigateToPsychology">
-          <text class="psychology-entry-icon">💚</text>
-          <view class="psychology-entry-text">
-            <text class="psychology-entry-title">心理健康助手</text>
-            <text class="psychology-entry-desc">AI陪伴，倾听你的心声</text>
+            </scroll-view>
           </view>
-          <text class="psychology-entry-arrow">›</text>
-        </view>
-      </view>
 
-      <!-- 快捷短语按钮网格 - 莫兰迪胶囊按钮 -->
-      <view class="deaf-quick-phrases">
-        <view class="phrase-grid">
-          <block wx:for="{{quickPhrases}}" wx:key="id">
-            <button
-              class="btn-capsule {{item.type === 'urgent' ? 'btn-urgent' : (item.type === 'biz' ? 'btn-biz' : 'btn-daily')}} press {{isEditingPhrases ? 'editing' : ''}}"
-              bindtap="{{isEditingPhrases ? 'deleteQuickPhrase' : 'selectQuickPhrase'}}"
-              data-phrase="{{item.text}}"
-              data-type="{{item.type}}"
-              data-index="{{index}}"
-              aria-label="{{item.text}}"
-            >
-              <text class="btn-text">{{isEditingPhrases ? '× ' : ''}}{{item.text}}</text>
+          <!-- 底部功能按钮 -->
+          <view class="normal-bottom-actions">
+            <button class="bottom-btn press" bindtap="showQuickPhrases" aria-label="{{texts.quickPhrases}}">
+              <image src="/icons/message.svg" mode="aspectFit" class="btn-icon"/>
+              <text>{{texts.quickPhrases}}</text>
             </button>
-          </block>
-          <!-- 添加自定义短语按钮 -->
-          <button class="btn-capsule btn-add-phrase press" bindtap="showAddPhraseModal" wx:if="{{!isEditingPhrases}}">
-            <text class="btn-text">+</text>
-          </button>
-        </view>
-        <!-- 编辑模式切换按钮 -->
-        <view class="phrase-edit-bar">
-          <text class="edit-hint" wx:if="{{isEditingPhrases}}">点击删除快捷短语</text>
-          <button class="edit-toggle-btn press" bindtap="toggleEditPhrases">
-            <text>{{isEditingPhrases ? '完成' : '管理'}}</text>
-          </button>
-        </view>
-      </view>
-    </block>
-
-    <!-- ===== 普通版 (mode === 'normal') ===== -->
-    <block wx:if="{{mode === 'normal'}}">
-      <!-- 文本输入 + 生成手语区域 -->
-      <view class="normal-main card">
-        <text class="text-secondary normal-main-hint">{{texts.normalHint}}</text>
-        <text class="text-caption text-tertiary normal-main-sub">{{texts.normalSubHint}}</text>
-        <textarea
-          class="normal-textarea"
-          placeholder="{{texts.inputPlaceholder}}"
-          value="{{inputText}}"
-          bindinput="onInputChange"
-          maxlength="200"
-        />
-        <view class="normal-actions">
-          <button class="btn-capsule btn-brand press" bindtap="generateSignLanguage">
-            <image src="/icons/hand.svg" mode="aspectFit" class="btn-icon"/>
-            <text>{{texts.generateSign}}</text>
-          </button>
-        </view>
-      </view>
-
-      <view class="normal-secondary">
-        <view class="secondary-card card press" bindtap="openCamera">
-          <text class="card-title text-body">{{texts.signRecognition}}</text>
-          <text class="card-desc text-caption text-secondary">{{texts.signRecognitionDesc}}</text>
-          <view class="card-badge camera-badge">
-            <image src="/icons/camera.svg" mode="aspectFit" class="icon-small"/>
+            <button class="bottom-btn press" bindtap="openKeyboard" aria-label="{{texts.type}}">
+              <image src="/icons/keyboard.svg" mode="aspectFit" class="btn-icon"/>
+              <text>{{texts.type}}</text>
+            </button>
+            <button class="bottom-btn psychology-btn press" bindtap="navigateToPsychology">
+              <text class="psychology-btn-icon">💚</text>
+              <text>心理助手</text>
+            </button>
           </view>
+
         </view>
-        <view class="secondary-card card press" bindtap="openPopularization">
-          <text class="card-title text-body">{{texts.popularization}}</text>
-          <text class="card-desc text-caption text-secondary">{{texts.popularizationDesc}}</text>
-          <view class="card-badge learn-badge">
-            <image src="/icons/book.svg" mode="aspectFit" class="icon-small"/>
-          </view>
-        </view>
-      </view>
+      </scroll-view>
+    </swiper-item>
 
-      <!-- 正圆语音按钮区域 -->
-      <view class="normal-record-area">
-        <view class="record-wrapper">
-          <button
-            class="voice-btn {{isRecording ? 'recording' : ''}} press"
-            bindtouchstart="startRecording"
-            bindtouchend="stopRecording"
-            aria-label="{{texts.holdToSpeak}}"
-          >
-            <image src="/icons/mic.svg" mode="aspectFit" class="voice-icon"/>
-          </button>
-          <text class="record-hint">{{isRecording ? texts.releaseToSend : texts.holdToSpeak}}</text>
-        </view>
-      </view>
-
-      <!-- 最近使用记录区域（后端历史任务 + 本地最近3次） -->
-      <view class="normal-history-area">
-        <view class="history-header">
-          <text class="history-title">{{texts.recentUse}}</text>
-          <text class="history-subtitle">{{texts.maxRecords}}</text>
-          <view class="refresh-btn" bindtap="fetchBackendTasks">
-            <text>刷新</text>
-          </view>
-        </view>
-        <scroll-view class="history-list" scroll-y="true">
-          <!-- 后端历史任务 -->
-          <block wx:if="{{backendTasks.length > 0}}">
-            <view class="task-section-title">云端历史</view>
-            <block wx:for="{{backendTasks}}" wx:key="id">
-              <view class="history-item press" bindtap="viewBackendTask" data-task="{{item}}">
-                <view class="history-content">
-                  <text class="history-text">{{item.text}}</text>
-                  <text class="history-time">{{item.time}}</text>
-                </view>
-                <view class="history-action">
-                  <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
-                  <text class="history-action-text">{{texts.view}}</text>
-                </view>
-              </view>
-            </block>
-            <view class="divider" wx:if="{{smplHistory.length > 0}}"></view>
-          </block>
-
-          <!-- 本地最近记录 -->
-          <block wx:if="{{smplHistory.length === 0 && backendTasks.length === 0}}">
-            <view class="history-empty">
-              <text>{{texts.emptyHistory}}</text>
-            </view>
-          </block>
-          <block wx:if="{{smplHistory.length > 0}}">
-            <view class="task-section-title" wx:if="{{backendTasks.length > 0}}">本机最近</view>
-            <block wx:for="{{smplHistory}}" wx:key="id">
-              <view class="history-item press" bindtap="viewHistoryItem" data-index="{{index}}">
-                <view class="history-content">
-                  <text class="history-text">{{item.text}}</text>
-                  <text class="history-time">{{item.time}}</text>
-                </view>
-                <view class="history-action">
-                  <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
-                  <text class="history-action-text">{{texts.view}}</text>
-                </view>
-              </view>
-            </block>
-          </block>
-        </scroll-view>
-      </view>
-
-      <!-- 底部功能按钮 -->
-      <view class="normal-bottom-actions">
-        <button class="bottom-btn press" bindtap="showQuickPhrases" aria-label="{{texts.quickPhrases}}">
-          <image src="/icons/message.svg" mode="aspectFit" class="btn-icon"/>
-          <text>{{texts.quickPhrases}}</text>
-        </button>
-        <button class="bottom-btn press" bindtap="openKeyboard" aria-label="{{texts.type}}">
-          <image src="/icons/keyboard.svg" mode="aspectFit" class="btn-icon"/>
-          <text>{{texts.type}}</text>
-        </button>
-        <button class="bottom-btn psychology-btn press" bindtap="navigateToPsychology">
-          <text class="psychology-btn-icon">💚</text>
-          <text>心理助手</text>
-        </button>
-      </view>
-    </block>
-
-  </view>
+  </swiper>
 
   <!-- 常用语弹窗 -->
   <view class="modal-mask" wx:if="{{showPhraseModal}}" bindtap="hidePhraseModal"></view>
