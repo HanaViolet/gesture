@@ -1,4 +1,5 @@
 const { API_BASE, ENDPOINTS } = require('../../utils/api');
+const i18n = require('../../i18n/index');
 
 Page({
   data: {
@@ -7,17 +8,29 @@ Page({
     images: [],
     selectedCategory: 'help',
     categories: [
-      { value: 'help', label: '求助' },
-      { value: 'share', label: '分享' },
-      { value: 'job', label: '就业' },
-      { value: 'life', label: '生活' }
+      { value: 'help', labelKey: 'forum.category.help' },
+      { value: 'share', labelKey: 'forum.category.share' },
+      { value: 'job', labelKey: 'forum.category.job' },
+      { value: 'life', labelKey: 'forum.category.life' }
     ],
     canSubmit: false,
     isSubmitting: false
   },
 
   onLoad() {
+    this.setData({ t: this.t.bind(this) });
     this.checkCanSubmit();
+  },
+
+  t(key) {
+    return i18n.t(key);
+  },
+
+  // 生成分布式头像URL（基于用户名生成一致的头像）
+  generateAvatar(seed) {
+    const styles = ['adventurer', 'avataaars', 'big-ears', 'bottts', 'fun-emoji', 'lorelei', 'notionists', 'open-peeps'];
+    const style = styles[seed.length % styles.length];
+    return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
   },
 
   onTitleChange(e) {
@@ -80,13 +93,15 @@ Page({
     // const result = await this.submitToServer({ title, content, images, category: selectedCategory });
 
     // 临时本地存储方案
+    const authorName = "我";
     const newPost = {
       id: Date.now(),
       title: title.trim(),
       content: content.trim(),
       images,
       category: selectedCategory,
-      author: "我",
+      author: authorName,
+      avatar: this.generateAvatar(authorName + Date.now()), // 为自己生成独特头像
       time: this.formatTime(new Date()),
       likes: 0,
       comments: [],
@@ -98,7 +113,7 @@ Page({
     wx.setStorageSync('posts', posts);
 
     wx.hideLoading();
-    wx.showToast({ title: '发布成功', icon: 'success' });
+    wx.showToast({ title: i18n.t('forum.create.success'), icon: 'success' });
 
     setTimeout(() => {
       wx.navigateBack();

@@ -1,3 +1,5 @@
+const { API_BASE, ENDPOINTS } = require('../../utils/api');
+
 Page({
   data: {
     chatTexts: '',
@@ -27,7 +29,7 @@ Page({
       progress: 20
     });
     wx.uploadFile({
-      url: 'http://0.0.0.0:6006/inference',
+      url: `${API_BASE}${ENDPOINTS.SIGN_RECOGNITION}`,
       filePath: videoPath,
       name: 'video',
       success: (res) => {
@@ -40,7 +42,7 @@ Page({
             progress: 50
           });
           // 自动进行男声和女声的语音生成
-          const cleanedText= data.predictions.replace(/[？?]/g,'');
+          const cleanedText = resultText.replace(/[？?]/g, '');
           that.generateBothVoices(cleanedText);
         } else {
           wx.showToast({
@@ -75,7 +77,7 @@ Page({
   callTextToSpeech: function (text, voiceType, callback) {
     const voiceValue = voiceType ==='male'? '6652' : '1983';
     wx.request({
-      url: 'http://127.0.0.1:9966/tts',
+      url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -118,11 +120,15 @@ Page({
   playMaleVoice: function (e) {
     const audioUrl = this.data.maleAudioUrl;
     if (audioUrl) {
+      // 先销毁旧的男声音频上下文
+      if (this.data.maleAudioContext) {
+        this.data.maleAudioContext.destroy();
+      }
       const audioContext = wx.createInnerAudioContext();
       audioContext.src = audioUrl;
       audioContext.play();
       this.setData({
-        audioContext: audioContext,
+        maleAudioContext: audioContext,
         selectedVoice: 'male',
       });
     } else {
@@ -135,11 +141,15 @@ Page({
   playFemaleVoice: function (e) {
     const audioUrl = this.data.femaleAudioUrl;
     if (audioUrl) {
+      // 先销毁旧的女声音频上下文
+      if (this.data.femaleAudioContext) {
+        this.data.femaleAudioContext.destroy();
+      }
       const audioContext = wx.createInnerAudioContext();
       audioContext.src = audioUrl;
       audioContext.play();
       this.setData({
-        audioContext: audioContext,
+        femaleAudioContext: audioContext,
         selectedVoice: 'female',
       });
     } else {
@@ -186,9 +196,16 @@ Page({
     });
   },
   onUnload: function () {
-    const audioContext = this.data.audioContext;
-    if (audioContext) {
-      audioContext.destroy();
+    // 销毁所有音频上下文，防止内存泄漏
+    if (this.data.maleAudioContext) {
+      this.data.maleAudioContext.destroy();
+    }
+    if (this.data.femaleAudioContext) {
+      this.data.femaleAudioContext.destroy();
+    }
+    // 兼容旧代码
+    if (this.data.audioContext) {
+      this.data.audioContext.destroy();
     }
   }
 });

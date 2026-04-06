@@ -48,15 +48,15 @@ module.exports = {
 
   // Schnellphrasen
   'phrase.help': 'Ich brauche Hilfe',
+  'phrase.ambulance': 'Rufen Sie einen Krankenwagen',
   'phrase.thanks': 'Danke',
+  'phrase.morning': 'Guten Morgen',
   'phrase.hello': 'Hallo',
+  'phrase.business': 'Ich möchte Geschäfte machen',
+  'phrase.id': 'Bitte Ausweis zeigen',
+  'phrase.price': 'Wie viel kostet das?',
+  'phrase.bye': 'Auf Wiedersehen',
   'phrase.sorry': 'Entschuldigung',
-  'phrase.yes': 'Ja',
-  'phrase.no': 'Nein',
-  'phrase.water': 'Ich brauche Wasser',
-  'phrase.bathroom': 'Wo ist die Toilette?',
-  'phrase.emergency': 'Das ist ein Notfall',
-  'phrase.hospital': 'Bitte bringen Sie mich ins Krankenhaus',
 
   // Einstellungen
   'settings.title': 'Einstellungen',
@@ -73,6 +73,9 @@ module.exports = {
   'settings.about': 'Über',
   'settings.aboutApp': 'Über HerzStimme',
   'settings.feedback': 'Feedback',
+  'settings.personal': 'Persönlich',
+  'settings.profile': 'Über Mich',
+  'settings.notSet': 'Nicht festgelegt',
   'settings.help': 'Hilfe',
   'settings.tutorial': 'Anleitung',
   'settings.selectLanguage': 'Sprache auswählen',
@@ -99,5 +102,58 @@ module.exports = {
 
   // Über
   'about.title': 'Über HerzStimme',
-  'about.content': 'HerzStimme ist ein Mini-Programm für barrierefreie Kommunikation, das gehörlosen und sehbehinderten Nutzern helfen soll, sich im Alltag besser zu verständigen.\n\nVersion: 1.0.0'
+  'about.content': 'HerzStimme ist ein Mini-Programm für barrierefreie Kommunikation, das gehörlosen und sehbehinderten Nutzern helfen soll, sich im Alltag besser zu verständigen.\n\nVersion: 1.0.0',
+
+  // Forum
+  'forum.title': 'Community',
+  'forum.subtitle': 'Erfahrungen teilen, Hilfe suchen, sich vernetzen',
+  'forum.empty': 'Noch keine Beiträge. Seien Sie der Erste!',
+  'forum.newPost': 'Neuer Beitrag',
+  'forum.category.share': 'Teilen',
+  'forum.category.help': 'Hilfe',
+  'forum.category.job': 'Arbeit',
+  'forum.category.life': 'Leben',
+  'forum.likes': 'Gefällt mir',
+  'forum.comments': 'Kommentare',
+  'forum.commentPlaceholder': 'Kommentar schreiben...',
+  'forum.commentEmpty': 'Noch keine Kommentare. Seien Sie der Erste!',
+  'forum.send': 'Senden',
+  'forum.create.title': 'Beitrag erstellen',
+  'forum.create.category': 'Kategorie wählen',
+  'forum.create.titlePlaceholder': 'Titel eingeben',
+  'forum.create.contentPlaceholder': 'Teilen Sie Ihre Bedürfnisse oder Erfahrungen...',
+  'forum.create.addImage': 'Bild hinzufügen',
+  'forum.create.submit': 'Veröffentlichen',
+  'forum.create.success': 'Erfolgreich veröffentlicht',
+  'forum.detail.title': 'Beitragsdetails',
+
+  // Home General
+  'home.mode.normal': 'Standard',
+  'home.mode.deaf': 'Gehörlosen',
+  'home.community': 'Community',
+  'home.settings': 'Einstellungen',
+  'home.currentOutput': 'Aktuelle Ausgabe',
+  'home.outputHint': 'Text oder Gebärde erscheint hier',
+  'home.play': 'Abspielen',
+  'home.shoot': 'Aufnehmen',
+  'home.send': 'Senden',
+  'home.cancel': 'Abbrechen',
+  'home.close': 'Schließen',
+  'home.phrases.title': 'Schnellphrasen',
+  'home.keyboard.title': 'Text eingeben',
+  'home.recentUse': 'Zuletzt verwendet',
+  'home.maxRecords': 'Max. 3 Einträge',
+  'home.emptyHistory': 'Generierte Gebärde erscheint hier',
+  'home.view': 'Ansehen',
+  'home.quickPhrases': 'Phrasen',
+  'home.type': 'Tippen',
+
+  // Normal Mode
+  'home.normal.hint': 'Text eingeben, Gebärde generieren',
+  'home.normal.subHint': 'Unterstützt Chinesisch, Englisch, Deutsch',
+  'home.normal.generateSign': 'Gebärde erstellen',
+  'home.normal.signRecognition': 'Gebärden­erkennung',
+  'home.normal.signRecognitionDesc': 'Video aufnehmen oder hochladen',
+  'home.normal.popularization': 'Gebärdensprache',
+  'home.normal.popularizationDesc': 'Erfahren Sie mehr über die Kultur'
 }

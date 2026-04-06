@@ -1,0 +1,146 @@
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <text class="header-title">关于我</text>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- 头像区域 -->
+  <view class="avatar-section">
+    <view class="avatar-wrapper" bindtap="chooseAvatar">
+      <image
+        wx:if="{{profile.avatar}}"
+        src="{{profile.avatar}}"
+        class="avatar"
+        mode="aspectFill"
+      />
+      <view wx:else class="avatar-placeholder">
+        <text class="avatar-icon">📷</text>
+      </view>
+      <view class="avatar-edit">
+        <text class="avatar-edit-text">更换头像</text>
+      </view>
+    </view>
+    <text class="avatar-hint">点击更换头像</text>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <!-- 昵称 -->
+    <view class="form-item">
+      <text class="form-label">昵称</text>
+      <input
+        class="form-input"
+        placeholder="请输入昵称"
+        value="{{profile.nickname}}"
+        bindinput="onNicknameInput"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 性别 -->
+    <view class="form-item" bindtap="showGenderPicker">
+      <text class="form-label">性别</text>
+      <view class="form-value {{profile.gender ? '' : 'placeholder'}}">
+        <text>{{profile.gender ? getGenderLabel(profile.gender) : '请选择性别'}}</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <!-- 年龄 -->
+    <view class="form-item">
+      <text class="form-label">年龄</text>
+      <input
+        class="form-input"
+        placeholder="请输入年龄"
+        value="{{profile.age}}"
+        bindinput="onAgeInput"
+        type="number"
+        maxlength="3"
+      />
+    </view>
+
+    <!-- 个人简介 -->
+    <view class="form-item form-item-textarea">
+      <text class="form-label">个人简介</text>
+      <textarea
+        class="form-textarea"
+        placeholder="介绍一下自己吧..."
+        value="{{profile.bio}}"
+        bindinput="onBioInput"
+        maxlength="200"
+        auto-height
+      />
+      <text class="textarea-counter">{{profile.bio.length || 0}}/200</text>
+    </view>
+  </view>
+
+  <!-- 联系信息 -->
+  <view class="section-title">联系信息（选填）</view>
+  <view class="form-section">
+    <!-- 手机号 -->
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <input
+        class="form-input"
+        placeholder="请输入手机号"
+        value="{{profile.phone}}"
+        bindinput="onPhoneInput"
+        type="number"
+        maxlength="11"
+      />
+    </view>
+
+    <!-- 邮箱 -->
+    <view class="form-item">
+      <text class="form-label">邮箱</text>
+      <input
+        class="form-input"
+        placeholder="请输入邮箱"
+        value="{{profile.email}}"
+        bindinput="onEmailInput"
+        maxlength="50"
+      />
+    </view>
+  </view>
+
+  <!-- 按钮区域 -->
+  <view class="btn-section">
+    <button
+      class="btn-save {{isSaving ? 'loading' : ''}}"
+      bindtap="saveProfile"
+    >
+      <text wx:if="{{!isSaving}}">保存</text>
+      <text wx:else>保存中...</text>
+    </button>
+    <button class="btn-clear" bindtap="clearProfile">
+      清空信息
+    </button>
+  </view>
+</view>
+
+<!-- 性别选择器 -->
+<view class="picker-mask {{showGenderPicker ? 'show' : ''}}" bindtap="hideGenderPicker">
+  <view class="picker-content {{showGenderPicker ? 'show' : ''}}" catchtap="preventBubble">
+    <view class="picker-header">
+      <text class="picker-title">选择性别</text>
+      <text class="picker-close" bindtap="hideGenderPicker">✕</text>
+    </view>
+    <view class="picker-list">
+      <view
+        class="picker-item {{profile.gender === item.value ? 'active' : ''}}"
+        wx:for="{{genderOptions}}"
+        wx:key="value"
+        data-value="{{item.value}}"
+        bindtap="selectGender"
+      >
+        <text class="picker-item-icon">{{item.icon}}</text>
+        <text class="picker-item-text">{{item.label}}</text>
+        <text class="picker-item-check" wx:if="{{profile.gender === item.value}}">✓</text>
+      </view>
+    </view>
+  </view>
+</view>

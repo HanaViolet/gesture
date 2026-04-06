@@ -4,7 +4,7 @@
     <view class="category-tag">{{post.category || '分享'}}</view>
     <view class="title">{{post.title}}</view>
     <view class="author-info">
-      <view class="author-avatar"></view>
+      <image class="author-avatar" src="{{post.avatar}}" mode="aspectFill"/>
       <view class="author-meta">
         <view class="author-name">{{post.author}}</view>
         <view class="author-time">{{post.time}}</view>
@@ -38,20 +38,20 @@
   <!-- 评论区 -->
   <view class="comment-section">
     <view class="comment-header">
-      评论
+      {{t('forum.comments')}}
       <text class="comment-count">({{post.commentCount}})</text>
     </view>
 
     <view class="comment-list">
       <block wx:if="{{post.commentCount == 0}}">
         <view class="comment-empty">
-          <text>暂无评论，来说两句吧～</text>
+          <text>{{t('forum.commentEmpty')}}</text>
         </view>
       </block>
 
       <block wx:for="{{post.comments}}" wx:key="id">
         <view class="comment-item">
-          <view class="comment-avatar"></view>
+          <image class="comment-avatar" src="{{item.avatar}}" mode="aspectFill"/>
           <view class="comment-body">
             <view>
               <text class="comment-author">{{item.user || '匿名'}}</text>
@@ -68,14 +68,14 @@
   <view class="comment-input-area">
     <input
       class="comment-input"
-      placeholder="请输入评论..."
+      placeholder="{{t('forum.commentPlaceholder')}}"
       value="{{commentInput}}"
       bindinput="onCommentInput"
       confirm-type="send"
       bindconfirm="submitComment"
     />
     <view class="send-btn {{!commentInput ? 'disabled' : ''}}" bindtap="submitComment">
-      发送
+      {{t('forum.send')}}
     </view>
   </view>
 </view>

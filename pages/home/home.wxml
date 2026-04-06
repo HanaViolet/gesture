@@ -11,17 +11,21 @@
       <!-- 胶囊模式切换器 -->
       <view class="mode-switcher" bindtap="switchMode">
         <view class="mode-option {{mode === 'normal' ? 'active' : ''}}">
-          <text>普通版</text>
+          <text>{{texts.normalMode}}</text>
         </view>
         <view class="mode-option {{mode === 'deaf' ? 'active' : ''}}">
-          <text>听障版</text>
+          <text>{{texts.deafMode}}</text>
         </view>
       </view>
     </view>
     <view class="header-right">
-      <view class="settings-capsule press" bindtap="navigateToSettings" aria-label="设置">
+      <view class="header-btn community-capsule press" bindtap="navigateToForum" aria-label="{{texts.community}}">
+        <image src="/icons/message.svg" class="header-icon" mode="aspectFit"/>
+        <text class="header-btn-text">{{texts.community}}</text>
+      </view>
+      <view class="settings-capsule press" bindtap="navigateToSettings" aria-label="{{texts.settings}}">
         <image src="/icons/setting.svg" class="settings-icon" mode="aspectFit"/>
-        <text class="settings-text">设置</text>
+        <text class="settings-text">{{texts.settings}}</text>
       </view>
     </view>
   </view>
@@ -34,14 +38,39 @@
       <!-- 当前输出显示区域 -->
       <view class="deaf-output-area">
         <view class="output-card">
-          <text class="output-label">当前输出</text>
-          <text class="output-text {{currentOutput ? 'has-content' : ''}}">{{currentOutput || '输入文字或拍摄手语后将显示在这里'}}</text>
+          <text class="output-label">{{texts.currentOutput}}</text>
+          <text class="output-text {{currentOutput ? 'has-content' : ''}}">{{currentOutput || texts.outputHint}}</text>
+        </view>
+      </view>
+
+      <!-- 输入框区域 + 相机按钮 -->
+      <view class="deaf-input-area">
+        <view class="input-wrapper">
+          <input
+            class="deaf-input"
+            placeholder="{{texts.inputPlaceholder}}"
+            placeholder-class="input-placeholder"
+            value="{{inputText}}"
+            bindinput="onInputChange"
+            maxlength="200"
+            aria-label="{{texts.type}}"
+          />
+        </view>
+        <view class="input-actions">
+          <button class="action-btn camera-btn press" bindtap="openCameraForDeaf" aria-label="{{texts.shoot}}">
+            <image src="/icons/camera.svg" mode="aspectFit" class="btn-icon"/>
+            <text>{{texts.shoot}}</text>
+          </button>
+          <button class="action-btn tts-btn press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafTTS" aria-label="{{texts.play}}">
+            <image src="/icons/volume.svg" mode="aspectFit" class="btn-icon"/>
+            <text>{{texts.play}}</text>
+          </button>
         </view>
       </view>
 
       <!-- 历史记录区域（最近3条） -->
       <view class="deaf-history-area">
-        <text class="deaf-history-title">最近使用（{{deafOutputHistory.length}}/3）</text>
+        <text class="deaf-history-title">{{texts.recentUse}}（{{deafOutputHistory.length}}/3）</text>
         <view class="deaf-history-list">
           <block wx:for="{{[0, 1, 2]}}" wx:key="*this">
             <view class="deaf-history-item {{!deafOutputHistory[item] ? 'empty' : ''}}">
@@ -50,12 +79,12 @@
                 <view class="deaf-history-actions">
                   <view class="deaf-history-btn" bindtap="playHistoryItem" data-index="{{item}}">
                     <image src="/icons/volume.svg" mode="aspectFit" class="deaf-history-icon"/>
-                    <text>播放</text>
+                    <text>{{texts.play}}</text>
                   </view>
                 </view>
               </block>
               <block wx:else>
-                <text class="deaf-history-text" style="color: #ccc;">空</text>
+                <text class="deaf-history-text" style="color: #ccc;">-</text>
               </block>
             </view>
           </block>
@@ -67,39 +96,26 @@
         <view class="phrase-grid">
           <block wx:for="{{quickPhrases}}" wx:key="id">
             <button
-              class="btn-capsule {{item.type === 'urgent' ? 'btn-urgent' : (item.type === 'biz' ? 'btn-biz' : 'btn-daily')}} press"
-              bindtap="selectQuickPhrase"
+              class="btn-capsule {{item.type === 'urgent' ? 'btn-urgent' : (item.type === 'biz' ? 'btn-biz' : 'btn-daily')}} press {{isEditingPhrases ? 'editing' : ''}}"
+              bindtap="{{isEditingPhrases ? 'deleteQuickPhrase' : 'selectQuickPhrase'}}"
               data-phrase="{{item.text}}"
               data-type="{{item.type}}"
+              data-index="{{index}}"
               aria-label="{{item.text}}"
             >
-              <text class="btn-text">{{item.text}}</text>
+              <text class="btn-text">{{isEditingPhrases ? '× ' : ''}}{{item.text}}</text>
             </button>
           </block>
-        </view>
-      </view>
-
-      <!-- 输入框区域 + 相机按钮 -->
-      <view class="deaf-input-area">
-        <view class="input-wrapper">
-          <input
-            class="deaf-input"
-            placeholder="输入文字或点击相机拍摄手语..."
-            placeholder-class="input-placeholder"
-            value="{{inputText}}"
-            bindinput="onInputChange"
-            maxlength="200"
-            aria-label="输入文字"
-          />
-        </view>
-        <view class="input-actions">
-          <button class="action-btn camera-btn press" bindtap="openCameraForDeaf" aria-label="拍摄手语">
-            <image src="/icons/camera.svg" mode="aspectFit" class="btn-icon"/>
-            <text>拍摄</text>
+          <!-- 添加自定义短语按钮 -->
+          <button class="btn-capsule btn-add-phrase press" bindtap="showAddPhraseModal" wx:if="{{!isEditingPhrases}}">
+            <text class="btn-text">+</text>
           </button>
-          <button class="action-btn tts-btn press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafTTS" aria-label="播放语音">
-            <image src="/icons/volume.svg" mode="aspectFit" class="btn-icon"/>
-            <text>播放</text>
+        </view>
+        <!-- 编辑模式切换按钮 -->
+        <view class="phrase-edit-bar">
+          <text class="edit-hint" wx:if="{{isEditingPhrases}}">点击删除快捷短语</text>
+          <button class="edit-toggle-btn press" bindtap="toggleEditPhrases">
+            <text>{{isEditingPhrases ? '完成' : '管理'}}</text>
           </button>
         </view>
       </view>
@@ -109,11 +125,11 @@
     <block wx:if="{{mode === 'normal'}}">
       <!-- 文本输入 + 生成手语区域 -->
       <view class="normal-main card">
-        <text class="text-secondary normal-main-hint">输入文字，生成手语动画</text>
-        <text class="text-caption text-tertiary normal-main-sub">支持中文、英文、德文</text>
+        <text class="text-secondary normal-main-hint">{{texts.normalHint}}</text>
+        <text class="text-caption text-tertiary normal-main-sub">{{texts.normalSubHint}}</text>
         <textarea
           class="normal-textarea"
-          placeholder="{{texts.inputPlaceholder || '请输入要转换的文字...'}}"
+          placeholder="{{texts.inputPlaceholder}}"
           value="{{inputText}}"
           bindinput="onInputChange"
           maxlength="200"
@@ -121,22 +137,22 @@
         <view class="normal-actions">
           <button class="btn-capsule btn-brand press" bindtap="generateSignLanguage">
             <image src="/icons/hand.svg" mode="aspectFit" class="btn-icon"/>
-            <text>生成手语</text>
+            <text>{{texts.generateSign}}</text>
           </button>
         </view>
       </view>
 
       <view class="normal-secondary">
         <view class="secondary-card card press" bindtap="openCamera">
-          <text class="card-title text-body">手语识别</text>
-          <text class="card-desc text-caption text-secondary">拍摄或上传手语视频</text>
+          <text class="card-title text-body">{{texts.signRecognition}}</text>
+          <text class="card-desc text-caption text-secondary">{{texts.signRecognitionDesc}}</text>
           <view class="card-badge camera-badge">
             <image src="/icons/camera.svg" mode="aspectFit" class="icon-small"/>
           </view>
         </view>
         <view class="secondary-card card press" bindtap="openPopularization">
-          <text class="card-title text-body">手语科普</text>
-          <text class="card-desc text-caption text-secondary">了解手语文化知识</text>
+          <text class="card-title text-body">{{texts.popularization}}</text>
+          <text class="card-desc text-caption text-secondary">{{texts.popularizationDesc}}</text>
           <view class="card-badge learn-badge">
             <image src="/icons/book.svg" mode="aspectFit" class="icon-small"/>
           </view>
@@ -150,24 +166,24 @@
             class="voice-btn {{isRecording ? 'recording' : ''}} press"
             bindtouchstart="startRecording"
             bindtouchend="stopRecording"
-            aria-label="按住说话"
+            aria-label="{{texts.holdToSpeak}}"
           >
             <image src="/icons/mic.svg" mode="aspectFit" class="voice-icon"/>
           </button>
-          <text class="record-hint">{{isRecording ? '松开结束' : '按住说话，松开发送'}}</text>
+          <text class="record-hint">{{isRecording ? texts.releaseToSend : texts.holdToSpeak}}</text>
         </view>
       </view>
 
       <!-- 最近使用记录区域（最近3次SMPL生成） -->
       <view class="normal-history-area">
         <view class="history-header">
-          <text class="history-title">最近使用</text>
-          <text class="history-subtitle">最多保存3条</text>
+          <text class="history-title">{{texts.recentUse}}</text>
+          <text class="history-subtitle">{{texts.maxRecords}}</text>
         </view>
         <scroll-view class="history-list" scroll-y="true">
           <block wx:if="{{smplHistory.length === 0}}">
             <view class="history-empty">
-              <text>输入文字生成手语动画后，将显示在这里</text>
+              <text>{{texts.emptyHistory}}</text>
             </view>
           </block>
           <block wx:for="{{smplHistory}}" wx:key="id">
@@ -178,7 +194,7 @@
               </view>
               <view class="history-action">
                 <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
-                <text class="history-action-text">查看</text>
+                <text class="history-action-text">{{texts.view}}</text>
               </view>
             </view>
           </block>
@@ -187,17 +203,13 @@
 
       <!-- 底部功能按钮 -->
       <view class="normal-bottom-actions">
-        <button class="bottom-btn press" bindtap="showQuickPhrases" aria-label="常用语">
+        <button class="bottom-btn press" bindtap="showQuickPhrases" aria-label="{{texts.quickPhrases}}">
           <image src="/icons/message.svg" mode="aspectFit" class="btn-icon"/>
-          <text>常用语</text>
+          <text>{{texts.quickPhrases}}</text>
         </button>
-        <button class="bottom-btn press" bindtap="openKeyboard" aria-label="打字">
+        <button class="bottom-btn press" bindtap="openKeyboard" aria-label="{{texts.type}}">
           <image src="/icons/keyboard.svg" mode="aspectFit" class="btn-icon"/>
-          <text>打字</text>
-        </button>
-        <button class="bottom-btn press" bindtap="waveHand" aria-label="打招呼">
-          <image src="/icons/hand.svg" mode="aspectFit" class="btn-icon"/>
-          <text>打招呼</text>
+          <text>{{texts.type}}</text>
         </button>
       </view>
     </block>
@@ -207,29 +219,60 @@
   <!-- 常用语弹窗 -->
   <view class="modal-mask" wx:if="{{showPhraseModal}}" bindtap="hidePhraseModal"></view>
   <view class="phrase-modal {{showPhraseModal ? 'show' : ''}}" wx:if="{{showPhraseModal}}">
-    <view class="modal-title">常用语</view>
+    <view class="modal-title">{{texts.phrasesTitle}}</view>
     <view class="phrase-list">
-      <block wx:for="{{quickPhrases}}" wx:key="*this">
-        <view class="phrase-item press" bindtap="usePhrase" data-phrase="{{item}}">{{item}}</view>
+      <block wx:for="{{quickPhrases}}" wx:key="id">
+        <view class="phrase-item press" bindtap="usePhrase" data-phrase="{{item.text}}">{{item.text}}</view>
       </block>
     </view>
-    <button class="modal-close" bindtap="hidePhraseModal">关闭</button>
+    <button class="modal-close" bindtap="hidePhraseModal">{{texts.close}}</button>
   </view>
 
   <!-- 键盘输入弹窗 -->
   <view class="modal-mask" wx:if="{{showKeyboardModal}}" bindtap="hideKeyboardModal"></view>
   <view class="keyboard-modal {{showKeyboardModal ? 'show' : ''}}" wx:if="{{showKeyboardModal}}">
-    <view class="modal-title">输入文字</view>
+    <view class="modal-title">{{texts.keyboardTitle}}</view>
     <textarea
       class="keyboard-textarea"
-      placeholder="请输入内容..."
+      placeholder="{{texts.inputPlaceholder}}"
       value="{{keyboardInput}}"
       bindinput="onKeyboardInput"
       maxlength="200"
     />
     <view class="modal-actions">
-      <button class="modal-btn cancel" bindtap="hideKeyboardModal">取消</button>
-      <button class="modal-btn confirm" bindtap="sendKeyboardText">发送</button>
+      <button class="modal-btn cancel" bindtap="hideKeyboardModal">{{texts.cancel}}</button>
+      <button class="modal-btn confirm" bindtap="sendKeyboardText">{{texts.send}}</button>
+    </view>
+  </view>
+
+  <!-- 添加自定义快捷短语弹窗 -->
+  <view class="modal-mask" wx:if="{{showAddPhraseModal}}" bindtap="hideAddPhraseModal"></view>
+  <view class="phrase-add-modal {{showAddPhraseModal ? 'show' : ''}}" wx:if="{{showAddPhraseModal}}">
+    <view class="modal-title">添加常用语</view>
+    <input
+      class="phrase-add-input"
+      placeholder="输入常用语..."
+      value="{{newPhraseText}}"
+      bindinput="onNewPhraseInput"
+      maxlength="20"
+    />
+    <view class="phrase-type-selector">
+      <text class="type-label">类型：</text>
+      <view class="type-options">
+        <view
+          wx:for="{{phraseTypes}}"
+          wx:key="value"
+          class="type-option {{selectedPhraseType === item.value ? 'active' : ''}}"
+          bindtap="selectPhraseType"
+          data-value="{{item.value}}"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <button class="modal-btn cancel" bindtap="hideAddPhraseModal">取消</button>
+      <button class="modal-btn confirm" bindtap="addCustomPhrase">添加</button>
     </view>
   </view>
 

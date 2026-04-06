@@ -56,9 +56,16 @@ Page({
       list = this.data.communityHelpList;
     }
     const item = list[index];
-    wx.navigateTo({
-      url: `${item.pagePath}?title=${item.title}`
+    // 临时提示，详情页面开发中
+    wx.showToast({
+      title: '详情页面开发中',
+      icon: 'none',
+      duration: 2000
     });
+    // 页面创建后恢复以下代码：
+    // wx.navigateTo({
+    //   url: `${item.pagePath}?title=${item.title}`
+    // });
   },
   onLoad(options) {
     // 页面加载时的操作

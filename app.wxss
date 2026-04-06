@@ -27,11 +27,11 @@ page {
   --brand-dark: var(--morandi-blue-dark);
   --accent: var(--morandi-amber);
 
-  /* 功能渐变色 */
-  --gradient-urgent: linear-gradient(135deg, #D4A373 0%, #C9956A 100%);
-  --gradient-daily: linear-gradient(135deg, #7A8B99 0%, #6A7B89 100%);
-  --gradient-biz: linear-gradient(135deg, #9A9A9A 0%, #8A8A8A 100%);
-  --gradient-voice: linear-gradient(135deg, #7A8B99 0%, #5A6B79 100%);
+  /* 功能渐变色 - 加深以提高对比度(WCAG AA) */
+  --gradient-urgent: linear-gradient(135deg, #B8834F 0%, #A6703D 100%);
+  --gradient-daily: linear-gradient(135deg, #5A6B7A 0%, #4A5B6A 100%);
+  --gradient-biz: linear-gradient(135deg, #6A6A6A 0%, #5A5A5A 100%);
+  --gradient-voice: linear-gradient(135deg, #5A6B7A 0%, #3A4B5A 100%);
 
   /* 文字色 */
   --text-primary: #2D2D2D;      /* 深灰，非纯黑 */
@@ -148,38 +148,66 @@ page {
   font-weight: 500;
   transition: all var(--duration-fast);
   border: none;
+  color: #FFFFFF;
+  white-space: nowrap;  /* 防止文字换行 */
+  min-width: 200rpx;    /* 最小宽度 */
+}
+
+.btn-capsule text,
+.btn-capsule .btn-text {
+  color: #FFFFFF !important;
+  white-space: nowrap;  /* 防止文字换行 */
 }
 
 .btn-capsule:active {
   transform: scale(0.96);
 }
 
-/* 紧急按钮 - 琥珀渐变 */
+/* 紧急按钮 - 琥珀渐变 (加深版) */
 .btn-urgent {
   background: var(--gradient-urgent);
-  color: #fff;
-  box-shadow: 0 4rpx 16rpx rgba(212, 163, 115, 0.3);
+  color: #FFFFFF !important;
+  box-shadow: 0 4rpx 16rpx rgba(160, 110, 60, 0.35);
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+}
+
+.btn-urgent .btn-text {
+  color: #FFFFFF !important;
 }
 
 .btn-urgent:active {
-  box-shadow: 0 2rpx 8rpx rgba(212, 163, 115, 0.2);
+  box-shadow: 0 2rpx 8rpx rgba(160, 110, 60, 0.25);
 }
 
-/* 日常按钮 - 灰蓝渐变 */
+/* 日常按钮 - 灰蓝渐变 (加深版) */
 .btn-daily {
   background: var(--gradient-daily);
-  color: #fff;
-  box-shadow: 0 4rpx 16rpx rgba(122, 139, 153, 0.25);
+  color: #FFFFFF !important;
+  box-shadow: 0 4rpx 16rpx rgba(70, 90, 110, 0.3);
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+}
+
+.btn-daily .btn-text {
+  color: #FFFFFF !important;
 }
 
 .btn-daily:active {
-  box-shadow: 0 2rpx 8rpx rgba(122, 139, 153, 0.15);
+  box-shadow: 0 2rpx 8rpx rgba(70, 90, 110, 0.2);
 }
 
-/* 业务按钮 - 中性灰 */
+/* 业务按钮 - 中性灰 (加深版) */
 .btn-biz {
   background: var(--gradient-biz);
-  color: #fff;
+  color: #FFFFFF !important;
+  box-shadow: 0 4rpx 16rpx rgba(80, 80, 80, 0.3);
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+}
+
+.btn-biz .btn-text {
+  color: #FFFFFF !important;
 }
 
 /* ===== 正圆语音按钮（普通版核心） ===== */

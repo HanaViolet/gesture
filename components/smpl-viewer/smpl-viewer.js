@@ -43,6 +43,8 @@ Component({
       query.select('#webgl').node().exec((res) => {
         if (!res[0] || !res[0].node) {
           console.warn('canvas node not found');
+          this.setData({ loading: false, error: 'Canvas初始化失败' });
+          wx.showToast({ title: '初始化失败，请重试', icon: 'none' });
           return;
         }
         const canvas = res[0].node;
@@ -51,6 +53,8 @@ Component({
           THREE = createScopedThreejs(canvas);
         } catch (e) {
           console.error('createScopedThreejs failed', e);
+          this.setData({ loading: false, error: '3D渲染初始化失败，请重试' });
+          wx.showToast({ title: '3D渲染初始化失败', icon: 'none' });
           return;
         }
         this._THREE = THREE;

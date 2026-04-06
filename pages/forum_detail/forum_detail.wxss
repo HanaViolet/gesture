@@ -40,6 +40,7 @@
   height: 64rpx;
   border-radius: 50%;
   background: var(--morandi-blue-light, #B8C4CE);
+  border: 2rpx solid var(--bg-secondary, #F2F0ED);
 }
 
 .author-meta {
@@ -159,6 +160,7 @@
   height: 56rpx;
   border-radius: 50%;
   background: var(--morandi-blue-light, #B8C4CE);
+  border: 2rpx solid var(--bg-secondary, #F2F0ED);
   flex-shrink: 0;
 }
 

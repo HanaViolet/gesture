@@ -39,6 +39,11 @@ Page({
               },
               fail: (err) => {
                   console.error('停止录制失败:', err);
+                  this.setData({ recording: false, isRecording: false });
+                  if (this.data.countdownInterval) {
+                      clearInterval(this.data.countdownInterval);
+                      this.setData({ countdownInterval: null });
+                  }
               }
           });
       } else {
@@ -67,27 +72,26 @@ Page({
 
   startCountdown() {
       let totalSeconds = 30;
-      let milliseconds = 0;
+      // 使用100ms间隔，减少性能开销
       const intervalId = setInterval(() => {
-          milliseconds -= 10;
-          if (milliseconds < 0) {
-              milliseconds = 990;
-              totalSeconds--;
+          totalSeconds--;
+
+          // 更新显示
+          if (totalSeconds >= 0) {
+              const formattedSeconds = String(totalSeconds).padStart(2, '0');
+              this.setData({
+                  countdown: `${formattedSeconds}:00`
+              });
           }
 
-          // 只有当总时间>0时才更新显示
-          if (totalSeconds > 0 || (totalSeconds === 0 && milliseconds > 0)) {
-              const formattedSeconds = String(totalSeconds).padStart(2, '0');
-              const formattedMilliseconds = String(Math.floor(milliseconds / 10)).padStart(2, '0');
-              this.setData({
-                  countdown: `${formattedSeconds}:${formattedMilliseconds}`
-              });
-          } else {
-              // 时间耗尽时显示00:00
+          // 时间耗尽
+          if (totalSeconds <= 0) {
               this.setData({
                   countdown: '00:00'
               });
               clearInterval(intervalId);
+              this.setData({ countdownInterval: null });
+
               // 如果正在录制，自动停止
               if (this.data.recording) {
                   const ctx = wx.createCameraContext();
@@ -102,11 +106,16 @@ Page({
                       },
                       fail: (err) => {
                           console.error('倒计时结束时停止录制失败:', err);
+                          this.setData({ recording: false, isRecording: false });
+                          if (this.data.countdownInterval) {
+                              clearInterval(this.data.countdownInterval);
+                              this.setData({ countdownInterval: null });
+                          }
                       }
                   });
               }
           }
-      }, 10);
+      }, 1000);
 
       this.setData({
           countdownInterval: intervalId
@@ -180,5 +189,34 @@ Page({
   convertVideoToGif(videoPath) {
       // 实际项目中需要替换为真实转换逻辑
       return videoPath.replace('.mp4', '.gif');
+  },
+
+  // 页面卸载时清理定时器
+  onUnload() {
+      if (this.data.countdownInterval) {
+          clearInterval(this.data.countdownInterval);
+          this.setData({ countdownInterval: null });
+      }
+  },
+
+  // 页面隐藏时停止录制并清理
+  onHide() {
+      if (this.data.recording) {
+          const ctx = wx.createCameraContext();
+          ctx.stopRecord({
+              success: () => {
+                  console.log('页面隐藏，停止录制');
+              },
+              fail: () => {}
+          });
+      }
+      if (this.data.countdownInterval) {
+          clearInterval(this.data.countdownInterval);
+          this.setData({
+              countdownInterval: null,
+              recording: false,
+              isRecording: false
+          });
+      }
   }
 });    

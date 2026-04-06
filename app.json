@@ -10,6 +10,7 @@
     "pages/get_detail/get_detail",
     "pages/society_cowork/society_cowork",
     "pages/settings/settings",
+    "pages/settings_profile/settings_profile",
     "pages/forum/forum",
     "pages/forum_create/forum_create",
     "pages/forum_detail/forum_detail"

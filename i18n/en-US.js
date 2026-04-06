@@ -48,15 +48,15 @@ module.exports = {
 
   // Quick Phrases
   'phrase.help': 'I need help',
+  'phrase.ambulance': 'Call an ambulance',
   'phrase.thanks': 'Thank you',
+  'phrase.morning': 'Good morning',
   'phrase.hello': 'Hello',
+  'phrase.business': 'I want to do business',
+  'phrase.id': 'Please show ID',
+  'phrase.price': 'How much is it?',
+  'phrase.bye': 'Goodbye',
   'phrase.sorry': 'Sorry',
-  'phrase.yes': 'Yes',
-  'phrase.no': 'No',
-  'phrase.water': 'I need water',
-  'phrase.bathroom': 'Where is the restroom?',
-  'phrase.emergency': 'This is an emergency',
-  'phrase.hospital': 'Please take me to the hospital',
 
   // Settings
   'settings.title': 'Settings',
@@ -73,6 +73,9 @@ module.exports = {
   'settings.about': 'About',
   'settings.aboutApp': 'About HeartVoice',
   'settings.feedback': 'Feedback',
+  'settings.personal': 'Personal',
+  'settings.profile': 'About Me',
+  'settings.notSet': 'Not Set',
   'settings.help': 'Help',
   'settings.tutorial': 'Tutorial',
   'settings.selectLanguage': 'Select Language',
@@ -99,5 +102,58 @@ module.exports = {
 
   // About
   'about.title': 'About HeartVoice',
-  'about.content': 'HeartVoice is a mini program focused on accessible communication, dedicated to helping deaf and visually impaired users communicate better in daily life.\n\nVersion: 1.0.0'
+  'about.content': 'HeartVoice is a mini program focused on accessible communication, dedicated to helping deaf and visually impaired users communicate better in daily life.\n\nVersion: 1.0.0',
+
+  // Forum
+  'forum.title': 'Community',
+  'forum.subtitle': 'Share experiences, seek help, and connect',
+  'forum.empty': 'No posts yet. Be the first to share!',
+  'forum.newPost': 'New Post',
+  'forum.category.share': 'Share',
+  'forum.category.help': 'Help',
+  'forum.category.job': 'Job',
+  'forum.category.life': 'Life',
+  'forum.likes': 'Likes',
+  'forum.comments': 'Comments',
+  'forum.commentPlaceholder': 'Write a comment...',
+  'forum.commentEmpty': 'No comments yet. Be the first!',
+  'forum.send': 'Send',
+  'forum.create.title': 'Create Post',
+  'forum.create.category': 'Select Category',
+  'forum.create.titlePlaceholder': 'Enter post title',
+  'forum.create.contentPlaceholder': 'Share your needs or experiences...',
+  'forum.create.addImage': 'Add Image',
+  'forum.create.submit': 'Post',
+  'forum.create.success': 'Posted successfully',
+  'forum.detail.title': 'Post Details',
+
+  // Home General
+  'home.mode.normal': 'Standard',
+  'home.mode.deaf': 'Deaf',
+  'home.community': 'Community',
+  'home.settings': 'Settings',
+  'home.currentOutput': 'Current Output',
+  'home.outputHint': 'Text or sign language will appear here',
+  'home.play': 'Play',
+  'home.shoot': 'Shoot',
+  'home.send': 'Send',
+  'home.cancel': 'Cancel',
+  'home.close': 'Close',
+  'home.phrases.title': 'Quick Phrases',
+  'home.keyboard.title': 'Type Text',
+  'home.recentUse': 'Recent',
+  'home.maxRecords': 'Max 3 records',
+  'home.emptyHistory': 'Generated sign language will appear here',
+  'home.view': 'View',
+  'home.quickPhrases': 'Phrases',
+  'home.type': 'Type',
+
+  // Normal Mode
+  'home.normal.hint': 'Type text to generate sign language',
+  'home.normal.subHint': 'Supports Chinese, English, German',
+  'home.normal.generateSign': 'Generate Sign',
+  'home.normal.signRecognition': 'Sign Recognition',
+  'home.normal.signRecognitionDesc': 'Record or upload sign video',
+  'home.normal.popularization': 'Sign Language',
+  'home.normal.popularizationDesc': 'Learn about sign culture'
 }

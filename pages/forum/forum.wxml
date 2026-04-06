@@ -1,16 +1,31 @@
 <view class="forum-container">
   <!-- 头部 -->
   <view class="forum-header">
-    <text class="forum-title">听障人士交流社区</text>
-    <text class="forum-subtitle">分享经验、寻求帮助、交流互动</text>
+    <text class="forum-title">{{t('forum.title')}}</text>
+    <text class="forum-subtitle">{{t('forum.subtitle')}}</text>
   </view>
 
   <!-- 帖子列表 -->
   <scroll-view scroll-y="true" class="post-list" bindscrolltolower="loadMore">
+    <!-- 合作社区宣传轮播 -->
+    <view class="community-banner-section" wx:if="{{communityImages.length > 0}}">
+      <text class="section-title">合作社区</text>
+      <swiper class="community-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
+        <swiper-item wx:for="{{communityImages}}" wx:key="index">
+          <view class="community-banner">
+            <image src="{{item.path}}" mode="aspectFill" class="banner-image"/>
+            <view class="banner-overlay">
+              <text class="banner-title">{{item.title}}</text>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{!posts.length}}">
       <image src="/icons/empty.svg" mode="aspectFit" class="empty-icon"/>
-      <text class="empty-text">暂无帖子，快来发布第一条吧</text>
+      <text class="empty-text">{{t('forum.empty')}}</text>
     </view>
 
     <block wx:for="{{posts}}" wx:key="id">
@@ -27,7 +42,10 @@
         </view>
 
         <view class="post-footer">
-          <view class="post-author">{{item.author}}</view>
+          <view class="post-author-wrapper">
+            <image class="post-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+            <view class="post-author">{{item.author}}</view>
+          </view>
           <view class="post-stats">
             <view class="stat-item">
               <image src="/icons/heart.svg" mode="aspectFit" class="stat-icon"/>
@@ -50,6 +68,6 @@
   <!-- 发帖按钮 -->
   <view class="new-post-button" bindtap="createPost">
     <image src="/icons/plus.svg" mode="aspectFit" class="new-post-icon"/>
-    <text class="new-post-text">发帖</text>
+    <text class="new-post-text">{{t('forum.newPost')}}</text>
   </view>
 </view>

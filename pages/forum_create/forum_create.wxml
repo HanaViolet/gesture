@@ -1,7 +1,7 @@
 <view class="create-container">
   <!-- 分类选择 -->
   <view class="input-block">
-    <text class="input-label">选择分类</text>
+    <text class="input-label">{{t('forum.create.category')}}</text>
     <view class="category-list">
       <view
         wx:for="{{categories}}"
@@ -10,17 +10,17 @@
         bindtap="selectCategory"
         data-value="{{item.value}}"
       >
-        {{item.label}}
+        {{t(item.labelKey)}}
       </view>
     </view>
   </view>
 
   <!-- 标题输入 -->
   <view class="input-block">
-    <text class="input-label">标题</text>
+    <text class="input-label">{{t('forum.create.title')}}</text>
     <input
       class="input-title"
-      placeholder="请输入帖子标题"
+      placeholder="{{t('forum.create.titlePlaceholder')}}"
       bindinput="onTitleChange"
       value="{{title}}"
     />
@@ -28,10 +28,10 @@
 
   <!-- 内容输入 -->
   <view class="input-block">
-    <text class="input-label">内容</text>
+    <text class="input-label">{{t('forum.comments')}}</text>
     <textarea
       class="input-content"
-      placeholder="请输入帖子内容，分享您的需求或经验..."
+      placeholder="{{t('forum.create.contentPlaceholder')}}"
       bindinput="onContentChange"
       value="{{content}}"
       maxlength="1000"
@@ -40,11 +40,11 @@
 
   <!-- 图片上传 -->
   <view class="image-upload">
-    <text class="input-label">添加图片（可选）</text>
+    <text class="input-label">{{t('forum.create.addImage')}}</text>
     <view class="image-preview">
       <view class="upload-btn" bindtap="chooseImage">
         <image src="/icons/camera.svg" mode="aspectFit" class="upload-icon"/>
-        <text class="upload-text">添加图片</text>
+        <text class="upload-text">{{t('forum.create.addImage')}}</text>
       </view>
       <block wx:for="{{images}}" wx:key="*this">
         <view class="preview-item">
@@ -57,6 +57,6 @@
 
   <!-- 发布按钮 -->
   <button class="submit-button {{!canSubmit ? 'disabled' : ''}}" bindtap="submitPost">
-    发布帖子
+    {{t('forum.create.submit')}}
   </button>
 </view>

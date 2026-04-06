@@ -74,12 +74,38 @@ Page({
   },
 
   onShow() {
+    // 刷新个人信息显示
+    this.loadProfile()
     // 重新初始化i18n以获取最新语言设置
     i18n.init()
     // 刷新页面数据以反映当前语言
     const settings = settingsManager.getSettings()
     this.setData({ settings })
     this.updateDisplayNames()
+  },
+
+  // 加载个人信息
+  loadProfile() {
+    const profile = wx.getStorageSync('userProfile') || {}
+    let profileName = ''
+    if (profile.nickname) {
+      profileName = profile.nickname
+    } else if (profile.phone) {
+      profileName = profile.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+    } else if (profile.email) {
+      const email = profile.email
+      profileName = email.substring(0, 2) + '***@' + email.split('@')[1]
+    } else {
+      profileName = ''
+    }
+    this.setData({ profileName })
+  },
+
+  // 打开个人信息页面
+  openProfile() {
+    wx.navigateTo({
+      url: '/pages/settings_profile/settings_profile'
+    })
   },
 
   // 更新显示名称

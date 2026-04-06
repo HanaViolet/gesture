@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
   background: var(--bg-primary, #FAF9F7);
   padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 /* 论坛头部 */
@@ -25,19 +27,70 @@
   margin-top: 8rpx;
 }
 
-/* 帖子列表 */
+/* 帖子列表 - 确保左右对称 */
 .post-list {
   flex: 1;
-  padding: 24rpx;
+  padding: 24rpx 24rpx 0 24rpx;
+  box-sizing: border-box;
+}
+
+/* 合作社区宣传区域 */
+.community-banner-section {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary, #2D2D2D);
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.community-swiper {
+  height: 320rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.community-banner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20rpx;
+  display: block;
+}
+
+.banner-overlay {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 40rpx 24rpx 24rpx;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 0 0 20rpx 20rpx;
+}
+
+.banner-title {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
 }
 
 .post-card {
   background: #fff;
   border-radius: 24rpx;
   padding: 32rpx;
-  margin-bottom: 24rpx;
+  margin: 0 0 24rpx 0;
   box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.06);
   transition: transform 200ms ease;
+  box-sizing: border-box;
 }
 
 .post-card:active {
@@ -78,6 +131,7 @@
   height: 320rpx;
   border-radius: 16rpx;
   margin-bottom: 20rpx;
+  display: block;
 }
 
 .post-footer {
@@ -88,9 +142,24 @@
   border-top: 1rpx solid var(--bg-secondary, #F2F0ED);
 }
 
+.post-author-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.post-avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: var(--bg-secondary, #F2F0ED);
+  border: 2rpx solid var(--bg-secondary, #F2F0ED);
+}
+
 .post-author {
   font-size: 24rpx;
   color: var(--text-secondary, #5A5A5A);
+  font-weight: 500;
 }
 
 .post-time {

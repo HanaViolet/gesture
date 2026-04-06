@@ -1,6 +1,7 @@
 const app = getApp();
 const { i18n, t } = require('../../i18n/index');
 const settingsManager = require('../../utils/settings-manager');
+const { API_BASE, ENDPOINTS } = require('../../utils/api');
 
 // 数据清洗函数 - 修复 [object Object] bug
 function sanitizePhrases(phrases) {
@@ -42,16 +43,17 @@ function chooseVideo() {
     wx.showToast({ title: '当前版本不支持选择媒体功能', icon: 'none' });
     return;
   }
+  const page = this;
   wx.getSetting({
     success: (res) => {
       if (!res.authSetting['scope.writePhotosAlbum']) {
         wx.authorize({
           scope: 'scope.writePhotosAlbum',
-          success: () => { chooseMediaAfterAuth.call(this); },
+          success: () => { chooseMediaAfterAuth.call(page); },
           fail: () => { wx.showToast({ title: '未授予相册访问权限', icon: 'none' }); }
         });
       } else {
-        chooseMediaAfterAuth.call(this);
+        chooseMediaAfterAuth.call(page);
       }
     }
   });
@@ -89,19 +91,19 @@ function uploadVideo() {
 
 function chunkGifList() {
   const gifList = app.globalData.gifList;
-  if (!gifList.length) {
+  if (!gifList || !gifList.length) {
     this.setData({ chunkedGifList: [[null]] });
     return;
   }
   const chunked = [];
   for (let i = 0; i < gifList.length; i += 2) {
-    chunked.push([gifList[i], gifList[i + 1]]);
-  }
-  const lastRow = chunked[chunked.length - 1];
-  if (lastRow.length === 2 && lastRow[1]) {
-    chunked.push([null]);
-  } else if (lastRow.length === 1 || !lastRow[1]) {
-    lastRow[1] = null;
+    const pair = [gifList[i]];
+    if (i + 1 < gifList.length) {
+      pair.push(gifList[i + 1]);
+    } else {
+      pair.push(null);
+    }
+    chunked.push(pair);
   }
   this.setData({ chunkedGifList: chunked });
 }
@@ -136,18 +138,15 @@ Page({
     smplHistory: [],
     // 听障版输出历史记录（最多3条）
     deafOutputHistory: [],
-    // 重构后的快捷短语数据结构 - 统一为对象数组，支持AI动态替换
-    quickPhrases: [
-      { text: '我需要帮助', type: 'urgent', id: 'p1' },
-      { text: '请帮我叫救护车', type: 'urgent', id: 'p2' },
-      { text: '谢谢', type: 'daily', id: 'p3' },
-      { text: '早上好', type: 'daily', id: 'p4' },
-      { text: '你好', type: 'daily', id: 'p5' },
-      { text: '我想办理业务', type: 'biz', id: 'p6' },
-      { text: '请出示证件', type: 'biz', id: 'p7' },
-      { text: '请问多少钱', type: 'biz', id: 'p8' },
-      { text: '再见', type: 'daily', id: 'p9' },
-      { text: '对不起', type: 'daily', id: 'p10' }
+    // 快捷短语管理
+    isEditingPhrases: false,
+    showAddPhraseModal: false,
+    newPhraseText: '',
+    selectedPhraseType: 'daily',
+    phraseTypes: [
+      { value: 'urgent', label: '紧急' },
+      { value: 'daily', label: '日常' },
+      { value: 'biz', label: '业务' }
     ]
   },
 
@@ -184,28 +183,26 @@ Page({
 
     const windowInfo = wx.getWindowInfo();
     // 从本地存储加载自定义短语，使用数据清洗确保格式正确
+    // 同时过滤掉旧的系统短语（只保留 id 以 custom_ 开头的用户自定义短语）
     const rawCustomPhrases = wx.getStorageSync('customPhrases') || [];
-    const customPhrases = sanitizePhrases(rawCustomPhrases);
+    const customPhrases = sanitizePhrases(rawCustomPhrases).filter(p =>
+      p.id && p.id.startsWith('custom_')
+    );
+    // 同步清理本地存储
+    if (customPhrases.length !== rawCustomPhrases.length) {
+      wx.setStorageSync('customPhrases', customPhrases);
+    }
 
-    // 默认短语 - 已是正确格式
+    // 默认短语 - 只保留两个系统短语，其余由用户自定义
     const defaultPhrases = [
-      { text: '我需要帮助', type: 'urgent', id: 'p1' },
-      { text: '请帮我叫救护车', type: 'urgent', id: 'p2' },
-      { text: '谢谢', type: 'daily', id: 'p3' },
-      { text: '早上好', type: 'daily', id: 'p4' },
-      { text: '你好', type: 'daily', id: 'p5' },
-      { text: '我想办理业务', type: 'biz', id: 'p6' },
-      { text: '请出示证件', type: 'biz', id: 'p7' },
-      { text: '请问多少钱', type: 'biz', id: 'p8' },
-      { text: '再见', type: 'daily', id: 'p9' },
-      { text: '对不起', type: 'daily', id: 'p10' }
+      { text: t('phrase.help'), type: 'urgent', id: 'p1' },
+      { text: t('phrase.business'), type: 'biz', id: 'p6' }
     ];
 
-    // 合并并去重（基于 text 字段）
-    const allPhrases = [...defaultPhrases, ...customPhrases];
-    const uniquePhrases = allPhrases.filter((item, index, self) =>
-      index === self.findIndex(t => t.text === item.text)
-    );
+    // 合并并去重（系统短语优先，自定义短语中重复系统短语的将被过滤）
+    const defaultTexts = new Set(defaultPhrases.map(p => p.text));
+    const filteredCustom = customPhrases.filter(p => !defaultTexts.has(p.text));
+    const uniquePhrases = [...defaultPhrases, ...filteredCustom];
 
     this.setData({
       statusBarHeight: windowInfo.statusBarHeight,
@@ -259,15 +256,66 @@ Page({
   // 更新翻译文本
   updateTexts() {
     const prefix = this.data.mode === 'deaf' ? 'home.deaf' : 'home.normal';
+
+    // 保留现有的自定义短语，只更新默认短语的翻译（系统短语优先）
+    const currentPhrases = this.data.quickPhrases || [];
+    const customPhrases = currentPhrases.filter(p => p.id && p.id.startsWith('custom_'));
+    const defaultPhrases = this.getTranslatedPhrases();
+    const defaultTexts = new Set(defaultPhrases.map(p => p.text));
+    const filteredCustom = customPhrases.filter(p => !defaultTexts.has(p.text));
+    const mergedPhrases = [...defaultPhrases, ...filteredCustom];
+
     this.setData({
       texts: {
+        // 模式相关
+        normalMode: t('home.mode.normal'),
+        deafMode: t('home.mode.deaf'),
+        // 标题和输入
         title: t(`${prefix}.title`),
         inputPlaceholder: t(`${prefix}.input.placeholder`),
         playButton: t(`${prefix}.button.play`),
         holdToSpeak: t('home.normal.holdToSpeak') || '按住说话，松开发送',
-        quickPhrasesTitle: t('home.deaf.quickPhrases') || '快捷短语'
-      }
+        quickPhrasesTitle: t('home.deaf.quickPhrases') || '快捷短语',
+        // 通用按钮和标签
+        community: t('home.community'),
+        settings: t('home.settings'),
+        currentOutput: t('home.currentOutput'),
+        outputHint: t('home.outputHint'),
+        play: t('home.play'),
+        shoot: t('home.shoot'),
+        send: t('home.send'),
+        cancel: t('home.cancel'),
+        close: t('home.close'),
+        phrasesTitle: t('home.phrases.title'),
+        keyboardTitle: t('home.keyboard.title'),
+        recentUse: t('home.recentUse'),
+        maxRecords: t('home.maxRecords'),
+        emptyHistory: t('home.emptyHistory'),
+        view: t('home.view'),
+        quickPhrases: t('home.quickPhrases'),
+        type: t('home.type'),
+        // 普通版特有
+        normalHint: t('home.normal.hint'),
+        normalSubHint: t('home.normal.subHint'),
+        generateSign: t('home.normal.generateSign'),
+        signRecognition: t('home.normal.signRecognition'),
+        signRecognitionDesc: t('home.normal.signRecognitionDesc'),
+        popularization: t('home.normal.popularization'),
+        popularizationDesc: t('home.normal.popularizationDesc'),
+        releaseToSend: t('home.normal.releaseToSend'),
+        recording: t('home.normal.recording')
+      },
+      // 更新快捷短语，保留自定义短语
+      quickPhrases: mergedPhrases
     });
+  },
+
+  // 获取当前语言的快捷短语
+  getTranslatedPhrases() {
+    return [
+      { text: t('phrase.help'), type: 'urgent', id: 'p1' },
+      { text: t('phrase.business'), type: 'biz', id: 'p6' }
+    ];
   },
 
   // 更新字体样式
@@ -320,25 +368,6 @@ Page({
     }, 180);
   },
 
-  // ===== 健听模式 =====
-  onInputChange(e) {
-    this.setData({ inputText: e.detail.value });
-  },
-
-  generateSignLanguage() {
-    const text = this.data.inputText.trim();
-    if (!text) {
-      wx.showToast({ title: '请输入文字', icon: 'none' });
-      return;
-    }
-    wx.vibrateShort({ type: 'light' });
-    this.setData({ showViewer: true, viewerText: text });
-  },
-
-  closeViewer() {
-    this.setData({ showViewer: false });
-  },
-
   openCamera() {
     wx.showActionSheet({
       itemList: ['从相册上传', '拍摄手语'],
@@ -380,7 +409,7 @@ Page({
     // 自动播放语音
     const formData = `text=${encodeURIComponent(phrase.replace(/[？?]/g, ''))}&prompt=&voice=6652&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
     wx.request({
-      url: 'http://127.0.0.1:9966/tts',
+      url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: formData,
@@ -436,7 +465,7 @@ Page({
     // TTS播放逻辑
     const formData = `text=${encodeURIComponent(text.replace(/[？?]/g, ''))}&prompt=&voice=6652&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
     wx.request({
-      url: 'http://127.0.0.1:9966/tts',
+      url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: formData,
@@ -484,7 +513,7 @@ Page({
 
     const formData = `text=${encodeURIComponent(item.text.replace(/[？?]/g, ''))}&prompt=&voice=6652&temperature=0.1&top_p=0.7&top_k=20&skip_refine=1&custom_voice=0`;
     wx.request({
-      url: 'http://127.0.0.1:9966/tts',
+      url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: formData,
@@ -535,6 +564,11 @@ Page({
     wx.setStorageSync('smplHistory', updatedHistory);
   },
 
+  // 关闭 SMPL 查看器
+  closeViewer() {
+    this.setData({ showViewer: false });
+  },
+
   // 查看历史记录中的SMPL动画
   viewHistoryItem(e) {
     const index = e.currentTarget.dataset.index;
@@ -545,10 +579,6 @@ Page({
         viewerText: item.text
       });
     }
-  },
-
-  closeViewer() {
-    this.setData({ showViewer: false });
   },
 
   // 开始录音
@@ -620,6 +650,110 @@ Page({
     wx.showToast({ title: '已发送打招呼', icon: 'none' });
   },
 
+  // ===== 快捷短语管理功能 =====
+
+  // 切换编辑模式
+  toggleEditPhrases() {
+    this.setData({ isEditingPhrases: !this.data.isEditingPhrases });
+  },
+
+  // 显示添加短语弹窗
+  showAddPhraseModal() {
+    this.setData({
+      showAddPhraseModal: true,
+      newPhraseText: '',
+      selectedPhraseType: 'daily'
+    });
+  },
+
+  // 隐藏添加短语弹窗
+  hideAddPhraseModal() {
+    this.setData({ showAddPhraseModal: false });
+  },
+
+  // 输入新短语
+  onNewPhraseInput(e) {
+    this.setData({ newPhraseText: e.detail.value });
+  },
+
+  // 选择短语类型
+  selectPhraseType(e) {
+    this.setData({ selectedPhraseType: e.currentTarget.dataset.value });
+  },
+
+  // 添加自定义短语
+  addCustomPhrase() {
+    const { newPhraseText, selectedPhraseType, quickPhrases } = this.data;
+    const trimmedText = newPhraseText.trim();
+
+    if (!trimmedText) {
+      wx.showToast({ title: '请输入内容', icon: 'none' });
+      return;
+    }
+
+    // 检查是否已存在
+    if (quickPhrases.some(p => p.text === trimmedText)) {
+      wx.showToast({ title: '该短语已存在', icon: 'none' });
+      return;
+    }
+
+    // 检查是否超过最大数量（限制为15个）
+    if (quickPhrases.length >= 15) {
+      wx.showToast({ title: '最多添加15个常用语', icon: 'none' });
+      return;
+    }
+
+    const newPhrase = {
+      text: trimmedText,
+      type: selectedPhraseType,
+      id: `custom_${Date.now()}`
+    };
+
+    const updatedPhrases = [...quickPhrases, newPhrase];
+
+    // 保存到本地存储
+    const customPhrases = updatedPhrases.filter(p => p.id.startsWith('custom_'));
+    wx.setStorageSync('customPhrases', customPhrases);
+
+    this.setData({
+      quickPhrases: updatedPhrases,
+      showAddPhraseModal: false,
+      newPhraseText: ''
+    });
+
+    wx.showToast({ title: '添加成功', icon: 'success' });
+  },
+
+  // 删除快捷短语
+  deleteQuickPhrase(e) {
+    const { index } = e.currentTarget.dataset;
+    const { quickPhrases } = this.data;
+    const phraseToDelete = quickPhrases[index];
+
+    // 只允许删除自定义短语
+    if (!phraseToDelete.id.startsWith('custom_')) {
+      wx.showToast({ title: '系统短语不可删除', icon: 'none' });
+      return;
+    }
+
+    wx.showModal({
+      title: '删除短语',
+      content: `确定删除"${phraseToDelete.text}"吗？`,
+      confirmColor: '#ff4d4f',
+      success: (res) => {
+        if (res.confirm) {
+          const updatedPhrases = quickPhrases.filter((_, i) => i !== index);
+
+          // 更新本地存储
+          const customPhrases = updatedPhrases.filter(p => p.id.startsWith('custom_'));
+          wx.setStorageSync('customPhrases', customPhrases);
+
+          this.setData({ quickPhrases: updatedPhrases });
+          wx.showToast({ title: '已删除', icon: 'success' });
+        }
+      }
+    });
+  },
 
   addQuickPhrase() {
     this.setData({ showAddModal: true, addModalType: 'quick', addModalTitle: '添加快捷短语' });
@@ -708,6 +842,10 @@ Page({
 
   navigateToSocietyCowork() {
     wx.navigateTo({ url: '/pages/society_cowork/society_cowork' });
+  },
+
+  navigateToForum() {
+    wx.navigateTo({ url: '/pages/forum/forum' });
   },
 
   previewGif(e) {

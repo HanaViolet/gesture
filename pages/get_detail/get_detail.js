@@ -1,3 +1,5 @@
+const { API_BASE, ENDPOINTS } = require('../../utils/api');
+
 Page({
   data: {
     inputText: '',
@@ -87,7 +89,7 @@ Page({
   callTextToSpeech: function (text, voiceType, callback) {
     const voiceValue = voiceType === 'male' ? '6652' : '1983';
     wx.request({
-      url: 'http://127.0.0.1:9966/tts',
+      url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -130,11 +132,15 @@ Page({
   playMaleVoice: function () {
     const audioUrl = this.data.maleAudioUrl;
     if (audioUrl) {
+      // 先销毁旧的男声音频上下文
+      if (this.data.maleAudioContext) {
+        this.data.maleAudioContext.destroy();
+      }
       const audioContext = wx.createInnerAudioContext();
       audioContext.src = audioUrl;
       audioContext.play();
       this.setData({
-        audioContext: audioContext,
+        maleAudioContext: audioContext,
         selectedVoice: 'male'
       });
     } else {
@@ -147,11 +153,15 @@ Page({
   playFemaleVoice: function () {
     const audioUrl = this.data.femaleAudioUrl;
     if (audioUrl) {
+      // 先销毁旧的女声音频上下文
+      if (this.data.femaleAudioContext) {
+        this.data.femaleAudioContext.destroy();
+      }
       const audioContext = wx.createInnerAudioContext();
       audioContext.src = audioUrl;
       audioContext.play();
       this.setData({
-        audioContext: audioContext,
+        femaleAudioContext: audioContext,
         selectedVoice: 'female'
       });
     } else {
@@ -162,9 +172,16 @@ Page({
     }
   },
   onUnload: function () {
-    const audioContext = this.data.audioContext;
-    if (audioContext) {
-      audioContext.destroy();
+    // 销毁所有音频上下文，防止内存泄漏
+    if (this.data.maleAudioContext) {
+      this.data.maleAudioContext.destroy();
+    }
+    if (this.data.femaleAudioContext) {
+      this.data.femaleAudioContext.destroy();
+    }
+    // 兼容旧代码
+    if (this.data.audioContext) {
+      this.data.audioContext.destroy();
     }
   },
   saveToCommonPhrases() {

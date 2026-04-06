@@ -70,12 +70,21 @@ Page({
         return;
       }
 
-      // 如果有保存的设置，恢复它们
-      if (savedLang) {
-        this.setData({ selectedLang: savedLang });
+      // 检查设置是否变更，清除可能存在的旧格式数据
+      const oldCustomPhrases = wx.getStorageSync('customPhrases');
+      if (oldCustomPhrases && Array.isArray(oldCustomPhrases)) {
+        // 清理旧格式数据（在onLoad时统一处理）
       }
-      if (savedMode) {
-        this.setData({ selectedMode: savedMode });
+
+      // 如果有保存的设置，恢复它们
+      const savedSettings = wx.getStorageSync('app_settings_v1');
+      if (savedSettings) {
+        if (savedSettings.language) {
+          this.setData({ selectedLang: savedSettings.language });
+        }
+        if (savedSettings.mode) {
+          this.setData({ selectedMode: savedSettings.mode });
+        }
       }
     } catch (e) {
       console.log('检查引导状态失败', e);
@@ -132,10 +141,8 @@ Page({
 
     // 保存设置
     try {
-      wx.setStorageSync('app_language', selectedLang);
       wx.setStorageSync('app_language_v1', selectedLang); // i18n使用的键
-      wx.setStorageSync('app_mode', selectedMode);
-      wx.setStorageSync('userMode', selectedMode); // 兼容旧版
+      wx.setStorageSync('app_settings_v1', { language: selectedLang, mode: selectedMode, fontSize: 'medium', highContrast: false, reduceMotion: false });
       wx.setStorageSync('has_onboarded', true);
 
       // 触觉反馈
