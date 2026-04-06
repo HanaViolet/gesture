@@ -116,7 +116,7 @@
       <!-- 关于语见 -->
       <view class="list-item" bindtap="showAbout">
         <view class="list-item-left">
-          <text class="icon">ℹ️</text>
+          <image class="app-logo" src="/images/logo.png" mode="aspectFit"/>
           <text class="label">{{t('settings.aboutApp') || '关于语见'}}</text>
         </view>
         <view class="list-item-right">

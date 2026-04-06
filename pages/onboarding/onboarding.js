@@ -44,11 +44,11 @@ Page({
   // 初始化系统信息
   initSystemInfo() {
     try {
-      const systemInfo = wx.getSystemInfoSync();
+      const windowInfo = wx.getWindowInfo();
       this.setData({
-        statusBarHeight: systemInfo.statusBarHeight || 44,
-        safeAreaBottom: systemInfo.safeArea?.bottom ?
-          systemInfo.safeArea.bottom - systemInfo.windowHeight : 34
+        statusBarHeight: windowInfo.statusBarHeight || 44,
+        safeAreaBottom: windowInfo.safeArea?.bottom ?
+          windowInfo.safeArea.bottom - windowInfo.windowHeight : 34
       });
     } catch (e) {
       console.log('获取系统信息失败，使用默认值');

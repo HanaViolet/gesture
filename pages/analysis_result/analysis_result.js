@@ -1,5 +1,9 @@
 const { API_BASE, ENDPOINTS } = require('../../utils/api');
 
+// 当前环境配置
+const ENV = require('../../utils/api').CURRENT_ENV;
+const isDev = ENV === 'development';
+
 Page({
   data: {
     chatTexts: '',
@@ -34,9 +38,10 @@ Page({
       name: 'video',
       success: (res) => {
         const data = JSON.parse(res.data);
-        if (data.predictions) {
-          console.log('手语翻译结果:', data.predictions);
-          const resultText = Array.isArray(data.predictions) ? data.predictions.join('') : String(data.predictions || '');
+        // API文档格式: { success: true, text: "翻译结果", message: "..." }
+        if (data.success && data.text) {
+          console.log('手语翻译结果:', data.text);
+          const resultText = data.text;
           that.setData({
             chatTexts: resultText,
             progress: 50
@@ -46,7 +51,7 @@ Page({
           that.generateBothVoices(cleanedText);
         } else {
           wx.showToast({
-            title: '手语翻译失败:' + data.error,
+            title: '手语翻译失败:' + (data.message || data.error || '未知错误'),
             icon: 'none'
           });
         }

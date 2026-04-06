@@ -5,37 +5,232 @@ Component({
     text: {
       type: String,
       value: ''
+    },
+    videoUrl: {
+      type: String,
+      value: ''  // 后端返回的视频URL
+    },
+    taskId: {
+      type: String,
+      value: ''  // 生成任务ID
+    },
+    smplBase: {
+      type: String,
+      value: ''  // SMPL服务基础URL
+    },
+    endpoints: {
+      type: Object,
+      value: {}  // API端点配置
     }
   },
   data: {
     loading: true,
+    error: '',
     startY: 0,
     translateY: 0,
-    pulling: false
+    pulling: false,
+    playbackRate: 1,
+    isPlaying: false,
+    // 生成状态
+    isGenerating: false,
+    progress: 0,
+    statusText: '正在为您生成中...'
   },
   lifetimes: {
     attached() {
-      this.setData({ loading: true });
+      this.setData({ loading: true, error: '' });
     },
     ready() {
-      setTimeout(() => {
-        this.setData({ loading: false });
-        wx.vibrateShort({ type: 'light' });
-      }, 1500);
+      // 如果有taskId且有有效的smplBase和endpoints，开始轮询生成进度
+      const { taskId, smplBase, endpoints, videoUrl } = this.properties;
+      if (taskId && smplBase && endpoints && endpoints.SMPL_STATUS) {
+        this.setData({ isGenerating: true });
+        this.pollTaskStatus(taskId);
+      } else if (videoUrl) {
+        // 已有videoUrl，直接显示
+        setTimeout(() => {
+          this.setData({ loading: false });
+          wx.vibrateShort({ type: 'light' });
+        }, 500);
+      } else {
+        // 没有taskId也没有videoUrl，显示3D模式
+        setTimeout(() => {
+          this.setData({ loading: false });
+        }, 1500);
+      }
+    },
+    ready() {
+      // 如果没有taskId（直接传入videoUrl的情况），直接显示
+      if (!this.properties.taskId && this.properties.videoUrl) {
+        setTimeout(() => {
+          this.setData({ loading: false, isGenerating: false });
+          wx.vibrateShort({ type: 'light' });
+        }, 500);
+      }
     },
     detached() {
+      this.cleanup();
+      // 清除轮询定时器
+      if (this._pollTimer) {
+        clearTimeout(this._pollTimer);
+      }
+      if (this._progressTimer) {
+        clearInterval(this._progressTimer);
+      }
+    }
+  },
+  observers: {
+    'videoUrl': function(url) {
+      if (url) {
+        this.setData({
+          loading: false,
+          error: '',
+          isGenerating: false,
+          progress: 100
+        });
+        // 视频加载完成后播放
+        this.videoContext = wx.createVideoContext('smplVideo', this);
+        wx.vibrateShort({ type: 'light' });
+      }
+    }
+  },
+  methods: {
+    cleanup() {
       if (this._renderLoop) {
         cancelAnimationFrame(this._renderLoop);
         this._renderLoop = null;
       }
       if (this._renderer) {
         this._renderer.dispose && this._renderer.dispose();
+        this._renderer = null;
       }
-    }
-  },
-  methods: {
+      if (this.videoContext) {
+        this.videoContext.stop();
+        this.videoContext = null;
+      }
+    },
+
+    // 获取任务进度
+    fetchTaskProgress(taskId) {
+      const { smplBase, endpoints } = this.properties;
+      if (!smplBase || !endpoints.SMPL_PROGRESS) {
+        return Promise.resolve(0);
+      }
+      return new Promise((resolve) => {
+        wx.request({
+          url: `${smplBase}${endpoints.SMPL_PROGRESS}/${taskId}`,
+          method: 'GET',
+          success: (res) => {
+            if (res.statusCode === 200 && res.data) {
+              resolve(res.data.progress || 0);
+            } else {
+              resolve(0);
+            }
+          },
+          fail: () => resolve(0)
+        });
+      });
+    },
+
+    // 轮询任务状态
+    async pollTaskStatus(taskId) {
+      const { smplBase, endpoints } = this.properties;
+      console.log('[SMPL] 开始轮询任务:', taskId, 'base:', smplBase);
+
+      if (!smplBase || !endpoints.SMPL_STATUS) {
+        console.error('[SMPL] 配置错误:', { smplBase, endpoints });
+        this.setData({ error: '配置错误', loading: false });
+        return;
+      }
+
+      let pollCount = 0;
+      const maxPolls = 600; // 最多轮询600次（约10分钟）
+
+      // 定期获取进度
+      this._progressTimer = setInterval(async () => {
+        const progress = await this.fetchTaskProgress(taskId);
+        console.log('[SMPL] 进度:', progress + '%');
+        this.setData({
+          progress: progress,
+          statusText: `正在为您生成中，已生成 ${progress}%`
+        });
+      }, 1000); // 每1秒获取一次进度
+
+      const doPoll = () => {
+        console.log('[SMPL] 轮询次数:', pollCount, '/', maxPolls);
+
+        if (pollCount >= maxPolls) {
+          console.log('[SMPL] 超时');
+          clearInterval(this._progressTimer);
+          this.setData({
+            error: '生成超时（超过10分钟）',
+            loading: false,
+            isGenerating: false
+          });
+          return;
+        }
+
+        wx.request({
+          url: `${smplBase}${endpoints.SMPL_STATUS}/${taskId}`,
+          method: 'GET',
+          success: (res) => {
+            console.log('[SMPL] 状态响应:', res.statusCode, res.data);
+
+            if (res.statusCode === 200 && res.data) {
+              const status = res.data.status || res.data.state || res.data.task_status;
+              console.log('[SMPL] 当前状态:', status, '完整响应:', res.data);
+
+              if (status === 'completed') {
+                console.log('[SMPL] 任务完成！');
+                clearInterval(this._progressTimer);
+                // 任务完成，获取视频URL
+                const videoUrl = `${smplBase}${endpoints.SMPL_VIDEO}/${taskId}`;
+                this.setData({
+                  videoUrl: videoUrl,
+                  loading: false,
+                  isGenerating: false,
+                  progress: 100,
+                  statusText: '生成完成！'
+                });
+                // 通知父组件
+                this.triggerEvent('complete', { videoUrl, text: this.properties.text });
+                wx.vibrateShort({ type: 'light' });
+              } else if (status === 'failed') {
+                console.error('[SMPL] 任务失败:', res.data.error);
+                clearInterval(this._progressTimer);
+                this.setData({
+                  error: '生成失败: ' + (res.data.error || ''),
+                  loading: false,
+                  isGenerating: false
+                });
+              } else {
+                // 仍在处理中（queued 或 processing），继续轮询
+                console.log('[SMPL] 继续轮询...');
+                pollCount++;
+                this._pollTimer = setTimeout(doPoll, 1000);
+              }
+            } else {
+              console.error('[SMPL] 响应错误:', res);
+              pollCount++;
+              this._pollTimer = setTimeout(doPoll, 1000);
+            }
+          },
+          fail: (err) => {
+            console.error('[SMPL] 请求失败:', err);
+            pollCount++;
+            this._pollTimer = setTimeout(doPoll, 1000);
+          }
+        });
+      };
+
+      doPoll();
+    },
+
     onCanvasReady() {
-      this.initThree();
+      // 只有在没有视频URL且不在生成中时才初始化Three.js
+      if (!this.properties.videoUrl && !this.data.isGenerating) {
+        this.initThree();
+      }
     },
 
     initThree() {
@@ -167,8 +362,31 @@ Component({
     animateFigure(figure, time) {
       if (!figure) return;
       figure.rotation.y = Math.sin(time * 0.5) * 0.15;
-      // subtle sway
       figure.position.y = Math.sin(time * 1.2) * 0.015;
+    },
+
+    // 视频播放相关方法
+    onVideoPlay() {
+      this.setData({ isPlaying: true });
+      console.log('视频开始播放');
+    },
+
+    onVideoPause() {
+      this.setData({ isPlaying: false });
+      console.log('视频暂停');
+    },
+
+    onVideoEnded() {
+      this.setData({ isPlaying: false });
+      console.log('视频播放结束');
+    },
+
+    onVideoError(e) {
+      console.error('视频播放错误:', e.detail);
+      this.setData({
+        error: '视频播放失败',
+        isPlaying: false
+      });
     },
 
     onTouchStart(e) {
@@ -190,22 +408,52 @@ Component({
     },
     closeViewer() {
       this.setData({ translateY: wx.getWindowInfo().windowHeight, pulling: false });
+      if (this.videoContext) {
+        this.videoContext.stop();
+      }
       setTimeout(() => {
         this.triggerEvent('close');
       }, 250);
     },
     replay() {
-      // Replay placeholder: smooth camera reset
-      if (this._camera) {
-        this._camera.position.set(0, 1.6, 4.2);
-        this._camera.lookAt(0, 0.8, 0);
+      if (this.data.videoUrl && this.videoContext) {
+        this.videoContext.seek(0);
+        this.videoContext.play();
+      } else {
+        if (this._camera) {
+          this._camera.position.set(0, 1.6, 4.2);
+          this._camera.lookAt(0, 0.8, 0);
+        }
       }
     },
     changeSpeed() {
-      wx.showToast({ title: '倍速播放功能开发中', icon: 'none' });
+      const rates = [0.5, 0.75, 1, 1.25, 1.5];
+      const currentIndex = rates.indexOf(this.data.playbackRate);
+      const nextIndex = (currentIndex + 1) % rates.length;
+      const newRate = rates[nextIndex];
+
+      this.setData({ playbackRate: newRate });
+
+      if (this.data.videoUrl && this.videoContext) {
+        this.videoContext.playbackRate(newRate);
+      }
+
+      wx.showToast({
+        title: `播放速度: ${newRate}x`,
+        icon: 'none',
+        duration: 1000
+      });
     },
     share() {
-      wx.showToast({ title: '分享功能开发中', icon: 'none' });
+      if (this.data.videoUrl) {
+        wx.showShareMenu({
+          withShareTicket: true,
+          menus: ['shareAppMessage', 'shareTimeline']
+        });
+        wx.showToast({ title: '请点击右上角分享', icon: 'none' });
+      } else {
+        wx.showToast({ title: '分享功能开发中', icon: 'none' });
+      }
     }
   }
 });

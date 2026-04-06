@@ -46,6 +46,14 @@
   text-align: center;
 }
 
+/* 关于语见 - 应用logo */
+.app-logo {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 20rpx;
+  border-radius: 10rpx;
+}
+
 .label {
   font-size: 32rpx;
   color: #333;

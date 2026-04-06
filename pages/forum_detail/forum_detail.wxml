@@ -45,7 +45,7 @@
     <view class="comment-list">
       <block wx:if="{{post.commentCount == 0}}">
         <view class="comment-empty">
-          <text>{{t('forum.commentEmpty')}}</text>
+          <view class="empty-text">{{t('forum.commentEmpty')}}</view>
         </view>
       </block>
 
@@ -75,7 +75,7 @@
       bindconfirm="submitComment"
     />
     <view class="send-btn {{!commentInput ? 'disabled' : ''}}" bindtap="submitComment">
-      {{t('forum.send')}}
+      <text class="send-text">发送</text>
     </view>
   </view>
 </view>

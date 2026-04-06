@@ -1,7 +1,8 @@
 const app = getApp();
 const { i18n, t } = require('../../i18n/index');
 const settingsManager = require('../../utils/settings-manager');
-const { API_BASE, ENDPOINTS } = require('../../utils/api');
+const api = require('../../utils/api');
+const { API_BASE, SMPL_BASE, ENDPOINTS, getSmplUrl } = api;
 
 // 数据清洗函数 - 修复 [object Object] bug
 function sanitizePhrases(phrases) {
@@ -136,6 +137,12 @@ Page({
     currentOutput: '',
     // SMPL使用历史记录（最多3条）
     smplHistory: [],
+    // 当前查看的视频URL
+    viewerVideoUrl: '',
+    // 当前任务ID
+    viewerTaskId: '',
+    // 后端历史任务列表
+    backendTasks: [],
     // 听障版输出历史记录（最多3条）
     deafOutputHistory: [],
     // 快捷短语管理
@@ -147,7 +154,10 @@ Page({
       { value: 'urgent', label: '紧急' },
       { value: 'daily', label: '日常' },
       { value: 'biz', label: '业务' }
-    ]
+    ],
+    // API配置（传递给组件）
+    SMPL_BASE: SMPL_BASE,
+    ENDPOINTS: ENDPOINTS
   },
 
   onLoad() {
@@ -216,6 +226,10 @@ Page({
 
   onShow() {
     this.chunkGifList();
+
+    // 获取后端历史任务
+    this.fetchBackendTasks();
+
     // 检查设置是否被更改
     const currentSettings = settingsManager.getSettings();
     const settingsChanged = (
@@ -541,32 +555,107 @@ Page({
     }
     wx.vibrateShort({ type: 'light' });
 
-    // 保存到历史记录（最多3条，新记录插入头部）
-    const newRecord = {
-      id: Date.now(),
-      text: text,
-      time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
-      timestamp: Date.now()
-    };
-
-    // 获取现有历史记录，添加新记录，只保留最近3条
-    const currentHistory = this.data.smplHistory || [];
-    const updatedHistory = [newRecord, ...currentHistory].slice(0, 3);
-
-    // 更新数据和本地存储
-    this.setData({
-      showViewer: true,
-      viewerText: text,
-      smplHistory: updatedHistory,
-      inputText: ''  // 清空输入框
+    // 显示加载状态
+    wx.showLoading({
+      title: '正在提交任务...',
+      mask: true
     });
 
-    wx.setStorageSync('smplHistory', updatedHistory);
+    // 调用后端SMPL生成API
+    // 调用后端SMPL生成API
+    wx.request({
+      url: `${SMPL_BASE}${ENDPOINTS.SMPL_GENERATE}`,
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        text: text
+      },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.statusCode === 200 && res.data && res.data.task_id) {
+          // 立即跳转到viewer页面，带上task_id和text
+          this.setData({
+            showViewer: true,
+            viewerText: text,
+            viewerTaskId: res.data.task_id,
+            viewerVideoUrl: ''  // 初始为空，生成完成后再填充
+          });
+        } else {
+          const errorMsg = (res.data && res.data.error) || '提交任务失败';
+          wx.showToast({ title: errorMsg, icon: 'none' });
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络错误', icon: 'none' });
+        console.error('SMPL提交失败:', err);
+      }
+    });
+  },
+
+  // 已删除：轮询逻辑移至 smpl-viewer 组件
+
+  // 从后端获取历史任务列表
+  fetchBackendTasks() {
+    wx.request({
+      url: `${SMPL_BASE}${ENDPOINTS.SMPL_TASKS}`,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode === 200 && res.data && res.data.tasks) {
+          // 格式化后端任务数据
+          const tasks = res.data.tasks.map(task => ({
+            id: task.id,
+            text: task.text || '未命名任务',
+            time: this.formatTaskTime(task.created_at),
+            timestamp: new Date(task.created_at).getTime(),
+            videoUrl: task.status === 'completed' ? `${SMPL_BASE}${ENDPOINTS.SMPL_VIDEO}/${task.id}` : ''
+          })).filter(task => task.status !== 'failed').slice(0, 10); // 只取最近10个成功的
+
+          this.setData({ backendTasks: tasks });
+        }
+      },
+      fail: (err) => {
+        console.error('获取历史任务失败:', err);
+      }
+    });
+  },
+
+  // 格式化任务时间
+  formatTaskTime(timestamp) {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
   },
 
   // 关闭 SMPL 查看器
   closeViewer() {
     this.setData({ showViewer: false });
+  },
+
+  // SMPL 生成完成回调
+  onSmplComplete(e) {
+    const { videoUrl, text } = e.detail;
+    console.log('SMPL生成完成:', videoUrl);
+
+    // 保存到本地历史记录
+    const newRecord = {
+      id: Date.now(),
+      text: text,
+      time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+      timestamp: Date.now(),
+      videoUrl: videoUrl
+    };
+
+    const currentHistory = this.data.smplHistory || [];
+    const updatedHistory = [newRecord, ...currentHistory].slice(0, 3);
+
+    this.setData({ smplHistory: updatedHistory });
+    wx.setStorageSync('smplHistory', updatedHistory);
+
+    // 刷新后端任务列表
+    this.fetchBackendTasks();
   },
 
   // 查看历史记录中的SMPL动画
@@ -576,8 +665,25 @@ Page({
     if (item) {
       this.setData({
         showViewer: true,
-        viewerText: item.text
+        viewerText: item.text,
+        viewerVideoUrl: item.videoUrl || '',  // 从历史记录恢复视频URL
+        viewerTaskId: ''  // 已有视频URL，不需要taskId
       });
+    }
+  },
+
+  // 查看后端历史任务
+  viewBackendTask(e) {
+    const task = e.currentTarget.dataset.task;
+    if (task && task.videoUrl) {
+      this.setData({
+        showViewer: true,
+        viewerText: task.text,
+        viewerVideoUrl: task.videoUrl,
+        viewerTaskId: ''  // 已有视频URL，不需要taskId
+      });
+    } else {
+      wx.showToast({ title: '视频暂未生成完成', icon: 'none' });
     }
   },
 
