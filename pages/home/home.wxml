@@ -5,7 +5,8 @@
   <!-- 顶部栏：胶囊模式切换 + 设置按钮 -->
   <view class="home-header">
     <view class="header-left">
-      <text class="brand">语见</text>
+      <image class="brand-logo" src="/images/logo.png" mode="aspectFit"/>
+      <view class="brand-text">语见</view>
     </view>
     <view class="header-center">
       <!-- 胶囊模式切换器 -->
@@ -174,29 +175,54 @@
         </view>
       </view>
 
-      <!-- 最近使用记录区域（最近3次SMPL生成） -->
+      <!-- 最近使用记录区域（后端历史任务 + 本地最近3次） -->
       <view class="normal-history-area">
         <view class="history-header">
           <text class="history-title">{{texts.recentUse}}</text>
           <text class="history-subtitle">{{texts.maxRecords}}</text>
+          <view class="refresh-btn" bindtap="fetchBackendTasks">
+            <text>刷新</text>
+          </view>
         </view>
         <scroll-view class="history-list" scroll-y="true">
-          <block wx:if="{{smplHistory.length === 0}}">
+          <!-- 后端历史任务 -->
+          <block wx:if="{{backendTasks.length > 0}}">
+            <view class="task-section-title">云端历史</view>
+            <block wx:for="{{backendTasks}}" wx:key="id">
+              <view class="history-item press" bindtap="viewBackendTask" data-task="{{item}}">
+                <view class="history-content">
+                  <text class="history-text">{{item.text}}</text>
+                  <text class="history-time">{{item.time}}</text>
+                </view>
+                <view class="history-action">
+                  <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
+                  <text class="history-action-text">{{texts.view}}</text>
+                </view>
+              </view>
+            </block>
+            <view class="divider" wx:if="{{smplHistory.length > 0}}"></view>
+          </block>
+
+          <!-- 本地最近记录 -->
+          <block wx:if="{{smplHistory.length === 0 && backendTasks.length === 0}}">
             <view class="history-empty">
               <text>{{texts.emptyHistory}}</text>
             </view>
           </block>
-          <block wx:for="{{smplHistory}}" wx:key="id">
-            <view class="history-item press" bindtap="viewHistoryItem" data-index="{{index}}">
-              <view class="history-content">
-                <text class="history-text">{{item.text}}</text>
-                <text class="history-time">{{item.time}}</text>
+          <block wx:if="{{smplHistory.length > 0}}">
+            <view class="task-section-title" wx:if="{{backendTasks.length > 0}}">本机最近</view>
+            <block wx:for="{{smplHistory}}" wx:key="id">
+              <view class="history-item press" bindtap="viewHistoryItem" data-index="{{index}}">
+                <view class="history-content">
+                  <text class="history-text">{{item.text}}</text>
+                  <text class="history-time">{{item.time}}</text>
+                </view>
+                <view class="history-action">
+                  <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
+                  <text class="history-action-text">{{texts.view}}</text>
+                </view>
               </view>
-              <view class="history-action">
-                <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
-                <text class="history-action-text">{{texts.view}}</text>
-              </view>
-            </view>
+            </block>
           </block>
         </scroll-view>
       </view>
@@ -278,6 +304,14 @@
 
   <!-- SMPL 手语动画查看器 -->
   <view class="viewer-fullscreen" wx:if="{{showViewer}}">
-    <smpl-viewer text="{{viewerText}}" bind:close="closeViewer" />
+    <smpl-viewer
+      text="{{viewerText}}"
+      videoUrl="{{viewerVideoUrl}}"
+      taskId="{{viewerTaskId}}"
+      smplBase="{{SMPL_BASE}}"
+      endpoints="{{ENDPOINTS}}"
+      bind:close="closeViewer"
+      bind:complete="onSmplComplete"
+    />
   </view>
 </view>

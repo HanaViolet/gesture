@@ -37,13 +37,31 @@
   padding: calc(16rpx + env(safe-area-inset-top)) 24rpx 24rpx;
 }
 
-.header-left, .header-right, .header-center {
+.header-right, .header-center {
   display: flex;
   align-items: center;
 }
 
 .header-left {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.brand-logo {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 16rpx;
+}
+
+.brand-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text-primary, #2D2D2D);
+  line-height: 1;
 }
 
 .header-center {
@@ -215,6 +233,30 @@
 .history-subtitle {
   font-size: 22rpx;
   color: var(--text-tertiary, #999);
+}
+
+.refresh-btn {
+  padding: 8rpx 20rpx;
+  background: var(--morandi-blue-light, #e8eef3);
+  border-radius: 20rpx;
+}
+
+.refresh-btn text {
+  font-size: 22rpx;
+  color: var(--morandi-blue, #5B7BA3);
+}
+
+.task-section-title {
+  font-size: 24rpx;
+  color: var(--text-secondary, #666);
+  padding: 16rpx 32rpx 8rpx;
+  font-weight: 500;
+}
+
+.divider {
+  height: 2rpx;
+  background: var(--bg-secondary, #f0f0f0);
+  margin: 16rpx 32rpx;
 }
 
 .history-list {

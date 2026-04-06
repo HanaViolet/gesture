@@ -4,28 +4,74 @@
     <view class="smpl-handle"><view class="handle-bar"></view></view>
   </view>
 
-  <!-- Loading State -->
-  <view class="loading-layer" wx:if="{{loading}}">
+  <!-- 生成中状态 -->
+  <view class="generating-layer" wx:if="{{isGenerating}}">
+    <view class="progress-container">
+      <view class="progress-ring">
+        <view class="progress-circle" style="background: conic-gradient(var(--morandi-blue, #5B7BA3) {{progress * 3.6}}deg, rgba(0,0,0,0.05) 0deg);">
+          <view class="progress-inner">
+            <text class="progress-percent">{{progress}}%</text>
+          </view>
+        </view>
+      </view>
+      <view class="generating-text">{{statusText}}</view>
+      <view class="generating-hint">请稍候，手语动画正在生成中</view>
+    </view>
+  </view>
+
+  <!-- Loading State (非生成中状态) -->
+  <view class="loading-layer" wx:if="{{!isGenerating && loading && !error}}">
     <view class="ripple-group">
       <view class="water-ripple"></view>
       <view class="water-ripple delay-1"></view>
       <view class="water-ripple delay-2"></view>
     </view>
-    <view class="loading-text">AI 正在为您构建手语序列…</view>
+    <view class="loading-text">加载中...</view>
   </view>
 
-  <!-- 3D Canvas -->
-  <canvas wx:if="{{!loading}}" type="webgl" id="webgl" class="webgl-canvas" bindready="onCanvasReady"></canvas>
+  <!-- Error State -->
+  <view class="error-layer" wx:if="{{error}}">
+    <view class="error-icon">⚠️</view>
+    <view class="error-text">{{error}}</view>
+    <view class="error-hint">请检查网络连接或稍后重试</view>
+    <view class="retry-btn" bindtap="closeViewer">返回重试</view>
+  </view>
 
-  <!-- Text Bubble -->
-  <view class="text-bubble glass" wx:if="{{!loading}}">
+  <!-- Content Area - 视频/3D内容 -->
+  <view class="content-area" wx:if="{{!loading && !error && !isGenerating}}">
+    <!-- 视频播放器模式 -->
+    <view class="video-container" wx:if="{{videoUrl}}">
+      <video
+        id="smplVideo"
+        class="smpl-video"
+        src="{{videoUrl}}"
+        autoplay="true"
+        loop="true"
+        muted="false"
+        show-center-play-btn="true"
+        show-play-btn="true"
+        controls="true"
+        object-fit="contain"
+        bindplay="onVideoPlay"
+        bindpause="onVideoPause"
+        bindended="onVideoEnded"
+        binderror="onVideoError"
+      />
+    </view>
+
+    <!-- 3D Canvas 模式（备用/演示模式） -->
+    <canvas wx:else type="webgl" id="webgl" class="webgl-canvas" bindready="onCanvasReady"></canvas>
+  </view>
+
+  <!-- Text Bubble - 文字显示 -->
+  <view class="text-bubble" wx:if="{{!loading && !error && !isGenerating}}">
     <text class="bubble-text">{{text}}</text>
   </view>
 
-  <!-- Bottom Controls -->
-  <view class="viewer-controls" wx:if="{{!loading}}">
-    <view class="control-btn press back" bindtap="closeViewer"><text>返回</text></view>
-    <view class="control-btn press" bindtap="changeSpeed"><text>0.5x 慢放</text></view>
+  <!-- Bottom Controls - 底部控制按钮 -->
+  <view class="viewer-controls" wx:if="{{!loading && !error && !isGenerating}}">
+    <view class="control-btn back press" bindtap="closeViewer"><text>返回</text></view>
+    <view class="control-btn press" bindtap="changeSpeed"><text>{{playbackRate}}x {{playbackRate === 1 ? '常速' : '慢放'}}</text></view>
     <view class="control-btn press" bindtap="replay"><text>重播</text></view>
     <view class="control-btn press" bindtap="share"><text>分享</text></view>
   </view>

@@ -11,25 +11,30 @@ const ENV = {
 };
 
 // 当前环境（可通过构建工具注入或手动切换）
-const CURRENT_ENV = ENV.DEVELOPMENT; // 开发环境
-// const CURRENT_ENV = ENV.PRODUCTION; // 生产环境
+// const CURRENT_ENV = ENV.DEVELOPMENT; // 开发环境
+const CURRENT_ENV = ENV.PRODUCTION; // 生产环境 - 使用API文档地址进行测试
 
 // 各环境基础URL配置
 const BASE_URLS = {
   [ENV.DEVELOPMENT]: {
-    API_BASE: 'http://127.0.0.1:9966',
-    WS_BASE: 'ws://127.0.0.1:9966',
-    STATIC_BASE: 'http://127.0.0.1:9966/static'
+    // 手语识别 + SMPL生成 服务（开发环境）
+    API_BASE: 'http://127.0.0.1:8000',
+    WS_BASE: 'ws://127.0.0.1:8000',
+    STATIC_BASE: 'http://127.0.0.1:8000/static',
+    SMPL_BASE: 'http://127.0.0.1:8000'
   },
   [ENV.PRODUCTION]: {
-    API_BASE: 'https://api.xinyuzhe.com',
-    WS_BASE: 'wss://api.xinyuzhe.com',
-    STATIC_BASE: 'https://static.xinyuzhe.com'
+    // 手语识别 + SMPL生成 服务（生产环境 - API文档地址）
+    API_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443',
+    WS_BASE: 'wss://uu895901-9072-0273df24.westc.seetacloud.com:8443',
+    STATIC_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443/static',
+    SMPL_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443'
   },
   [ENV.TEST]: {
     API_BASE: 'https://test-api.xinyuzhe.com',
     WS_BASE: 'wss://test-api.xinyuzhe.com',
-    STATIC_BASE: 'https://test-static.xinyuzhe.com'
+    STATIC_BASE: 'https://test-static.xinyuzhe.com',
+    SMPL_BASE: 'https://test-smpl.xinyuzhe.com'
   }
 };
 
@@ -42,13 +47,17 @@ const ENDPOINTS = {
   TTS: '/tts',
   TTS_PRELOAD: '/tts/preload',
 
-  // 手语识别
-  SIGN_RECOGNITION: '/inference',
-  SIGN_STATUS: '/inference/status',
+  // 手语识别（视频/图片翻译）
+  SIGN_RECOGNITION: '/translate/video',
+  SIGN_RECOGNITION_IMAGE: '/translate/image',
+  SIGN_STATUS: '/health',
 
-  // 3D手语生成
-  SMPL_GENERATE: '/smpl/generate',
-  SMPL_STATUS: '/smpl/status',
+  // 3D手语生成 (SMPL服务 - 接主地址)
+  SMPL_GENERATE: '/generate',
+  SMPL_STATUS: '/status',
+  SMPL_PROGRESS: '/progress',
+  SMPL_VIDEO: '/video',
+  SMPL_TASKS: '/tasks',
 
   // 用户相关
   USER_LOGIN: '/user/login',
@@ -83,6 +92,7 @@ module.exports = {
   API_BASE: currentConfig.API_BASE,
   WS_BASE: currentConfig.WS_BASE,
   STATIC_BASE: currentConfig.STATIC_BASE,
+  SMPL_BASE: currentConfig.SMPL_BASE,  // SMPL服务基础URL
 
   // 端点
   ENDPOINTS,
@@ -97,6 +107,11 @@ module.exports = {
   // 构建完整URL的辅助函数
   getUrl(endpoint) {
     return `${currentConfig.API_BASE}${endpoint}`;
+  },
+
+  // 获取SMPL服务完整URL
+  getSmplUrl(endpoint) {
+    return `${currentConfig.SMPL_BASE}${endpoint}`;
   },
 
   // 获取静态资源URL
