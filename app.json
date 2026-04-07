@@ -19,8 +19,8 @@
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "语见",
-    "navigationBarBackgroundColor": "#FAFBFC",
-    "backgroundColor": "#FAFBFC"
+    "navigationBarBackgroundColor": "#FDFBF8",
+    "backgroundColor": "#FDFBF8"
   },
   "usingComponents": {
     "mode-switcher": "/components/mode-switcher/mode-switcher",

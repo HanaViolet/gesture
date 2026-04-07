@@ -1,3 +1,5 @@
+/* ===== 相机页面：沉浸式现代设计 ===== */
+
 /* 相机容器 */
 .camera-container {
   position: relative;
@@ -19,21 +21,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12rpx 24rpx;
+  padding: calc(var(--space-3) + env(safe-area-inset-top)) var(--space-4) var(--space-3);
 }
 
 .nav-back {
-  width: 72rpx;
-  height: 72rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12rpx);
+  -webkit-backdrop-filter: blur(12rpx);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all var(--duration-fast);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-back:active {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0.95);
 }
 
 .back-arrow {
@@ -42,21 +49,22 @@
 }
 
 .nav-title {
-  font-size: 32rpx;
+  font-size: var(--font-lg);
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 }
 
 .nav-placeholder {
-  width: 72rpx;
+  width: 80rpx;
 }
 
 /* 顶部栏 */
 .top-bar {
   position: absolute;
   top: 200rpx;
-  left: 32rpx;
-  right: 32rpx;
+  left: var(--space-5);
+  right: var(--space-5);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -65,37 +73,42 @@
 
 /* 图标按钮 */
 .btn-icon {
-  width: 72rpx;
-  height: 72rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12rpx);
+  -webkit-backdrop-filter: blur(12rpx);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 200ms;
+  transition: all var(--duration-fast);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-icon:active {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0.95);
 }
 
 .btn-icon image {
-  width: 36rpx;
-  height: 36rpx;
+  width: 40rpx;
+  height: 40rpx;
   filter: brightness(0) invert(1);
 }
 
 /* 倒计时 */
 .countdown {
-  font-size: 48rpx;
-  font-weight: 500;
+  font-size: 56rpx;
+  font-weight: 600;
   color: #fff;
   font-variant-numeric: tabular-nums;
   letter-spacing: 4rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 }
 
 .countdown.recording {
-  color: #e74c3c;
+  color: #FF6B6B;
 }
 
 /* 相机 */
@@ -107,9 +120,9 @@ camera {
 /* 底部栏 */
 .bottom-bar {
   position: absolute;
-  bottom: 80rpx;
-  left: 64rpx;
-  right: 64rpx;
+  bottom: 100rpx;
+  left: var(--space-6);
+  right: var(--space-6);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -119,18 +132,22 @@ camera {
 
 /* 圆形按钮 */
 .btn-round {
-  width: 88rpx;
-  height: 88rpx;
+  width: 96rpx;
+  height: 96rpx;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12rpx);
+  -webkit-backdrop-filter: blur(12rpx);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 200ms;
+  transition: all var(--duration-fast);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-round:active {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0.95);
 }
 
 .btn-round.disabled {
@@ -139,15 +156,15 @@ camera {
 }
 
 .btn-round image {
-  width: 40rpx;
-  height: 40rpx;
+  width: 44rpx;
+  height: 44rpx;
   filter: brightness(0) invert(1);
 }
 
 /* 录制按钮 */
 .record-wrapper {
   position: relative;
-  padding: 16rpx;
+  padding: var(--space-2);
 }
 
 .record-wrapper.recording::before {
@@ -155,7 +172,7 @@ camera {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 4rpx solid #e74c3c;
+  border: 4rpx solid #FF6B6B;
   animation: pulse 1.5s ease-out infinite;
 }
 
@@ -165,28 +182,29 @@ camera {
 }
 
 .record-btn {
-  width: 120rpx;
-  height: 120rpx;
+  width: 128rpx;
+  height: 128rpx;
   border-radius: 50%;
   border: 6rpx solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.2);
 }
 
 .record-inner {
-  width: 88rpx;
-  height: 88rpx;
+  width: 96rpx;
+  height: 96rpx;
   border-radius: 50%;
-  background: #e74c3c;
-  transition: all 200ms;
+  background: #FF6B6B;
+  transition: all var(--duration-fast);
 }
 
 .record-inner.stop {
-  width: 48rpx;
-  height: 48rpx;
-  border-radius: 8rpx;
-  background: #e74c3c;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: var(--radius-sm);
+  background: #FF6B6B;
 }
 
 /* 视频预览 */
@@ -195,4 +213,17 @@ camera {
   inset: 0;
   z-index: 200;
   background: #000;
+}
+
+/* ===== 无障碍样式 ===== */
+@media (prefers-reduced-motion: reduce) {
+  .record-wrapper.recording::before {
+    animation: none;
+  }
+
+  .btn-icon,
+  .btn-round,
+  .nav-back {
+    transition: none;
+  }
 }

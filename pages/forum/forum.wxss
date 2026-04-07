@@ -1,55 +1,58 @@
+/* ===== 社区论坛：温暖社交设计 ===== */
+
 .forum-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
-  background: var(--bg-primary, #FAF9F7);
-  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  background: var(--bg-primary);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 
-/* 论坛头部 */
+/* ===== 论坛头部 ===== */
 .forum-header {
-  padding: 32rpx;
-  background: #fff;
-  border-bottom: 1rpx solid var(--bg-secondary, #F2F0ED);
+  padding: var(--space-5);
+  background: var(--bg-elevated);
+  border-bottom: 2rpx solid var(--bg-tertiary);
+  box-shadow: var(--shadow-xs);
 }
 
 .forum-title {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: var(--text-primary, #2D2D2D);
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .forum-subtitle {
-  font-size: 24rpx;
-  color: var(--text-secondary, #5A5A5A);
-  margin-top: 8rpx;
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
 }
 
-/* 帖子列表 - 确保左右对称 */
+/* ===== 帖子列表 ===== */
 .post-list {
   flex: 1;
-  padding: 24rpx 24rpx 0 24rpx;
+  padding: var(--space-4) var(--space-4) 0;
   box-sizing: border-box;
 }
 
-/* 合作社区宣传区域 */
+/* ===== 合作社区宣传区域 ===== */
 .community-banner-section {
-  margin-bottom: 32rpx;
+  margin-bottom: var(--space-5);
 }
 
 .section-title {
-  font-size: 30rpx;
+  font-size: var(--font-lg);
   font-weight: 600;
-  color: var(--text-primary, #2D2D2D);
-  margin-bottom: 20rpx;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
   display: block;
 }
 
 .community-swiper {
   height: 320rpx;
-  border-radius: 20rpx;
+  border-radius: var(--radius-xl);
   overflow: hidden;
 }
 
@@ -62,7 +65,7 @@
 .banner-image {
   width: 100%;
   height: 100%;
-  border-radius: 20rpx;
+  border-radius: var(--radius-xl);
   display: block;
 }
 
@@ -71,55 +74,59 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  padding: 40rpx 24rpx 24rpx;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
-  border-radius: 0 0 20rpx 20rpx;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  background: linear-gradient(to top, rgba(44, 62, 68, 0.7) 0%, transparent 100%);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
 .banner-title {
-  font-size: 28rpx;
+  font-size: var(--font-md);
   color: #fff;
-  font-weight: 500;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 }
 
+/* ===== 帖子卡片 ===== */
 .post-card {
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 32rpx;
-  margin: 0 0 24rpx 0;
-  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.06);
-  transition: transform 200ms ease;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin: 0 0 var(--space-4) 0;
+  box-shadow: var(--shadow-sm);
+  border: 2rpx solid var(--bg-tertiary);
+  transition: all var(--duration-fast) var(--ease-out);
   box-sizing: border-box;
 }
 
 .post-card:active {
   transform: scale(0.98);
+  box-shadow: var(--shadow);
 }
 
 .post-category {
   display: inline-block;
-  padding: 8rpx 16rpx;
-  background: var(--morandi-blue-light, #B8C4CE);
-  color: var(--morandi-blue, #7A8B99);
-  font-size: 22rpx;
-  border-radius: 8rpx;
-  margin-bottom: 16rpx;
+  padding: var(--space-1) var(--space-3);
+  background: var(--brand-light);
+  color: var(--brand-primary);
+  font-size: var(--font-xs);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+  font-weight: 600;
 }
 
 .post-title {
-  font-size: 32rpx;
+  font-size: var(--font-lg);
   font-weight: 600;
-  color: var(--text-primary, #2D2D2D);
-  margin-bottom: 16rpx;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
   line-height: 1.4;
 }
 
 .post-content {
-  font-size: 28rpx;
-  color: var(--text-secondary, #5A5A5A);
-  line-height: 1.6;
-  margin-bottom: 20rpx;
+  font-size: var(--font-base);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -129,8 +136,8 @@
 .post-image {
   width: 100%;
   height: 320rpx;
-  border-radius: 16rpx;
-  margin-bottom: 20rpx;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
   display: block;
 }
 
@@ -138,46 +145,46 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20rpx;
-  border-top: 1rpx solid var(--bg-secondary, #F2F0ED);
+  padding-top: var(--space-4);
+  border-top: 2rpx solid var(--bg-secondary);
 }
 
 .post-author-wrapper {
   display: flex;
   align-items: center;
-  gap: 16rpx;
+  gap: var(--space-3);
 }
 
 .post-avatar {
   width: 48rpx;
   height: 48rpx;
   border-radius: 50%;
-  background: var(--bg-secondary, #F2F0ED);
-  border: 2rpx solid var(--bg-secondary, #F2F0ED);
+  background: var(--bg-secondary);
+  border: 2rpx solid var(--bg-tertiary);
 }
 
 .post-author {
-  font-size: 24rpx;
-  color: var(--text-secondary, #5A5A5A);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .post-time {
-  font-size: 22rpx;
-  color: var(--text-tertiary, #8A8A8A);
+  font-size: var(--font-xs);
+  color: var(--text-tertiary);
 }
 
 .post-stats {
   display: flex;
-  gap: 24rpx;
+  gap: var(--space-4);
 }
 
 .stat-item {
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  font-size: 24rpx;
-  color: var(--text-secondary, #5A5A8A);
+  gap: var(--space-1);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
 }
 
 .stat-icon {
@@ -185,25 +192,27 @@
   height: 28rpx;
 }
 
-/* 发帖按钮 */
+/* ===== 发帖按钮 ===== */
 .new-post-button {
   position: fixed;
-  right: 40rpx;
-  bottom: calc(40rpx + env(safe-area-inset-bottom));
+  right: var(--space-5);
+  bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  background: var(--gradient-daily);
+  background: var(--gradient-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 32rpx rgba(122, 139, 153, 0.35);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
   z-index: 100;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .new-post-button:active {
   transform: scale(0.95);
+  box-shadow: var(--shadow-md);
 }
 
 .new-post-icon {
@@ -213,33 +222,47 @@
 }
 
 .new-post-text {
-  font-size: 20rpx;
+  font-size: var(--font-xs);
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* 空状态 */
+/* ===== 空状态 ===== */
 .empty-state {
-  padding: 80rpx 40rpx;
+  padding: var(--space-8) var(--space-5);
   text-align: center;
 }
 
 .empty-icon {
   width: 160rpx;
   height: 160rpx;
-  margin-bottom: 24rpx;
+  margin-bottom: var(--space-4);
   opacity: 0.3;
 }
 
 .empty-text {
-  font-size: 28rpx;
-  color: var(--text-tertiary, #8A8A8A);
+  font-size: var(--font-base);
+  color: var(--text-tertiary);
 }
 
-/* 加载状态 */
+/* ===== 加载状态 ===== */
 .loading-more {
   text-align: center;
-  padding: 32rpx;
-  font-size: 24rpx;
-  color: var(--text-tertiary, #8A8A8A);
+  padding: var(--space-4);
+  font-size: var(--font-sm);
+  color: var(--text-tertiary);
+}
+
+/* ===== 无障碍样式 ===== */
+@media (prefers-contrast: high) {
+  .post-card {
+    border: 4rpx solid var(--text-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card,
+  .new-post-button {
+    transition: none;
+  }
 }

@@ -1,35 +1,44 @@
-/* ============================
-   整体容器
-   ============================ */
+/* ===== 心理健康助手：温暖疗愈设计 ===== */
+
 .page-container {
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #F2F6FB;
+  background: var(--bg-primary);
   overflow: hidden;
 }
 
-/* ============================
-   对话区
-   ============================ */
+/* ===== 对话区 ===== */
 .chat-area {
   flex: 1;
   min-height: 0;
 }
 
 .chat-list {
-  padding: 28rpx 24rpx 20rpx;
+  padding: var(--space-4) var(--space-4) var(--space-3);
   display: flex;
   flex-direction: column;
-  gap: 28rpx;
+  gap: var(--space-4);
 }
 
 /* 消息组：头像 + 内容列 */
 .msg-group {
   display: flex;
   align-items: flex-start;
-  gap: 16rpx;
+  gap: var(--space-3);
+  animation: messageEnter var(--duration-normal) var(--ease-spring);
+}
+
+@keyframes messageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ai-group {
@@ -42,12 +51,12 @@
 
 /* AI 头像 */
 .ai-avatar {
-  width: 68rpx;
-  height: 68rpx;
+  width: 72rpx;
+  height: 72rpx;
   border-radius: 50%;
   flex-shrink: 0;
-  border: 3rpx solid #fff;
-  box-shadow: 0 4rpx 12rpx rgba(66,165,245,0.2);
+  border: 3rpx solid var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 内容列 */
@@ -55,7 +64,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10rpx;
+  gap: var(--space-2);
   max-width: 72%;
 }
 
@@ -63,104 +72,97 @@
   align-items: flex-end;
 }
 
-/* ============================
-   气泡
-   ============================ */
+/* ===== 气泡 ===== */
 .bubble {
-  padding: 22rpx 26rpx;
-  border-radius: 20rpx;
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
   word-break: break-all;
 }
 
 /* AI气泡：白色卡片，左下角尖 */
 .ai-bubble {
-  background: #FFFFFF;
-  border-bottom-left-radius: 4rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.07);
+  background: var(--bg-elevated);
+  border-bottom-left-radius: var(--space-1);
+  box-shadow: var(--shadow-sm);
+  border: 2rpx solid var(--bg-tertiary);
 }
 
-/* 用户气泡：蓝色渐变，右下角尖 */
+/* 用户气泡：品牌渐变，右下角尖 */
 .user-bubble {
-  background: linear-gradient(135deg, #5BB8FF 0%, #3D8EF0 100%);
-  border-bottom-right-radius: 4rpx;
-  box-shadow: 0 4rpx 16rpx rgba(61,142,240,0.35);
+  background: var(--gradient-primary);
+  border-bottom-right-radius: var(--space-1);
+  box-shadow: 0 4rpx 16rpx rgba(107, 142, 159, 0.35);
 }
 
 .bubble-text {
-  font-size: 30rpx;
+  font-size: var(--font-md);
   line-height: 1.8;
   display: block;
   letter-spacing: 0.5rpx;
 }
 
 .ai-bubble .bubble-text {
-  color: #2C3E50;
+  color: var(--text-primary);
 }
 
 .user-bubble .bubble-text {
   color: #FFFFFF;
 }
 
-/* ============================
-   手语 chip（气泡下方）
-   ============================ */
+/* ===== 手语 chip（气泡下方） ===== */
 .sign-chip-row {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding-left: 4rpx;
+  gap: var(--space-3);
+  padding-left: var(--space-1);
 }
 
 .sign-chip {
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  background: #FFF3E0;
-  border: 1.5rpx solid #FFCC80;
-  border-radius: 32rpx;
-  padding: 10rpx 22rpx 10rpx 16rpx;
-  transition: all 0.15s;
+  gap: var(--space-2);
+  background: var(--accent-light);
+  border: 2rpx solid var(--accent-soft);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .sign-chip:active {
-  background: #FFE0B2;
+  background: var(--accent-soft);
   transform: scale(0.95);
 }
 
 .sign-chip-emoji {
-  font-size: 30rpx;
+  font-size: var(--font-lg);
   line-height: 1;
 }
 
 .sign-chip-text {
-  font-size: 24rpx;
-  color: #E65100;
+  font-size: var(--font-sm);
+  color: var(--accent-dark);
   font-weight: 600;
   letter-spacing: 0.5rpx;
 }
 
-/* ============================
-   时间戳
-   ============================ */
+/* ===== 时间戳 ===== */
 .msg-time {
-  font-size: 22rpx;
-  color: #B0BEC5;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
 }
 
 .time-right {
   text-align: right;
 }
 
-/* ============================
-   输入中动画
-   ============================ */
+/* ===== 输入中动画 ===== */
 .typing-bubble {
-  padding: 24rpx 28rpx;
+  padding: var(--space-4) var(--space-5);
 }
 
 .typing-dots {
   display: flex;
-  gap: 10rpx;
+  gap: var(--space-2);
   align-items: center;
 }
 
@@ -168,7 +170,7 @@
   width: 14rpx;
   height: 14rpx;
   border-radius: 50%;
-  background: #90CAF9;
+  background: var(--brand-secondary);
   animation: dotBounce 1.2s infinite ease-in-out;
 }
 .dot:nth-child(2) { animation-delay: 0.2s; }
@@ -179,17 +181,15 @@
   30% { transform: translateY(-10rpx); opacity: 1; }
 }
 
-/* ============================
-   摄像头区
-   ============================ */
+/* ===== 摄像头区 ===== */
 .camera-area {
   flex-shrink: 0;
   height: 33vh;
-  margin: 0 20rpx 16rpx;
-  border-radius: 28rpx;
+  margin: 0 var(--space-4) var(--space-4);
+  border-radius: var(--radius-xl);
   overflow: hidden;
   position: relative;
-  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.14);
+  box-shadow: var(--shadow-md);
 }
 
 .camera-view {
@@ -204,30 +204,31 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 24rpx;
+  padding: var(--space-4);
 }
 
 /* 录制徽章 */
 .record-badge {
   display: flex;
   align-items: center;
-  gap: 12rpx;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(8px);
-  padding: 12rpx 26rpx;
-  border-radius: 48rpx;
-  border: 1rpx solid rgba(255,255,255,0.15);
+  gap: var(--space-2);
+  background: rgba(44, 62, 68, 0.6);
+  backdrop-filter: blur(12rpx);
+  -webkit-backdrop-filter: blur(12rpx);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1rpx solid rgba(255, 255, 255, 0.15);
 }
 
 .record-dot {
   width: 16rpx;
   height: 16rpx;
   border-radius: 50%;
-  background: #ccc;
+  background: var(--text-muted);
 }
 
 .record-badge.is-recording .record-dot {
-  background: #FF5252;
+  background: #FF6B6B;
   animation: blink 0.9s infinite;
 }
 
@@ -237,7 +238,7 @@
 }
 
 .record-text {
-  font-size: 26rpx;
+  font-size: var(--font-base);
   color: #fff;
   font-weight: 500;
 }
@@ -245,23 +246,24 @@
 /* 识别结果 */
 .recog-result {
   width: 100%;
-  background: rgba(255,255,255,0.94);
-  border-radius: 18rpx;
-  padding: 16rpx 24rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
   gap: 4rpx;
+  box-shadow: var(--shadow-sm);
 }
 
 .recog-label {
-  font-size: 22rpx;
-  color: #90A4AE;
+  font-size: var(--font-xs);
+  color: var(--text-tertiary);
 }
 
 .recog-text {
-  font-size: 30rpx;
-  color: #1565C0;
-  font-weight: 700;
+  font-size: var(--font-md);
+  color: var(--brand-primary);
+  font-weight: 600;
 }
 
 /* 占位 */
@@ -272,18 +274,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16rpx;
-  background: linear-gradient(145deg, #E8F4FD 0%, #EDE7F6 100%);
+  gap: var(--space-4);
+  background: linear-gradient(145deg, var(--brand-soft) 0%, var(--care-green-soft) 100%);
   position: relative;
 }
 
 /* 脉冲动画圆环 */
 .camera-pulse-ring {
   position: absolute;
-  width: 160rpx;
-  height: 160rpx;
+  width: 180rpx;
+  height: 180rpx;
   border-radius: 50%;
-  border: 4rpx solid rgba(66,165,245,0.25);
+  border: 4rpx solid rgba(107, 142, 159, 0.25);
   animation: pulseRing 2s ease-out infinite;
 }
 
@@ -299,92 +301,101 @@
 }
 
 .camera-hint {
-  font-size: 28rpx;
-  color: #78909C;
+  font-size: var(--font-base);
+  color: var(--text-secondary);
   font-weight: 500;
   letter-spacing: 1rpx;
 }
 
-/* ============================
-   底部输入栏
-   ============================ */
+/* ===== 底部输入栏 ===== */
 .input-bar {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding: 16rpx 24rpx;
-  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
-  background: #fff;
-  border-top: 1rpx solid #EEF2F7;
-  box-shadow: 0 -6rpx 24rpx rgba(0,0,0,0.05);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: var(--bg-elevated);
+  border-top: 2rpx solid var(--bg-tertiary);
+  box-shadow: 0 -4rpx 16rpx rgba(44, 62, 68, 0.05);
 }
 
 .input-wrap {
   flex: 1;
-  background: #F2F6FB;
-  border-radius: 44rpx;
-  border: 2rpx solid #E3ECF5;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  border: 2rpx solid var(--bg-tertiary);
   overflow: hidden;
+  transition: all var(--duration-fast);
+}
+
+.input-wrap:focus-within {
+  border-color: var(--brand-light);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
 }
 
 .text-input {
   width: 100%;
-  height: 84rpx;
-  padding: 0 28rpx;
-  font-size: 30rpx;
-  color: #2C3E50;
+  height: 88rpx;
+  padding: 0 var(--space-5);
+  font-size: var(--font-md);
+  color: var(--text-primary);
   box-sizing: border-box;
   background: transparent;
+  font-weight: 500;
+}
+
+.text-input::placeholder {
+  color: var(--text-placeholder);
 }
 
 .send-btn {
   flex-shrink: 0;
-  height: 84rpx;
-  padding: 0 36rpx;
-  background: #E3ECF5;
-  color: #B0BEC5;
-  border-radius: 44rpx;
-  font-size: 28rpx;
+  height: 88rpx;
+  padding: 0 var(--space-5);
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  border-radius: var(--radius-full);
+  font-size: var(--font-base);
   font-weight: 600;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 84rpx;
-  transition: all 0.2s;
+  line-height: 88rpx;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .send-btn::after { border: none; }
 
 .send-btn.send-active {
-  background: linear-gradient(135deg, #5BB8FF 0%, #3D8EF0 100%);
+  background: var(--gradient-primary);
   color: #fff;
-  box-shadow: 0 4rpx 16rpx rgba(61,142,240,0.4);
+  box-shadow: 0 4rpx 16rpx rgba(107, 142, 159, 0.4);
 }
 
 .send-btn:active { transform: scale(0.95); }
 
-/* ============================
-   手语浮层
-   ============================ */
+/* ===== 手语浮层 ===== */
 .sign-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(44, 62, 68, 0.6);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   z-index: 999;
+  backdrop-filter: blur(4rpx);
 }
 
 .sign-modal-box {
   width: 100%;
-  background: #fff;
-  border-radius: 32rpx 32rpx 0 0;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
   overflow: hidden;
-  box-shadow: 0 -8rpx 40rpx rgba(0,0,0,0.2);
-  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 -8rpx 40rpx rgba(44, 62, 68, 0.2);
+  animation: slideUp var(--duration-normal) var(--ease-spring);
 }
 
 @keyframes slideUp {
@@ -396,43 +407,45 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28rpx 32rpx 16rpx;
+  padding: var(--space-5) var(--space-5) var(--space-3);
+  position: relative;
 }
 
 /* 顶部拖拽指示条 */
 .sign-modal-header::before {
   content: '';
   position: absolute;
-  top: 14rpx;
+  top: var(--space-2);
   left: 50%;
   transform: translateX(-50%);
   width: 64rpx;
   height: 8rpx;
-  background: #E0E0E0;
+  background: var(--bg-tertiary);
   border-radius: 4rpx;
 }
 
 .sign-modal-title {
-  font-size: 32rpx;
+  font-size: var(--font-xl);
   font-weight: 700;
-  color: #2C3E50;
+  color: var(--text-primary);
 }
 
 .sign-modal-close {
-  width: 56rpx;
-  height: 56rpx;
-  background: #F5F5F5;
+  width: 64rpx;
+  height: 64rpx;
+  background: var(--bg-secondary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all var(--duration-fast);
 }
 
-.sign-modal-close:active { background: #E0E0E0; }
+.sign-modal-close:active { background: var(--bg-tertiary); }
 
 .close-icon {
-  font-size: 26rpx;
-  color: #757575;
+  font-size: var(--font-base);
+  color: var(--text-secondary);
   line-height: 1;
 }
 
@@ -449,15 +462,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24rpx;
-  background: #F8F9FA;
+  gap: var(--space-4);
+  background: var(--bg-secondary);
 }
 
 .sign-spinner {
-  width: 60rpx;
-  height: 60rpx;
-  border: 5rpx solid #E3ECF5;
-  border-top-color: #5BB8FF;
+  width: 64rpx;
+  height: 64rpx;
+  border: 5rpx solid var(--bg-tertiary);
+  border-top-color: var(--brand-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -465,17 +478,17 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .sign-loading-text {
-  font-size: 28rpx;
-  color: #90A4AE;
+  font-size: var(--font-base);
+  color: var(--text-tertiary);
 }
 
 .sign-original-text {
   display: block;
-  padding: 20rpx 32rpx 32rpx;
-  font-size: 26rpx;
-  color: #90A4AE;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+  font-size: var(--font-base);
+  color: var(--text-tertiary);
   line-height: 1.6;
-  border-top: 1rpx solid #F0F0F0;
+  border-top: 2rpx solid var(--bg-tertiary);
 }
 
 /* 确认开始按钮（摄像头开启后显示） */
@@ -490,23 +503,50 @@
 .confirm-start-btn {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  background: rgba(61, 142, 240, 0.88);
-  padding: 24rpx 48rpx;
-  border-radius: 64rpx;
-  border: 2rpx solid rgba(255,255,255,0.3);
-  box-shadow: 0 8rpx 32rpx rgba(61,142,240,0.4);
+  gap: var(--space-3);
+  background: var(--gradient-primary);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-full);
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  transition: all var(--duration-fast);
+}
+
+.confirm-start-btn:active {
+  transform: scale(0.97);
+  box-shadow: var(--shadow-sm);
 }
 
 .confirm-btn-icon {
-  font-size: 32rpx;
+  font-size: var(--font-lg);
   color: #fff;
   line-height: 1;
 }
 
 .confirm-btn-text {
-  font-size: 30rpx;
+  font-size: var(--font-md);
   color: #fff;
   font-weight: 600;
   letter-spacing: 1rpx;
+}
+
+/* ===== 无障碍样式 ===== */
+@media (prefers-contrast: high) {
+  .ai-bubble,
+  .user-bubble {
+    border: 4rpx solid var(--text-primary);
+  }
+
+  .sign-chip {
+    border: 4rpx solid var(--accent-dark);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-group,
+  .dot,
+  .camera-pulse-ring,
+  .sign-spinner {
+    animation: none;
+  }
 }
