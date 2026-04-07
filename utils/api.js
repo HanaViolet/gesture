@@ -25,10 +25,10 @@ const BASE_URLS = {
   },
   [ENV.PRODUCTION]: {
     // 手语识别 + SMPL生成 服务（生产环境 - API文档地址）
-    API_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443',
-    WS_BASE: 'wss://uu895901-9072-0273df24.westc.seetacloud.com:8443',
-    STATIC_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443/static',
-    SMPL_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443'
+    API_BASE: 'https://u895901-9072-0273df24.westc.seetacloud.com:8443',
+    WS_BASE: 'wss://u895901-9072-0273df24.westc.seetacloud.com:8443',
+    STATIC_BASE: 'https://u895901-9072-0273df24.westc.seetacloud.com:8443/static',
+    SMPL_BASE: 'https://u895901-9072-0273df24.westc.seetacloud.com:8443'
   },
   [ENV.TEST]: {
     API_BASE: 'https://test-api.xinyuzhe.com',
@@ -45,6 +45,7 @@ const currentConfig = BASE_URLS[CURRENT_ENV];
 const ENDPOINTS = {
   // TTS语音合成
   TTS: '/tts',
+  TTS_VOICES: '/tts/voices',
   TTS_PRELOAD: '/tts/preload',
 
   // 手语识别（视频/图片翻译）
@@ -78,8 +79,8 @@ const ENDPOINTS = {
   UPLOAD_VIDEO: '/upload/video',
   UPLOAD_IMAGE: '/upload/image',
 
-  // 心理健康AI对话
-  PSYCHOLOGY_CHAT: '/psychology/chat',
+  // 心理健康AI对话 (EmoLLM)
+  PSYCHOLOGY_CHAT: '/chat',
   PSYCHOLOGY_HISTORY: '/psychology/history',
 
   // 手语视频生成（文本转手语）
@@ -95,8 +96,11 @@ const ENDPOINTS = {
 const TIMEOUT = {
   DEFAULT: 10000,
   UPLOAD: 60000,
-  TTS: 15000,
-  SMPL: 30000
+  TTS: 30000,        // 短文本 30秒，长文本需要 60秒
+  TTS_LONG: 60000,
+  SMPL: 30000,
+  CHAT: 60000,       // EmoLLM 对话需要 5-30秒
+  HEALTH_CHECK: 5000
 };
 
 module.exports = {

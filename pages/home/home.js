@@ -501,14 +501,26 @@ Page({
 
   // ===== 公共TTS播放（新API: POST /tts，返回WAV音频流）=====
   _playTTS(text) {
-    const cleanText = text.replace(/[？?]/g, '').trim();
+    // 保留标点符号，只移除可能影响语气的特殊符号
+    const cleanText = text.replace(/[\n\r]/g, ' ').trim();
     if (!cleanText) return;
+
+    // 如果有正在播放的语音，先停止并销毁
+    if (this._currentAudioContext) {
+      try {
+        this._currentAudioContext.stop();
+        this._currentAudioContext.destroy();
+      } catch (e) {}
+      this._currentAudioContext = null;
+    }
+
     wx.request({
       url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: `text=${encodeURIComponent(cleanText)}&voice=2222&speed=5`,
+      data: `text=${encodeURIComponent(cleanText)}&voice=2222&speed=3`,
       responseType: 'arraybuffer',
+      timeout: 60000,
       success: (res) => {
         if (res.statusCode !== 200 || !res.data) {
           wx.showToast({ title: '语音合成失败', icon: 'none' });
@@ -521,10 +533,46 @@ Page({
           data: res.data,
           encoding: 'binary',
           success: () => {
-            const audio = wx.createInnerAudioContext();
-            audio.src = tmpPath;
-            audio.play();
-            audio.onError((e) => console.error('音频播放失败:', e));
+            // 延迟一点再播放，确保文件写入完成
+            setTimeout(() => {
+              const audio = wx.createInnerAudioContext();
+              this._currentAudioContext = audio;
+              audio.src = tmpPath;
+
+              // 关键：设置自动播放，确保音频不会被系统中断
+              audio.autoplay = false;
+
+              // 监听可以播放事件
+              audio.onCanplay(() => {
+                audio.play();
+              });
+
+              // 监听播放完成
+              audio.onEnded(() => {
+                setTimeout(() => {
+                  if (this._currentAudioContext === audio) {
+                    this._currentAudioContext = null;
+                  }
+                  try {
+                    audio.destroy();
+                  } catch (e) {}
+                }, 100);
+              });
+
+              // 监听播放错误
+              audio.onError((e) => {
+                console.error('音频播放失败:', e);
+                if (this._currentAudioContext === audio) {
+                  this._currentAudioContext = null;
+                }
+                try {
+                  audio.destroy();
+                } catch (err) {}
+              });
+
+              // 开始播放
+              audio.play();
+            }, 100);
           },
           fail: (err) => {
             wx.showToast({ title: '保存音频失败', icon: 'none' });

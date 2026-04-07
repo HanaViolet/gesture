@@ -254,6 +254,11 @@ Page({
     wx.navigateTo({ url: '/pages/teach/teach' });
   },
 
+  // ========== 社区工作 ==========
+  openCommunity() {
+    wx.navigateTo({ url: '/pages/forum/forum' });
+  },
+
   // ========== 关于页面 ==========
   showAbout() {
     wx.showModal({

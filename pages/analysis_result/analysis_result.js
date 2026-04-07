@@ -77,8 +77,9 @@ Page({
       url: `${API_BASE}${ENDPOINTS.TTS}`,
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: `text=${encodeURIComponent(text)}&voice=${voice}&speed=5`,
+      data: `text=${encodeURIComponent(text)}&voice=${voice}&speed=3`,
       responseType: 'arraybuffer',
+      timeout: 60000,
       success: (res) => {
         if (res.statusCode !== 200 || !res.data) {
           wx.showToast({ title: `${label}语音合成失败`, icon: 'none' });
@@ -112,11 +113,44 @@ Page({
     if (audioUrl) {
       // 先销毁旧的男声音频上下文
       if (this.data.maleAudioContext) {
-        this.data.maleAudioContext.destroy();
+        try {
+          this.data.maleAudioContext.stop();
+          this.data.maleAudioContext.destroy();
+        } catch (e) {}
       }
       const audioContext = wx.createInnerAudioContext();
       audioContext.src = audioUrl;
-      audioContext.play();
+
+      // 监听可以播放事件
+      audioContext.onCanplay(() => {
+        audioContext.play();
+      });
+
+      // 监听播放完成
+      audioContext.onEnded(() => {
+        setTimeout(() => {
+          try {
+            audioContext.destroy();
+          } catch (e) {}
+          this.setData({ maleAudioContext: null });
+        }, 100);
+      });
+
+      // 监听播放错误
+      audioContext.onError((err) => {
+        console.error('男声播放失败:', err);
+        try {
+          audioContext.destroy();
+        } catch (e) {}
+        this.setData({ maleAudioContext: null });
+        wx.showToast({ title: '播放失败', icon: 'none' });
+      });
+
+      // 延迟播放，确保资源加载完成
+      setTimeout(() => {
+        audioContext.play();
+      }, 100);
+
       this.setData({
         maleAudioContext: audioContext,
         selectedVoice: 'male',
@@ -133,11 +167,44 @@ Page({
     if (audioUrl) {
       // 先销毁旧的女声音频上下文
       if (this.data.femaleAudioContext) {
-        this.data.femaleAudioContext.destroy();
+        try {
+          this.data.femaleAudioContext.stop();
+          this.data.femaleAudioContext.destroy();
+        } catch (e) {}
       }
       const audioContext = wx.createInnerAudioContext();
       audioContext.src = audioUrl;
-      audioContext.play();
+
+      // 监听可以播放事件
+      audioContext.onCanplay(() => {
+        audioContext.play();
+      });
+
+      // 监听播放完成
+      audioContext.onEnded(() => {
+        setTimeout(() => {
+          try {
+            audioContext.destroy();
+          } catch (e) {}
+          this.setData({ femaleAudioContext: null });
+        }, 100);
+      });
+
+      // 监听播放错误
+      audioContext.onError((err) => {
+        console.error('女声播放失败:', err);
+        try {
+          audioContext.destroy();
+        } catch (e) {}
+        this.setData({ femaleAudioContext: null });
+        wx.showToast({ title: '播放失败', icon: 'none' });
+      });
+
+      // 延迟播放，确保资源加载完成
+      setTimeout(() => {
+        audioContext.play();
+      }, 100);
+
       this.setData({
         femaleAudioContext: audioContext,
         selectedVoice: 'female',

@@ -105,6 +105,17 @@
           <text class="arrow">></text>
         </view>
       </view>
+
+      <!-- 社区工作 -->
+      <view class="list-item" bindtap="openCommunity">
+        <view class="list-item-left">
+          <text class="icon">🏢</text>
+          <text class="label">{{t('settings.communityWork') || '社区工作'}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="arrow">></text>
+        </view>
+      </view>
     </view>
   </view>
 

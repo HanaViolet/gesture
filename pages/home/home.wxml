@@ -20,10 +20,6 @@
       </view>
     </view>
     <view class="header-right">
-      <view class="header-btn community-capsule press" bindtap="navigateToForum" aria-label="{{texts.community}}">
-        <image src="/icons/message.svg" class="header-icon" mode="aspectFit"/>
-        <text class="header-btn-text">{{texts.community}}</text>
-      </view>
       <view class="settings-capsule press" bindtap="navigateToSettings" aria-label="{{texts.settings}}">
         <image src="/icons/setting.svg" class="settings-icon" mode="aspectFit"/>
         <text class="settings-text">{{texts.settings}}</text>

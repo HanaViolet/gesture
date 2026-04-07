@@ -78,6 +78,7 @@ module.exports = {
   'settings.notSet': 'Nicht festgelegt',
   'settings.help': 'Hilfe',
   'settings.tutorial': 'Anleitung',
+  'settings.communityWork': 'Gemeinschaftsarbeit',
   'settings.selectLanguage': 'Sprache auswählen',
   'settings.selectFontSize': 'Schriftgröße auswählen',
   'settings.selectMode': 'Nutzungsmodus auswählen',

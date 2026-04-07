@@ -145,17 +145,25 @@
           <text class="close-icon">✕</text>
         </view>
       </view>
-      <view class="sign-loading" wx:if="{{signLoading}}">
+
+      <!-- SMPL 生成中 -->
+      <view class="sign-generating" wx:if="{{signLoading}}">
         <view class="sign-spinner"></view>
-        <text class="sign-loading-text">正在生成手语视频…</text>
+        <text class="sign-loading-text">正在生成手语动画…</text>
+        <text class="sign-loading-sub">请稍候，即将为您呈现</text>
       </view>
-      <video
-        wx:else
-        class="sign-video"
-        src="{{signVideoUrl}}"
-        autoplay loop controls
-        show-center-play-btn="{{false}}"
-      ></video>
+
+      <!-- SMPL 手语动画查看器 -->
+      <view class="sign-viewer-container" wx:else>
+        <smpl-viewer
+          text="{{currentSignText}}"
+          videoUrl="{{signVideoUrl}}"
+          taskId="{{signTaskId}}"
+          smplBase="{{SMPL_BASE}}"
+          endpoints="{{ENDPOINTS}}"
+        />
+      </view>
+
       <text class="sign-original-text">{{currentSignText}}</text>
     </view>
   </view>
