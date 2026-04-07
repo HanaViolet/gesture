@@ -868,6 +868,7 @@ page {
 }
 
 /* ===== 减少动画 ===== */
+/* 注意：微信小程序不支持 @media 中的 * 通配符选择器
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -877,8 +878,20 @@ page {
     transition-duration: 0.01ms !important;
   }
 }
+*/
+.reduce-motion .animate,
+.reduce-motion .animate-scale,
+.reduce-motion .animate-pulse,
+.reduce-motion .ripple,
+.reduce-motion .float-animation,
+.reduce-motion .wave-animation,
+.reduce-motion .skeleton {
+  animation: none !important;
+  transition: none !important;
+}
 
 /* ===== 高对比度模式 ===== */
+/* 注意：微信小程序不完全支持 prefers-contrast 媒体查询
 @media (prefers-contrast: high) {
   page {
     --text-primary: #000000;
@@ -892,6 +905,7 @@ page {
     box-shadow: none;
   }
 }
+*/
 
 /* ===== 听障模式全局样式 ===== */
 page.mode-deaf {
