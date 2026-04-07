@@ -1,11 +1,11 @@
-/* 引导页面样式 - 克制极简、温暖科技 */
+/* ===== 引导页面：温暖欢迎设计 ===== */
 
 .onboarding-page {
   min-height: 100vh;
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-5);
   box-sizing: border-box;
 }
 
@@ -20,84 +20,86 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-6) 0 var(--space-5);
+  padding: var(--space-7) 0 var(--space-6);
   animation: fadeSlideUp var(--duration-slow) var(--ease-out);
 }
 
 .welcome-icon {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .icon-circle {
-  width: 120rpx;
-  height: 120rpx;
+  width: 140rpx;
+  height: 140rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand) 0%, var(--accent) 100%);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
 .icon-text {
-  font-size: 56rpx;
+  font-size: 64rpx;
   font-weight: 700;
   color: #fff;
 }
 
 .welcome-title {
-  font-size: 44rpx;
-  font-weight: 600;
+  font-size: 48rpx;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--space-2);
 }
 
 .welcome-subtitle {
-  font-size: var(--font-caption);
+  font-size: var(--font-base);
   color: var(--text-secondary);
+  font-weight: 500;
 }
 
 /* ===== 通用区块样式 ===== */
 .section {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
   animation: fadeSlideUp var(--duration-slow) var(--ease-out) 100ms backwards;
 }
 
 .section-header {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .section-title {
-  font-size: var(--font-body);
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--text-primary);
   display: block;
 }
 
 .section-desc {
-  font-size: var(--font-caption);
+  font-size: var(--font-sm);
   color: var(--text-tertiary);
-  margin-top: 4rpx;
+  margin-top: var(--space-1);
   display: block;
 }
 
 /* ===== 语言选择器 ===== */
 .language-selector {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .lang-option {
   flex: 1;
   position: relative;
   background: var(--bg-elevated);
-  border-radius: var(--radius);
-  padding: var(--space-3);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2rpx solid transparent;
-  transition: all var(--duration-normal);
+  border: 2rpx solid var(--bg-tertiary);
+  transition: all var(--duration-fast) var(--ease-out);
+  box-shadow: var(--shadow-xs);
 }
 
 .lang-option:active {
@@ -105,30 +107,30 @@
 }
 
 .lang-option.active {
-  border-color: var(--brand);
-  background: var(--brand-light);
+  border-color: var(--brand-primary);
+  background: var(--brand-soft);
   box-shadow: var(--shadow-sm);
 }
 
 .lang-name {
-  font-size: 30rpx;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .lang-local {
-  font-size: 22rpx;
+  font-size: var(--font-sm);
   color: var(--text-tertiary);
   margin-top: 4rpx;
 }
 
 .check-icon {
   position: absolute;
-  top: 8rpx;
-  right: 8rpx;
-  width: 32rpx;
-  height: 32rpx;
-  background: var(--brand);
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 36rpx;
+  height: 36rpx;
+  background: var(--brand-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -136,8 +138,8 @@
 }
 
 .check-dot {
-  width: 12rpx;
-  height: 12rpx;
+  width: 14rpx;
+  height: 14rpx;
   background: #fff;
   border-radius: 50%;
 }
@@ -153,10 +155,11 @@
   display: flex;
   align-items: center;
   background: var(--bg-elevated);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  border: 2rpx solid transparent;
-  transition: all var(--duration-normal);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  border: 2rpx solid var(--bg-tertiary);
+  transition: all var(--duration-fast) var(--ease-out);
+  box-shadow: var(--shadow-xs);
 }
 
 .mode-card:active {
@@ -164,20 +167,21 @@
 }
 
 .mode-card.active {
-  border-color: var(--brand);
-  background: var(--brand-light);
-  box-shadow: var(--shadow-md);
+  border-color: var(--brand-primary);
+  background: var(--brand-soft);
+  box-shadow: var(--shadow-sm);
 }
 
 .mode-icon-wrapper {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: var(--radius);
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-right: var(--space-3);
+  margin-right: var(--space-4);
+  background: var(--bg-secondary);
 }
 
 .mode-icon {
@@ -191,18 +195,18 @@
 }
 
 .mode-title {
-  font-size: var(--font-body);
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--text-primary);
   display: block;
 }
 
 .mode-desc {
-  font-size: var(--font-caption);
+  font-size: var(--font-sm);
   color: var(--text-secondary);
-  margin-top: 4rpx;
+  margin-top: var(--space-1);
   display: block;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .mode-check {
@@ -210,19 +214,19 @@
 }
 
 .check-circle {
-  width: 44rpx;
-  height: 44rpx;
+  width: 48rpx;
+  height: 48rpx;
   border-radius: 50%;
-  border: 4rpx solid var(--text-tertiary);
+  border: 4rpx solid var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--duration-normal);
+  transition: all var(--duration-fast);
 }
 
 .check-circle.checked {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
 }
 
 .check-mark {
@@ -236,7 +240,7 @@
 /* ===== 底部区域 ===== */
 .footer-section {
   margin-top: auto;
-  padding: var(--space-4) 0;
+  padding: var(--space-5) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -245,36 +249,35 @@
 
 .enter-btn {
   width: 100%;
-  height: 96rpx;
-  background: var(--brand);
-  border-radius: 48rpx;
+  height: 104rpx;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
-  transition: all var(--duration-normal);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .enter-btn:active:not(.disabled) {
   transform: scale(0.98);
   box-shadow: var(--shadow-sm);
-  opacity: 0.9;
 }
 
 .enter-btn.disabled {
-  background: var(--text-tertiary);
-  opacity: 0.5;
+  background: var(--text-muted);
   box-shadow: none;
+  opacity: 0.7;
 }
 
 .btn-text {
-  font-size: var(--font-body);
+  font-size: var(--font-lg);
   font-weight: 600;
   color: #fff;
 }
 
 .footer-hint {
-  font-size: 24rpx;
+  font-size: var(--font-sm);
   color: var(--text-tertiary);
   margin-top: var(--space-3);
 }
@@ -296,7 +299,7 @@
   }
 }
 
-/* ===== 无障碍：减少动画 ===== */
+/* ===== 无障碍样式 ===== */
 @media (prefers-reduced-motion: reduce) {
   .welcome-section,
   .section,
@@ -311,10 +314,9 @@
   }
 }
 
-/* ===== 高对比度模式 ===== */
 @media (prefers-contrast: high) {
-  .lang-option.active,
-  .mode-card.active {
+  .lang-option,
+  .mode-card {
     border-width: 4rpx;
   }
 

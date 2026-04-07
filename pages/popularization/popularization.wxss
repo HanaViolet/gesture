@@ -1,44 +1,68 @@
+/* ===== 手语科普：清新知识设计 ===== */
+
 .popularization-container {
-  height: 100vh;
-  background: #e6f0ff; /* 浅蓝色背景 */
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding-top: 100rpx;
 }
 
 .back-button {
   position: fixed;
-  top: 20px;
-  left: 15px;
+  top: calc(20rpx + env(safe-area-inset-top));
+  left: var(--space-4);
   z-index: 100;
-  width: 30px;
-  height: 30px;
+  width: 72rpx;
+  height: 72rpx;
+  background: var(--bg-elevated);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  border: 2rpx solid var(--bg-tertiary);
+}
+
+.back-button:active {
+  background: var(--bg-secondary);
 }
 
 .content-scroll {
-  height: 100vh;
-  padding: 10px 20px 30px; /* 左右距离屏幕边缘 30px */
+  min-height: 100vh;
+  padding: var(--space-3) var(--space-5) var(--space-6);
 }
 
 .section-card {
-  width: calc(100vw - 40px); /* 左右两边各 20px，所以减去 40px */
-  background: white;
-  border-radius: 12px;
+  width: 100%;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  border: 2rpx solid var(--bg-tertiary);
 }
 
 .section-header {
-  background: #cddff5; /* 浅蓝色标题背景 */
-  padding: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
+  background: var(--brand-soft);
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 2rpx solid var(--bg-tertiary);
 }
 
 .section-content {
-  padding: 15px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #666;
-  word-break: break-all; /* 让文本自动换行 */
-  white-space: normal;    /* 正常处理空白，配合 word-break 实现自动换行 */
+  padding: var(--space-5);
+  font-size: var(--font-base);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  word-break: break-all;
+  white-space: normal;
+  font-weight: 500;
+}
+
+/* ===== 无障碍样式 ===== */
+@media (prefers-contrast: high) {
+  .section-card {
+    border: 4rpx solid var(--text-primary);
+  }
 }

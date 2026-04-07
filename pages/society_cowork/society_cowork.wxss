@@ -1,32 +1,35 @@
+/* ===== 社区工作：温暖连接设计 ===== */
+
 .container {
-  background: var(--bg-primary, #FAF9F7);
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
-  padding: 32rpx;
+  padding: var(--space-5);
   min-height: 100vh;
   box-sizing: border-box;
 }
 
 .phrase-card {
   width: 100%;
-  background: #fff;
-  border-radius: 24rpx;
-  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.06);
-  padding: 32rpx;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
   display: flex;
   flex-direction: column;
-  margin-bottom: 24rpx;
+  margin-bottom: var(--space-4);
   box-sizing: border-box;
+  border: 2rpx solid var(--bg-tertiary);
 }
 
 .card-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  margin-bottom: 24rpx;
-  color: var(--text-primary, #2D2D2D);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  color: var(--text-primary);
   text-align: left;
-  padding-left: 8rpx;
-  border-left: 6rpx solid var(--morandi-blue, #7A8B99);
+  padding-left: var(--space-3);
+  border-left: 6rpx solid var(--brand-primary);
 }
 
 .content-scroll {
@@ -37,56 +40,70 @@
 .small-block {
   display: flex;
   align-items: center;
-  margin-bottom: 20rpx;
-  padding: 20rpx;
-  background: var(--bg-secondary, #F2F0ED);
-  border-radius: 16rpx;
-  transition: all 200ms ease;
+  margin-bottom: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .small-block:active {
-  background: var(--morandi-blue-light, #B8C4CE);
+  background: var(--brand-light);
   transform: scale(0.98);
 }
 
 .small-block image {
   width: 120rpx;
   height: 90rpx;
-  margin-right: 24rpx;
-  border-radius: 12rpx;
+  margin-right: var(--space-4);
+  border-radius: var(--radius);
   object-fit: cover;
 }
 
 .small-block text {
-  font-size: 30rpx;
-  color: var(--text-primary, #2D2D2D);
-  font-weight: 500;
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
-/* 论坛按钮 */
+/* ===== 论坛按钮 ===== */
 .community-button {
   width: 100%;
-  margin-top: 16rpx;
-  padding: 32rpx 0;
-  background: var(--gradient-daily);
+  margin-top: var(--space-3);
+  padding: var(--space-5) 0;
+  background: var(--gradient-primary);
   color: #fff;
-  font-size: 32rpx;
+  font-size: var(--font-lg);
   font-weight: 600;
-  border-radius: 48rpx;
+  border-radius: var(--radius-full);
   text-align: center;
-  box-shadow: 0 8rpx 32rpx rgba(122, 139, 153, 0.25);
-  transition: all 200ms ease;
+  box-shadow: 0 8rpx 32rpx rgba(107, 142, 159, 0.35);
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .community-button:active {
   transform: scale(0.98);
-  box-shadow: 0 4rpx 16rpx rgba(122, 139, 153, 0.15);
+  box-shadow: 0 4rpx 16rpx rgba(107, 142, 159, 0.25);
 }
 
-/* 空状态提示 */
+/* ===== 空状态提示 ===== */
 .empty-tip {
   text-align: center;
-  padding: 40rpx;
-  color: var(--text-tertiary, #8A8A8A);
-  font-size: 28rpx;
+  padding: var(--space-6);
+  color: var(--text-tertiary);
+  font-size: var(--font-base);
+}
+
+/* ===== 无障碍样式 ===== */
+@media (prefers-contrast: high) {
+  .phrase-card {
+    border: 4rpx solid var(--text-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .small-block,
+  .community-button {
+    transition: none;
+  }
 }
