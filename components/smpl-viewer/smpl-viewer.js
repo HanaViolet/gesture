@@ -49,7 +49,7 @@ Component({
       } else if (videoUrl) {
         // 已有videoUrl，直接显示
         setTimeout(() => {
-          this.setData({ loading: false });
+          this.setData({ loading: false, isGenerating: false });
           wx.vibrateShort({ type: 'light' });
         }, 500);
       } else {
@@ -57,15 +57,6 @@ Component({
         setTimeout(() => {
           this.setData({ loading: false });
         }, 1500);
-      }
-    },
-    ready() {
-      // 如果没有taskId（直接传入videoUrl的情况），直接显示
-      if (!this.properties.taskId && this.properties.videoUrl) {
-        setTimeout(() => {
-          this.setData({ loading: false, isGenerating: false });
-          wx.vibrateShort({ type: 'light' });
-        }, 500);
       }
     },
     detached() {
