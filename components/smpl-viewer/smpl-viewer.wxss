@@ -228,14 +228,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center; /* 垂直居中 */
-  padding: 200rpx 40rpx 360rpx; /* 底部留出更多空间给原文区域 */
+  padding: 120rpx 40rpx 320rpx; /* 调整内边距，确保视频居中 */
   box-sizing: border-box;
 }
 
 /* Video Container - 视频容器 */
 .video-container {
   width: 92%;
-  height: 60vh; /* 更大一点，占屏幕60% */
+  height: 52vh; /* 调整高度，避免遮挡视频进度条 */
   display: flex;
   align-items: center;
   justify-content: center;

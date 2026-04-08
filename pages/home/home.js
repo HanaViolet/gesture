@@ -229,9 +229,6 @@ Page({
   onShow() {
     this.chunkGifList();
 
-    // 获取后端历史任务
-    this.fetchBackendTasks();
-
     // 检查设置是否被更改
     const currentSettings = settingsManager.getSettings();
     const settingsChanged = (
@@ -677,7 +674,7 @@ Page({
   // SMPL 生成完成回调
   onSmplComplete(e) {
     const { videoUrl, text, taskId } = e.detail;
-    console.log('SMPL生成完成:', videoUrl, 'taskId:', taskId);
+    console.log('[Home] SMPL生成完成回调:', { videoUrl, text, taskId });
 
     // 保存到本地历史记录（同时保存taskId，用于URL失效时重新获取）
     const newRecord = {
@@ -715,12 +712,24 @@ Page({
   viewHistoryItem(e) {
     const index = e.currentTarget.dataset.index;
     const item = this.data.smplHistory[index];
+    console.log('[Home] 查看历史记录, index:', index, 'item:', item);
     if (item) {
+      const hasTaskId = item.taskId && item.taskId !== 'undefined' && item.taskId !== 'null';
+      const hasVideoUrl = item.videoUrl && item.videoUrl !== 'undefined';
+      console.log('[Home] 历史记录详情:', { text: item.text, taskId: item.taskId, videoUrl: item.videoUrl, hasTaskId, hasVideoUrl });
+
+      // 如果有有效的taskId，优先使用taskId来重新获取视频（避免URL过期）
+      // 如果没有taskId但有videoUrl，则直接使用videoUrl
+      if (!hasTaskId && !hasVideoUrl) {
+        wx.showToast({ title: '视频链接已失效', icon: 'none' });
+        return;
+      }
+
       this.setData({
         showViewer: true,
         viewerText: item.text,
-        viewerVideoUrl: item.videoUrl || '',  // 从历史记录恢复视频URL
-        viewerTaskId: ''  // 已有视频URL，不需要taskId
+        viewerVideoUrl: hasTaskId ? '' : (item.videoUrl || ''),  // 有taskId时先不传videoUrl，让组件轮询获取
+        viewerTaskId: hasTaskId ? item.taskId : ''  // 只有有效的taskId才传递
       });
     }
   },

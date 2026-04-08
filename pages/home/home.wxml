@@ -182,56 +182,6 @@
             </view>
           </view>
 
-          <!-- 最近使用记录区域 -->
-          <view class="normal-history-area">
-            <view class="history-header">
-              <text class="history-title">{{texts.recentUse}}</text>
-              <text class="history-subtitle">{{texts.maxRecords}}</text>
-              <view class="refresh-btn" bindtap="fetchBackendTasks">
-                <text>刷新</text>
-              </view>
-            </view>
-            <scroll-view class="history-list" scroll-y="true">
-              <block wx:if="{{backendTasks.length > 0}}">
-                <view class="task-section-title">云端历史</view>
-                <block wx:for="{{backendTasks}}" wx:key="id">
-                  <view class="history-item press" bindtap="viewBackendTask" data-task="{{item}}">
-                    <view class="history-content">
-                      <text class="history-text">{{item.text}}</text>
-                      <text class="history-time">{{item.time}}</text>
-                    </view>
-                    <view class="history-action">
-                      <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
-                      <text class="history-action-text">{{texts.view}}</text>
-                    </view>
-                  </view>
-                </block>
-                <view class="divider" wx:if="{{smplHistory.length > 0}}"></view>
-              </block>
-
-              <block wx:if="{{smplHistory.length === 0 && backendTasks.length === 0}}">
-                <view class="history-empty">
-                  <text>{{texts.emptyHistory}}</text>
-                </view>
-              </block>
-              <block wx:if="{{smplHistory.length > 0}}">
-                <view class="task-section-title" wx:if="{{backendTasks.length > 0}}">本机最近</view>
-                <block wx:for="{{smplHistory}}" wx:key="id">
-                  <view class="history-item press" bindtap="viewHistoryItem" data-index="{{index}}">
-                    <view class="history-content">
-                      <text class="history-text">{{item.text}}</text>
-                      <text class="history-time">{{item.time}}</text>
-                    </view>
-                    <view class="history-action">
-                      <image src="/icons/hand.svg" mode="aspectFit" class="history-icon"/>
-                      <text class="history-action-text">{{texts.view}}</text>
-                    </view>
-                  </view>
-                </block>
-              </block>
-            </scroll-view>
-          </view>
-
           <!-- 底部功能按钮 -->
           <view class="normal-bottom-actions">
             <button class="bottom-btn press" bindtap="showQuickPhrases" aria-label="{{texts.quickPhrases}}">

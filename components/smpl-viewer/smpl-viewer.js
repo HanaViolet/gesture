@@ -43,17 +43,25 @@ Component({
     ready() {
       // 如果有taskId且有有效的smplBase和endpoints，开始轮询生成进度
       const { taskId, smplBase, endpoints, videoUrl } = this.properties;
-      if (taskId && smplBase && endpoints && endpoints.SMPL_STATUS) {
+      console.log('[SMPL] ready 生命周期, taskId:', taskId, 'videoUrl:', videoUrl);
+
+      // 检查taskId是否有效（不为空、undefined、null）
+      const hasValidTaskId = taskId && taskId !== 'undefined' && taskId !== 'null' && taskId !== '';
+
+      if (hasValidTaskId && smplBase && endpoints && endpoints.SMPL_STATUS) {
+        console.log('[SMPL] 有有效taskId，开始轮询');
         this.setData({ isGenerating: true });
         this.pollTaskStatus(taskId);
-      } else if (videoUrl) {
+      } else if (videoUrl && videoUrl !== 'undefined') {
         // 已有videoUrl，直接显示
+        console.log('[SMPL] 有videoUrl，直接显示');
         setTimeout(() => {
           this.setData({ loading: false, isGenerating: false });
           wx.vibrateShort({ type: 'light' });
         }, 500);
       } else {
         // 没有taskId也没有videoUrl，显示3D模式
+        console.log('[SMPL] 无taskId和videoUrl，显示3D模式');
         setTimeout(() => {
           this.setData({ loading: false });
         }, 1500);
@@ -98,21 +106,40 @@ Component({
     // 获取任务进度
     fetchTaskProgress(taskId) {
       const { smplBase, endpoints } = this.properties;
+      console.log('[SMPL] fetchTaskProgress 检查:', { smplBase, hasProgress: !!endpoints.SMPL_PROGRESS, progressEndpoint: endpoints.SMPL_PROGRESS });
       if (!smplBase || !endpoints.SMPL_PROGRESS) {
+        console.log('[SMPL] 进度端点不可用，返回0');
         return Promise.resolve(0);
       }
       return new Promise((resolve) => {
+        const url = `${smplBase}${endpoints.SMPL_PROGRESS}/${taskId}`;
+        console.log('[SMPL] 请求进度URL:', url);
         wx.request({
-          url: `${smplBase}${endpoints.SMPL_PROGRESS}/${taskId}`,
+          url: url,
           method: 'GET',
           success: (res) => {
+            console.log('[SMPL] 进度响应:', res.statusCode, res.data);
             if (res.statusCode === 200 && res.data) {
-              resolve(res.data.progress || 0);
+              // 处理响应可能是字符串的情况
+              let data = res.data;
+              if (typeof data === 'string') {
+                try {
+                  data = JSON.parse(data);
+                } catch (e) {
+                  console.log('[SMPL] 解析JSON失败:', e);
+                }
+              }
+              const progress = data.progress || data.percent || 0;
+              console.log('[SMPL] 解析进度:', progress);
+              resolve(progress);
             } else {
               resolve(0);
             }
           },
-          fail: () => resolve(0)
+          fail: (err) => {
+            console.error('[SMPL] 进度请求失败:', err);
+            resolve(0);
+          }
         });
       });
     },
@@ -161,6 +188,29 @@ Component({
           success: (res) => {
             console.log('[SMPL] 状态响应:', res.statusCode, res.data);
 
+            // 如果任务不存在（404），但有保存的videoUrl，直接尝试播放
+            if (res.statusCode === 404) {
+              console.log('[SMPL] 任务不存在，检查是否有保存的videoUrl');
+              clearInterval(this._progressTimer);
+              if (this._pollTimer) clearTimeout(this._pollTimer);
+              if (this.properties.videoUrl) {
+                console.log('[SMPL] 使用保存的videoUrl:', this.properties.videoUrl);
+                this.setData({
+                  videoUrl: this.properties.videoUrl,
+                  loading: false,
+                  isGenerating: false,
+                  progress: 100
+                });
+              } else {
+                this.setData({
+                  error: '视频已过期，请重新生成',
+                  loading: false,
+                  isGenerating: false
+                });
+              }
+              return;
+            }
+
             if (res.statusCode === 200 && res.data) {
               const status = res.data.status || res.data.state || res.data.task_status;
               console.log('[SMPL] 当前状态:', status, '完整响应:', res.data);
@@ -168,21 +218,25 @@ Component({
               if (status === 'completed') {
                 console.log('[SMPL] 任务完成！');
                 clearInterval(this._progressTimer);
+                if (this._pollTimer) clearTimeout(this._pollTimer);
                 // 任务完成，获取视频URL
-                const videoUrl = `${smplBase}${endpoints.SMPL_VIDEO}/${taskId}`;
+                const finalVideoUrl = `${smplBase}${endpoints.SMPL_VIDEO}/${taskId}`;
+                console.log('[SMPL] 设置视频URL:', finalVideoUrl);
                 this.setData({
-                  videoUrl: videoUrl,
+                  videoUrl: finalVideoUrl,
                   loading: false,
                   isGenerating: false,
                   progress: 100,
                   statusText: '生成完成！'
                 });
-                // 通知父组件
-                this.triggerEvent('complete', { videoUrl, text: this.properties.text });
+                // 通知父组件 - 确保传递taskId
+                console.log('[SMPL] 触发complete事件，taskId:', taskId);
+                this.triggerEvent('complete', { videoUrl: finalVideoUrl, text: this.properties.text, taskId: taskId });
                 wx.vibrateShort({ type: 'light' });
               } else if (status === 'failed') {
                 console.error('[SMPL] 任务失败:', res.data.error);
                 clearInterval(this._progressTimer);
+                if (this._pollTimer) clearTimeout(this._pollTimer);
                 this.setData({
                   error: '生成失败: ' + (res.data.error || ''),
                   loading: false,
