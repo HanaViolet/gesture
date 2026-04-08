@@ -103,45 +103,80 @@ Component({
       }
     },
 
-    // 获取任务进度
-    fetchTaskProgress(taskId) {
+    // 使用SSE获取任务进度
+    connectProgressSSE(taskId) {
       const { smplBase, endpoints } = this.properties;
-      console.log('[SMPL] fetchTaskProgress 检查:', { smplBase, hasProgress: !!endpoints.SMPL_PROGRESS, progressEndpoint: endpoints.SMPL_PROGRESS });
+      console.log('[SMPL] connectProgressSSE 检查:', { smplBase, hasProgress: !!endpoints.SMPL_PROGRESS });
       if (!smplBase || !endpoints.SMPL_PROGRESS) {
-        console.log('[SMPL] 进度端点不可用，返回0');
-        return Promise.resolve(0);
+        console.log('[SMPL] 进度端点不可用');
+        return;
       }
-      return new Promise((resolve) => {
-        const url = `${smplBase}${endpoints.SMPL_PROGRESS}/${taskId}`;
-        console.log('[SMPL] 请求进度URL:', url);
-        wx.request({
-          url: url,
-          method: 'GET',
-          success: (res) => {
-            console.log('[SMPL] 进度响应:', res.statusCode, res.data);
-            if (res.statusCode === 200 && res.data) {
-              // 处理响应可能是字符串的情况
-              let data = res.data;
-              if (typeof data === 'string') {
-                try {
-                  data = JSON.parse(data);
-                } catch (e) {
-                  console.log('[SMPL] 解析JSON失败:', e);
-                }
-              }
-              const progress = data.progress || data.percent || 0;
-              console.log('[SMPL] 解析进度:', progress);
-              resolve(progress);
-            } else {
-              resolve(0);
-            }
-          },
-          fail: (err) => {
-            console.error('[SMPL] 进度请求失败:', err);
-            resolve(0);
-          }
-        });
+
+      const url = `${smplBase}${endpoints.SMPL_PROGRESS}/${taskId}`;
+      console.log('[SMPL] 连接SSE进度流:', url);
+
+      // 使用enableChunked实现SSE流式接收
+      const requestTask = wx.request({
+        url: url,
+        method: 'GET',
+        enableChunked: true,
+        success: (res) => {
+          console.log('[SMPL] SSE连接结束:', res.statusCode);
+        },
+        fail: (err) => {
+          console.error('[SMPL] SSE连接失败:', err);
+        }
       });
+
+      let buffer = '';
+
+      requestTask.onChunkReceived((res) => {
+        // 将ArrayBuffer转换为字符串
+        const chunk = this.arrayBufferToString(res.data);
+        buffer += chunk;
+
+        // 处理SSE格式数据
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // 保留未完成的行
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('data:')) {
+            const dataStr = trimmed.substring(5).trim();
+            try {
+              const data = JSON.parse(dataStr);
+              console.log('[SMPL] SSE进度数据:', data);
+
+              if (data.progress !== undefined) {
+                this.setData({
+                  progress: data.progress,
+                  statusText: data.message || `正在为您生成中，已生成 ${data.progress}%`
+                });
+              }
+            } catch (e) {
+              console.log('[SMPL] 解析SSE数据失败:', e, dataStr);
+            }
+          }
+        }
+      });
+
+      this._progressRequest = requestTask;
+    },
+
+    // ArrayBuffer转UTF-8字符串
+    arrayBufferToString(buffer) {
+      const uint8Array = new Uint8Array(buffer);
+      // 使用TextDecoder正确解码UTF-8
+      if (typeof TextDecoder !== 'undefined') {
+        const decoder = new TextDecoder('utf-8');
+        return decoder.decode(uint8Array);
+      }
+      // 降级方案
+      let str = '';
+      for (let i = 0; i < uint8Array.length; i++) {
+        str += String.fromCharCode(uint8Array[i]);
+      }
+      return str;
     },
 
     // 轮询任务状态
@@ -158,22 +193,19 @@ Component({
       let pollCount = 0;
       const maxPolls = 600; // 最多轮询600次（约10分钟）
 
-      // 定期获取进度
-      this._progressTimer = setInterval(async () => {
-        const progress = await this.fetchTaskProgress(taskId);
-        console.log('[SMPL] 进度:', progress + '%');
-        this.setData({
-          progress: progress,
-          statusText: `正在为您生成中，已生成 ${progress}%`
-        });
-      }, 1000); // 每1秒获取一次进度
+      // 使用SSE连接获取实时进度
+      this.connectProgressSSE(taskId);
 
       const doPoll = () => {
         console.log('[SMPL] 轮询次数:', pollCount, '/', maxPolls);
 
         if (pollCount >= maxPolls) {
           console.log('[SMPL] 超时');
-          clearInterval(this._progressTimer);
+          // 关闭SSE连接
+          if (this._progressRequest) {
+            this._progressRequest.abort();
+            this._progressRequest = null;
+          }
           this.setData({
             error: '生成超时（超过10分钟）',
             loading: false,
@@ -191,7 +223,11 @@ Component({
             // 如果任务不存在（404），但有保存的videoUrl，直接尝试播放
             if (res.statusCode === 404) {
               console.log('[SMPL] 任务不存在，检查是否有保存的videoUrl');
-              clearInterval(this._progressTimer);
+              // 关闭SSE连接
+              if (this._progressRequest) {
+                this._progressRequest.abort();
+                this._progressRequest = null;
+              }
               if (this._pollTimer) clearTimeout(this._pollTimer);
               if (this.properties.videoUrl) {
                 console.log('[SMPL] 使用保存的videoUrl:', this.properties.videoUrl);
@@ -217,7 +253,11 @@ Component({
 
               if (status === 'completed') {
                 console.log('[SMPL] 任务完成！');
-                clearInterval(this._progressTimer);
+                // 关闭SSE连接
+                if (this._progressRequest) {
+                  this._progressRequest.abort();
+                  this._progressRequest = null;
+                }
                 if (this._pollTimer) clearTimeout(this._pollTimer);
                 // 任务完成，获取视频URL
                 const finalVideoUrl = `${smplBase}${endpoints.SMPL_VIDEO}/${taskId}`;
@@ -235,7 +275,11 @@ Component({
                 wx.vibrateShort({ type: 'light' });
               } else if (status === 'failed') {
                 console.error('[SMPL] 任务失败:', res.data.error);
-                clearInterval(this._progressTimer);
+                // 关闭SSE连接
+                if (this._progressRequest) {
+                  this._progressRequest.abort();
+                  this._progressRequest = null;
+                }
                 if (this._pollTimer) clearTimeout(this._pollTimer);
                 this.setData({
                   error: '生成失败: ' + (res.data.error || ''),
@@ -480,9 +524,10 @@ Component({
         clearTimeout(this._pollTimer);
         this._pollTimer = null;
       }
-      if (this._progressTimer) {
-        clearInterval(this._progressTimer);
-        this._progressTimer = null;
+      // 关闭SSE连接
+      if (this._progressRequest) {
+        this._progressRequest.abort();
+        this._progressRequest = null;
       }
       // 重置生成状态
       this.setData({
