@@ -61,13 +61,7 @@ Component({
     },
     detached() {
       this.cleanup();
-      // 清除轮询定时器
-      if (this._pollTimer) {
-        clearTimeout(this._pollTimer);
-      }
-      if (this._progressTimer) {
-        clearInterval(this._progressTimer);
-      }
+      this.cleanupGeneration();
     }
   },
   observers: {
@@ -405,6 +399,43 @@ Component({
       setTimeout(() => {
         this.triggerEvent('close');
       }, 250);
+    },
+
+    // 取消生成
+    cancelGeneration() {
+      wx.showModal({
+        title: '取消生成',
+        content: '确定要取消手语动画生成吗？',
+        confirmColor: '#ff4d4f',
+        success: (res) => {
+          if (res.confirm) {
+            console.log('[SMPL] 用户取消生成');
+            this.cleanupGeneration();
+            // 通知父组件生成被取消
+            this.triggerEvent('cancel', { text: this.properties.text });
+            this.closeViewer();
+          }
+        }
+      });
+    },
+
+    // 清理生成相关资源
+    cleanupGeneration() {
+      // 清除轮询定时器
+      if (this._pollTimer) {
+        clearTimeout(this._pollTimer);
+        this._pollTimer = null;
+      }
+      if (this._progressTimer) {
+        clearInterval(this._progressTimer);
+        this._progressTimer = null;
+      }
+      // 重置生成状态
+      this.setData({
+        isGenerating: false,
+        progress: 0,
+        statusText: '正在为您生成中...'
+      });
     },
     replay() {
       if (this.data.videoUrl && this.videoContext) {

@@ -24,11 +24,12 @@ const BASE_URLS = {
     SMPL_BASE: 'http://127.0.0.1:8000'
   },
   [ENV.PRODUCTION]: {
-    // 手语识别 + SMPL生成 服务（生产环境 - API文档地址）
+    // 手语识别 + TTS 服务（生产环境 - Api_Unsign.md 地址）
     API_BASE: 'https://u895901-9072-0273df24.westc.seetacloud.com:8443',
     WS_BASE: 'wss://u895901-9072-0273df24.westc.seetacloud.com:8443',
     STATIC_BASE: 'https://u895901-9072-0273df24.westc.seetacloud.com:8443/static',
-    SMPL_BASE: 'https://u895901-9072-0273df24.westc.seetacloud.com:8443'
+    // SMPL 3D手语生成服务（生产环境 - API_Soke.md 地址，注意是 uu895901 双u）
+    SMPL_BASE: 'https://uu895901-9072-0273df24.westc.seetacloud.com:8443'
   },
   [ENV.TEST]: {
     API_BASE: 'https://test-api.xinyuzhe.com',

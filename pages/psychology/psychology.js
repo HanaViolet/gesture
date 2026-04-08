@@ -32,7 +32,13 @@ Page({
 
   // ===== 生命周期 =====
   onLoad() {
-    this.loadHistory();
+    // 每次进入清空历史记录，防止上下文过长
+    this.clearHistory();
+  },
+
+  onShow() {
+    // 每次显示页面时也清空（防止从后台返回）
+    this.clearHistory();
   },
 
   onHide() {
@@ -41,6 +47,30 @@ Page({
 
   onUnload() {
     this.setData({ cameraOn: false, recording: false });
+    // 清理手语生成轮询定时器
+    if (this._pollTimer) {
+      clearTimeout(this._pollTimer);
+      this._pollTimer = null;
+    }
+    // 清理手语识别定时器
+    if (this._recognitionTimer) {
+      clearTimeout(this._recognitionTimer);
+    }
+  },
+
+  // 清空历史记录
+  clearHistory() {
+    this.setData({
+      messages: [],
+      messageIdCounter: 0
+    });
+    this.chatHistory = [];
+    // 可选：同时清除本地存储的历史记录
+    try {
+      wx.removeStorageSync('psychology_history');
+    } catch (e) {
+      console.error('清除历史记录失败:', e);
+    }
   },
 
   // ===== 历史记录 =====
@@ -95,7 +125,8 @@ Page({
       messageIdCounter: id + 1,
       scrollToView: `msg-${id}`
     });
-    this.saveHistory();
+    // 不再保存历史到本地存储，每次进入页面都重新开始对话
+    // this.saveHistory();
     return msg;
   },
 
@@ -307,9 +338,9 @@ Page({
                 { role: 'assistant', content: responseText }
               );
 
-              // 限制历史长度，保留最近10轮对话
-              if (this.chatHistory.length > 20) {
-                this.chatHistory = this.chatHistory.slice(-20);
+              // 限制历史长度，最多15条消息（约7-8轮对话），防止上下文过长
+              if (this.chatHistory.length > 15) {
+                this.chatHistory = this.chatHistory.slice(-15);
               }
 
               resolve(responseText);
@@ -448,7 +479,12 @@ Page({
   },
 
   onHideSign() {
-    this.setData({ showSignModal: false, signVideoUrl: '', signLoading: false });
+    // 清理轮询定时器
+    if (this._pollTimer) {
+      clearTimeout(this._pollTimer);
+      this._pollTimer = null;
+    }
+    this.setData({ showSignModal: false, signVideoUrl: '', signLoading: false, signTaskId: '' });
     this.haptic();
   },
 
@@ -489,7 +525,14 @@ Page({
     let pollCount = 0;
     const maxPolls = 60; // 最多轮询60次（约2分钟）
 
+    this._pollTimer = null;
+
     const doPoll = () => {
+      if (!this.data.showSignModal) {
+        // 弹窗已关闭，停止轮询
+        return;
+      }
+
       if (pollCount >= maxPolls) {
         wx.showToast({ title: '生成超时，请重试', icon: 'none' });
         this.setData({ signLoading: false });
@@ -500,6 +543,8 @@ Page({
         url: `${SMPL_BASE}${ENDPOINTS.SMPL_STATUS}/${taskId}`,
         method: 'GET',
         success: (res) => {
+          if (!this.data.showSignModal) return;
+
           if (res.statusCode === 200 && res.data) {
             const status = res.data.status;
 
@@ -517,20 +562,30 @@ Page({
             } else {
               // 继续轮询
               pollCount++;
-              setTimeout(doPoll, 2000);
+              this._pollTimer = setTimeout(doPoll, 2000);
             }
           } else {
             pollCount++;
-            setTimeout(doPoll, 2000);
+            this._pollTimer = setTimeout(doPoll, 2000);
           }
         },
         fail: () => {
+          if (!this.data.showSignModal) return;
           pollCount++;
-          setTimeout(doPoll, 2000);
+          this._pollTimer = setTimeout(doPoll, 2000);
         }
       });
     };
 
     doPoll();
+  },
+
+  // 视频播放错误处理
+  onVideoError(e) {
+    console.error('视频播放错误:', e.detail);
+    wx.showToast({
+      title: '视频播放失败',
+      icon: 'none'
+    });
   },
 });

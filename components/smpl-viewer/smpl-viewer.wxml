@@ -16,6 +16,10 @@
       </view>
       <view class="generating-text">{{statusText}}</view>
       <view class="generating-hint">请稍候，手语动画正在生成中</view>
+      <view class="cancel-btn press" bindtap="cancelGeneration">
+        <text class="cancel-icon">✕</text>
+        <text>取消生成</text>
+      </view>
     </view>
   </view>
 
@@ -63,9 +67,12 @@
     <canvas wx:else type="webgl" id="webgl" class="webgl-canvas" bindready="onCanvasReady"></canvas>
   </view>
 
-  <!-- Text Bubble - 文字显示 -->
-  <view class="text-bubble" wx:if="{{!loading && !error && !isGenerating}}">
-    <text class="bubble-text">{{text}}</text>
+  <!-- 原文展示区域 -->
+  <view class="original-text-section" wx:if="{{!loading && !error && !isGenerating}}">
+    <view class="original-text-label">原文</view>
+    <scroll-view class="original-text-content" scroll-y>
+      <text class="original-text">{{text}}</text>
+    </scroll-view>
   </view>
 
   <!-- Bottom Controls - 底部控制按钮 -->

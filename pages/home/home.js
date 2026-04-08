@@ -676,16 +676,17 @@ Page({
 
   // SMPL 生成完成回调
   onSmplComplete(e) {
-    const { videoUrl, text } = e.detail;
-    console.log('SMPL生成完成:', videoUrl);
+    const { videoUrl, text, taskId } = e.detail;
+    console.log('SMPL生成完成:', videoUrl, 'taskId:', taskId);
 
-    // 保存到本地历史记录
+    // 保存到本地历史记录（同时保存taskId，用于URL失效时重新获取）
     const newRecord = {
       id: Date.now(),
       text: text,
       time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
       timestamp: Date.now(),
-      videoUrl: videoUrl
+      videoUrl: videoUrl,
+      taskId: taskId || ''  // 保存taskId备用
     };
 
     const currentHistory = this.data.smplHistory || [];
@@ -696,6 +697,18 @@ Page({
 
     // 刷新后端任务列表
     this.fetchBackendTasks();
+  },
+
+  // SMPL 生成取消回调
+  onSmplCancel(e) {
+    const { text } = e.detail;
+    console.log('SMPL生成已取消:', text);
+    // 显示取消提示
+    wx.showToast({
+      title: '已取消生成',
+      icon: 'none',
+      duration: 1500
+    });
   },
 
   // 查看历史记录中的SMPL动画
@@ -964,22 +977,45 @@ Page({
     });
   },
 
-  // 手语识别（模拟）
+  // 手语识别 - 调用真实API
   recognizeSignLanguage(videoPath) {
-    wx.showLoading({ title: '识别中...' });
+    wx.showLoading({ title: '识别中...', mask: true });
 
-    // 这里应该调用实际的手语识别API
-    // 暂时模拟识别结果
-    setTimeout(() => {
-      wx.hideLoading();
-      const mockResults = ['你好，请问有什么可以帮助您？', '谢谢您的帮助', '我需要一杯水', '请问洗手间在哪里？'];
-      const result = mockResults[Math.floor(Math.random() * mockResults.length)];
+    wx.uploadFile({
+      url: `${API_BASE}${ENDPOINTS.SIGN_RECOGNITION}`,
+      filePath: videoPath,
+      name: 'file',
+      timeout: 60000,
+      success: (res) => {
+        wx.hideLoading();
+        let data;
+        try {
+          data = JSON.parse(res.data);
+        } catch (e) {
+          wx.showToast({ title: '解析响应失败', icon: 'none' });
+          return;
+        }
 
-      // 保存到历史记录并显示
-      this.saveDeafOutput(result);
-      this.setData({ currentOutput: result });
-      wx.showToast({ title: '识别完成', icon: 'success' });
-    }, 2000);
+        if (data.success && data.text) {
+          console.log('手语翻译结果:', data.text);
+          const result = data.text;
+          // 保存到历史记录并显示
+          this.saveDeafOutput(result);
+          this.setData({ currentOutput: result });
+          wx.showToast({ title: '识别完成', icon: 'success' });
+        } else {
+          wx.showToast({
+            title: '手语识别失败: ' + (data.message || '未知错误'),
+            icon: 'none'
+          });
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading();
+        console.error('手语识别失败:', err);
+        wx.showToast({ title: '上传视频失败: ' + (err.errMsg || '网络错误'), icon: 'none' });
+      }
+    });
   },
 
   navigateToSettings() {

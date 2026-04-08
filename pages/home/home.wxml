@@ -50,8 +50,8 @@
             </view>
           </view>
 
-          <!-- 输入框区域 + 相机按钮 -->
-          <view class="deaf-input-area">
+          <!-- 输入框区域 -->
+          <view class="deaf-input-area-compact">
             <view class="input-wrapper">
               <input
                 class="deaf-input"
@@ -63,38 +63,23 @@
                 aria-label="{{texts.type}}"
               />
             </view>
-            <view class="input-actions">
-              <button class="action-btn camera-btn press" bindtap="openCameraForDeaf" aria-label="{{texts.shoot}}">
-                <image src="/icons/camera.svg" mode="aspectFit" class="btn-icon"/>
-                <text>{{texts.shoot}}</text>
-              </button>
-              <button class="action-btn tts-btn press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafTTS" aria-label="{{texts.play}}">
-                <image src="/icons/volume.svg" mode="aspectFit" class="btn-icon"/>
-                <text>{{texts.play}}</text>
-              </button>
-            </view>
           </view>
 
-          <!-- 历史记录区域（最近3条） -->
-          <view class="deaf-history-area">
-            <text class="deaf-history-title">{{texts.recentUse}}（{{deafOutputHistory.length}}/3）</text>
-            <view class="deaf-history-list">
-              <block wx:for="{{[0, 1, 2]}}" wx:key="*this">
-                <view class="deaf-history-item {{!deafOutputHistory[item] ? 'empty' : ''}}">
-                  <block wx:if="{{deafOutputHistory[item]}}">
-                    <text class="deaf-history-text">{{deafOutputHistory[item].text}}</text>
-                    <view class="deaf-history-actions">
-                      <view class="deaf-history-btn" bindtap="playHistoryItem" data-index="{{item}}">
-                        <image src="/icons/volume.svg" mode="aspectFit" class="deaf-history-icon"/>
-                        <text>{{texts.play}}</text>
-                      </view>
-                    </view>
-                  </block>
-                  <block wx:else>
-                    <text class="deaf-history-text" style="color: #ccc;">-</text>
-                  </block>
+          <!-- 大号拍摄/播放按钮区域 -->
+          <view class="deaf-actions-area">
+            <view class="deaf-actions-row">
+              <button class="deaf-big-btn camera-big-btn press" bindtap="openCameraForDeaf" aria-label="{{texts.shoot}}">
+                <view class="big-btn-icon-wrap">
+                  <image src="/icons/camera.svg" mode="aspectFit" class="big-btn-icon"/>
                 </view>
-              </block>
+                <text class="big-btn-text">{{texts.shoot}}</text>
+              </button>
+              <button class="deaf-big-btn tts-big-btn press {{rippleActive ? 'ripple' : ''}}" bindtap="playDeafTTS" aria-label="{{texts.play}}">
+                <view class="big-btn-icon-wrap">
+                  <image src="/icons/volume.svg" mode="aspectFit" class="big-btn-icon"/>
+                </view>
+                <text class="big-btn-text">{{texts.play}}</text>
+              </button>
             </view>
           </view>
 
@@ -339,6 +324,7 @@
       endpoints="{{ENDPOINTS}}"
       bind:close="closeViewer"
       bind:complete="onSmplComplete"
+      bind:cancel="onSmplCancel"
     />
   </view>
 

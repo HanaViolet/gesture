@@ -197,6 +197,30 @@
   font-size: 28rpx;
 }
 
+/* 取消生成按钮 */
+.cancel-btn {
+  margin-top: 60rpx;
+  padding: 24rpx 48rpx;
+  background: rgba(255, 77, 79, 0.1);
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 28rpx;
+  color: #ff4d4f;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:active {
+  background: rgba(255, 77, 79, 0.2);
+  transform: scale(0.98);
+}
+
+.cancel-icon {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
 /* Content Area - 中间内容区 */
 .content-area {
   flex: 1;
@@ -204,7 +228,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center; /* 垂直居中 */
-  padding: 200rpx 40rpx 320rpx; /* 上下留出空间 */
+  padding: 200rpx 40rpx 360rpx; /* 底部留出更多空间给原文区域 */
   box-sizing: border-box;
 }
 
@@ -233,29 +257,36 @@
   display: block;
 }
 
-/* Text Bubble - 文字气泡（固定位置） */
-.text-bubble {
+/* 原文展示区域 */
+.original-text-section {
   position: absolute;
-  left: 50%;
-  bottom: 220rpx; /* 在视频和控制按钮之间 */
-  transform: translateX(-50%);
-  padding: 16rpx 36rpx;
-  border-radius: 36rpx;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4rpx 24rpx rgba(0,0,0,0.08);
-  border: 1rpx solid rgba(0,0,0,0.06);
-  max-width: 80%;
+  left: 0;
+  bottom: 320rpx;
+  width: 100%;
+  padding: 16rpx 40rpx;
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 2rpx solid rgba(0,0,0,0.06);
   z-index: 1002;
+  box-sizing: border-box;
 }
 
-.bubble-text {
-  font-size: 30rpx;
-  color: var(--text);
-  text-align: center;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.original-text-label {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.original-text-content {
+  max-height: 100rpx;
+}
+
+.original-text {
+  font-size: 34rpx;
+  color: #2D2D2D;
+  line-height: 1.7;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 /* Bottom Controls - 底部控制按钮 */
@@ -264,13 +295,13 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 180rpx;
+  height: 300rpx;
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(10rpx);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-around;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 20rpx);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 60rpx);
   padding-top: 20rpx;
   z-index: 1001;
   box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.05);

@@ -242,7 +242,73 @@
   filter: none;
 }
 
-/* ===== 听障版：历史记录 ===== */
+/* ===== 听障版：大号拍摄/播放按钮区域 ===== */
+.deaf-input-area-compact {
+  padding: var(--space-3) 0 var(--space-2);
+}
+
+.deaf-actions-area {
+  padding: var(--space-4) 0;
+}
+
+.deaf-actions-row {
+  display: flex;
+  gap: var(--space-4);
+  height: 420rpx;
+}
+
+.deaf-big-btn {
+  flex: 1;
+  height: 400rpx;
+  border-radius: var(--radius-2xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  box-shadow: var(--shadow);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.deaf-big-btn:active {
+  transform: scale(0.97);
+  box-shadow: var(--shadow-sm);
+}
+
+.big-btn-icon-wrap {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.big-btn-icon {
+  width: 100rpx;
+  height: 100rpx;
+  filter: brightness(0) invert(1);
+}
+
+.big-btn-text {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.camera-big-btn {
+  background: var(--gradient-warm);
+}
+
+.tts-big-btn {
+  background: var(--gradient-primary);
+}
+
+/* ===== 听障版：历史记录（已隐藏） ===== */
+.deaf-history-area {
+  display: none;
+}
 .deaf-history-area {
   padding: var(--space-2) 0 var(--space-4);
 }
@@ -504,6 +570,9 @@
 .btn-brand .btn-icon {
   filter: none;
   margin-right: var(--space-2);
+  width: 44rpx;
+  height: 44rpx;
+  flex-shrink: 0;
 }
 
 .btn-brand:active {
