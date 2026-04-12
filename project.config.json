@@ -50,7 +50,7 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx19a48af5cc8fd6f3",
+  "appid": "YOUR_APPID_HERE",
   "_comment": "请将上方appid替换为你自己的小程序AppID",
   "simulatorPluginLibVersion": {}
 }
