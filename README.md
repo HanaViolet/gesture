@@ -155,6 +155,22 @@ gesture/
 
 欢迎提交 Issue 和 Pull Request。
 
+## 致谢与引用
+
+本项目的关键功能使用了以下研究成果，特此致谢：
+
+### 手语识别
+**Uni-Sign: Toward Unified Sign Language Understanding at Scale**
+- Zecheng Li, Wengang Zhou, Weichao Zhao, Kepeng Wu, Hezhen Hu, Houqiang Li
+- University of Science and Technology of China, University of Texas at Austin
+- Published at ICLR 2025
+
+### 手语生成
+**Signs as Tokens: A Retrieval-Enhanced Multilingual Sign Language Generator**
+- Ronglai Zuo, Rolando Alexandros Potamias, Evangelos Ververas, Jiankang Deng, Stefanos Zafeiriou
+- Imperial College London
+- arXiv:2411.17799 (2024)
+
 ## 许可
 
 本项目仅供学习和研究使用。
