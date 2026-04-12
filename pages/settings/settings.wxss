@@ -6,9 +6,62 @@
   padding-bottom: var(--space-6);
 }
 
+/* ===== 自定义导航栏 ===== */
+.custom-nav {
+  background: var(--bg-primary);
+}
+
+.status-bar {
+  width: 100%;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  height: 88rpx;
+}
+
+.nav-back {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-back-icon {
+  font-size: 48rpx;
+  color: var(--text-primary);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+}
+
+.nav-placeholder {
+  width: 64rpx;
+}
+
 /* ===== 分组区域 ===== */
 .section {
   margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-sm);
+  color: var(--text-tertiary);
+  padding: var(--space-4) var(--space-5) var(--space-3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
 }
 
 .section-title {
@@ -295,4 +348,83 @@ switch {
   .picker-content {
     transition: none;
   }
+}
+
+/* ===== 意见反馈弹窗 ===== */
+.feedback-content {
+  max-height: 80vh;
+}
+
+.feedback-body {
+  padding: var(--space-4) var(--space-5);
+  flex: 1;
+}
+
+.feedback-textarea {
+  width: 100%;
+  min-height: 300rpx;
+  padding: var(--space-4);
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+.feedback-counter {
+  display: block;
+  text-align: right;
+  font-size: var(--font-sm);
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+.feedback-actions {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) var(--space-6);
+  border-top: 2rpx solid var(--bg-secondary);
+}
+
+.feedback-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: var(--font-md);
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  text-align: center;
+  border: none;
+}
+
+.feedback-btn.cancel {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.feedback-btn.confirm {
+  background: linear-gradient(135deg, #5B7BA3 0%, #4A6A92 100%);
+  color: #fff;
+}
+
+.feedback-btn.confirm.disabled {
+  opacity: 0.5;
+}
+
+/* 高对比度模式下的反馈样式 */
+.high-contrast .feedback-textarea {
+  background: #222;
+  color: #fff;
+  border: 2rpx solid #444;
+}
+
+.high-contrast .feedback-btn.cancel {
+  background: #333;
+  color: #ccc;
+}
+
+.high-contrast .feedback-btn.confirm {
+  background: #4A6A92;
 }

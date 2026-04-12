@@ -58,7 +58,7 @@ Page({
     });
     wx.showToast({ title: '已保存为常用语', icon: 'success' });
     setTimeout(() => {
-      wx.navigateBack({ delta: 1 });
+      wx.redirectTo({ url: '/pages/home/home' });
     }, 600);
   },
 
@@ -73,7 +73,7 @@ Page({
     wx.setStorageSync('customPhrases', custom);
     wx.showToast({ title: '已保存为快捷短语', icon: 'success' });
     setTimeout(() => {
-      wx.navigateBack({ delta: 1 });
+      wx.redirectTo({ url: '/pages/home/home' });
     }, 600);
   },
 

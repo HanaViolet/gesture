@@ -1,12 +1,56 @@
 /* ===== 分析结果页面：清晰专业设计 ===== */
 
 .result-page {
-  padding: var(--space-5);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: var(--bg-primary);
   box-sizing: border-box;
+}
+
+/* ===== 自定义导航栏 ===== */
+.custom-nav {
+  background: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.status-bar {
+  width: 100%;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  height: 88rpx;
+}
+
+.nav-back {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-back-icon {
+  font-size: 48rpx;
+  color: var(--text-primary);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+}
+
+.nav-placeholder {
+  width: 64rpx;
 }
 
 /* 进度条区域 */

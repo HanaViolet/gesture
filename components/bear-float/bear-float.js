@@ -21,9 +21,16 @@ Component({
   lifetimes: {
     attached() {
       // 3秒后自动抖动一次提示用户
-      setTimeout(() => {
+      this._wobbleTimer = setTimeout(() => {
         this.triggerWobble();
       }, 3000);
+    },
+    detached() {
+      // 清理定时器，防止内存泄漏
+      if (this._wobbleTimer) {
+        clearTimeout(this._wobbleTimer);
+        this._wobbleTimer = null;
+      }
     }
   },
 

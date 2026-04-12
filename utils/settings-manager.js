@@ -150,11 +150,19 @@ class SettingsManager {
 
   /**
    * 获取所有支持的字体大小档位
+   * 返回翻译键，页面需要使用 t() 函数翻译
    */
   getFontSizeOptions() {
+    const keyMap = {
+      small: 'font.small',
+      medium: 'font.medium',
+      large: 'font.large',
+      xlarge: 'font.xlarge',
+      xxlarge: 'font.xxlarge'
+    };
     return Object.keys(FONT_SIZE_CONFIG).map(key => ({
       value: key,
-      label: FONT_SIZE_CONFIG[key].name,
+      labelKey: keyMap[key],
       config: FONT_SIZE_CONFIG[key]
     }));
   }

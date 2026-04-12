@@ -1,4 +1,5 @@
 const { API_BASE, ENDPOINTS, TIMEOUT, SMPL_BASE } = require('../../utils/api');
+const { t } = require('../../i18n/index');
 
 Page({
   data: {
@@ -11,8 +12,9 @@ Page({
     // 摄像头 & 录制
     cameraOn: false,
     recording: false,
-    cameraStatus: '点击开始手语',
+    cameraStatus: '',  // 从翻译获取
     recognizedText: '',
+    isTogglingCamera: false,  // 防止相机操作重复点击
 
     // 文字输入
     textInput: '',
@@ -24,7 +26,13 @@ Page({
     currentSignText: '',
     signTaskId: '',
     SMPL_BASE: SMPL_BASE,
-    ENDPOINTS: ENDPOINTS
+    ENDPOINTS: ENDPOINTS,
+
+    // 状态栏高度
+    statusBarHeight: 44,
+
+    // 翻译文本
+    texts: {}
   },
 
   // 对话历史缓存（用于EmoLLM API）
@@ -32,13 +40,43 @@ Page({
 
   // ===== 生命周期 =====
   onLoad() {
+    // 获取状态栏高度
+    const windowInfo = wx.getWindowInfo()
+    this.setData({ statusBarHeight: windowInfo.statusBarHeight })
     // 每次进入清空历史记录，防止上下文过长
     this.clearHistory();
+    // 初始化翻译文本
+    this.updateTexts();
   },
 
   onShow() {
     // 每次显示页面时也清空（防止从后台返回）
     this.clearHistory();
+    // 刷新翻译文本
+    this.updateTexts();
+  },
+
+  // 更新界面文本
+  updateTexts() {
+    this.setData({
+      texts: {
+        title: t('psychology.title') || 'AI对话助手',
+        welcomeMessage: t('psychology.welcomeMessage') || '你好，我是你的AI对话助手。你可以用手语或文字和我交流，我会认真倾听你的心声。',
+        viewSign: t('psychology.viewSign') || '查看手语',
+        cameraStatus: t('psychology.cameraStatus') || '点击开始手语',
+        recognizing: t('psychology.recognizing') || '识别中…',
+        confirmStart: t('psychology.confirmStart') || '确认开始手语对话',
+        recognized: t('psychology.recognized') || '已识别',
+        cameraHint: t('psychology.cameraHint') || '点击开启手语输入',
+        inputPlaceholder: t('psychology.inputPlaceholder') || '说点什么…',
+        send: t('psychology.send') || '发送',
+        signModalTitle: t('psychology.signModalTitle') || '手语播放',
+        signLoading: t('psychology.signLoading') || '正在生成手语视频',
+        signLoadingWait: t('psychology.signLoadingWait') || '请稍候...',
+        signEmpty: t('psychology.signEmpty') || '等待生成手语视频',
+        originalText: t('psychology.originalText') || '原文'
+      }
+    });
   },
 
   onHide() {
@@ -136,14 +174,23 @@ Page({
 
   // ===== 摄像头：点击大框开始/停止 =====
   onToggleRecording() {
+    // 防止重复点击
+    if (this.data.isTogglingCamera) {
+      console.log('相机操作过于频繁，请稍候');
+      return;
+    }
+
     if (!this.data.cameraOn) {
       // 开启摄像头
       wx.authorize({
         scope: 'scope.camera',
         success: () => {
-          this.setData({ cameraOn: true, recording: true });
+          this.setData({ cameraOn: true, isTogglingCamera: true });
           this.haptic();
-          this.startSignRecognition();
+          // 在 startSignRecognition 成功后再设置 recording: true
+          this.startSignRecognition(() => {
+            this.setData({ isTogglingCamera: false });
+          });
         },
         fail: () => {
           wx.showModal({
@@ -152,18 +199,22 @@ Page({
             confirmText: '去设置',
             success: (res) => { if (res.confirm) wx.openSetting(); }
           });
+          this.setData({ isTogglingCamera: false });
         }
       });
     } else if (this.data.recording) {
       // 停止录制
-      this.setData({ recording: false });
+      this.setData({ recording: false, isTogglingCamera: true });
       this.haptic('medium');
       this.stopSignRecognition();
+      this.setData({ isTogglingCamera: false });
     } else {
       // 再次开始录制
-      this.setData({ recording: true, recognizedText: '' });
+      this.setData({ recognizedText: '', isTogglingCamera: true });
       this.haptic();
-      this.startSignRecognition();
+      this.startSignRecognition(() => {
+        this.setData({ isTogglingCamera: false });
+      });
     }
   },
 
@@ -174,47 +225,57 @@ Page({
   },
 
   // ===== 手语识别 =====
-  startSignRecognition() {
-    const ctx = wx.createCameraContext();
+  startSignRecognition(callback) {
+    // 复用 cameraContext，避免重复创建导致无法停止录制
+    if (!this.cameraContext) {
+      this.cameraContext = wx.createCameraContext();
+    }
+    const ctx = this.cameraContext;
     this._tempVideoPath = null;
 
     // 开始录制视频用于手语识别
     ctx.startRecord({
       success: () => {
         console.log('开始录制手语视频');
+        // startRecord 成功后才设置 recording 状态
+        this.setData({ recording: true });
+        if (callback) callback();
+
+        // 2.5秒后自动停止录制并上传
+        this._recognitionTimer = setTimeout(() => {
+          if (!this.data.recording) return;
+
+          ctx.stopRecord({
+            success: (res) => {
+              this._tempVideoPath = res.tempVideoPath;
+              this.uploadAndRecognize(res.tempVideoPath);
+            },
+            fail: (err) => {
+              console.error('停止录制失败:', err);
+              wx.showToast({ title: '录制失败', icon: 'none' });
+              this.setData({ recording: false, cameraStatus: '点击开始手语' });
+            }
+          });
+        }, 2500);
       },
       fail: (err) => {
         console.error('录制失败:', err);
         wx.showToast({ title: '录制失败', icon: 'none' });
+        this.setData({ recording: false });
+        if (callback) callback();
       }
     });
-
-    // 2秒后自动停止录制并上传
-    this._recognitionTimer = setTimeout(() => {
-      if (!this.data.recording) return;
-
-      ctx.stopRecord({
-        success: (res) => {
-          this._tempVideoPath = res.tempVideoPath;
-          this.uploadAndRecognize(res.tempVideoPath);
-        },
-        fail: (err) => {
-          console.error('停止录制失败:', err);
-          wx.showToast({ title: '录制失败', icon: 'none' });
-          this.setData({ recording: false, cameraStatus: '点击开始手语' });
-        }
-      });
-    }, 2500);
   },
 
   stopSignRecognition() {
     if (this._recognitionTimer) {
       clearTimeout(this._recognitionTimer);
     }
-    // 如果正在录制，停止录制
+    // 如果正在录制，停止录制（复用 cameraContext）
     if (this.data.recording) {
-      const ctx = wx.createCameraContext();
-      ctx.stopRecord({ success: () => {}, fail: () => {} });
+      if (this.cameraContext) {
+        this.cameraContext.stopRecord({ success: () => {}, fail: () => {} });
+      }
     }
     this.setData({ recognizedText: '', recording: false, cameraStatus: '点击开始手语' });
   },
@@ -588,4 +649,9 @@ Page({
       icon: 'none'
     });
   },
+
+  // 返回方法
+  goBack() {
+    wx.navigateBack({ delta: 1 })
+  }
 });

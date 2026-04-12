@@ -5,6 +5,7 @@ module.exports = {
   'common.cancel': 'Cancel',
   'common.save': 'Save',
   'common.ok': 'OK',
+  'common.submit': 'Submit',
   'common.loading': 'Loading...',
   'common.close': 'Close',
   'common.back': 'Back',
@@ -20,6 +21,10 @@ module.exports = {
   // Onboarding
   'onboarding.welcome': 'Welcome to HeartVoice',
   'onboarding.subtitle': 'Choose your preferred mode to start accessible communication',
+  'onboarding.enterApp': 'Enter App',
+  'onboarding.footerHint': 'You can change these options later in settings',
+  'onboarding.settingsSaved': 'Settings saved',
+  'onboarding.saveFailed': 'Save failed, please try again',
   'onboarding.option.deaf.title': 'Deaf Mode',
   'onboarding.option.deaf.desc': 'Text to speech for communication with others',
   'onboarding.option.normal.title': 'Standard Mode',
@@ -34,6 +39,8 @@ module.exports = {
   'home.deaf.quickPhrases': 'Quick Phrases',
   'home.deaf.history': 'History',
   'home.deaf.clear': 'Clear',
+  'home.deaf.psychologyTitle': 'AI Chat Assistant',
+  'home.deaf.psychologyDesc': 'AI companion, listening to your heart',
 
   // Home - Normal Mode
   'home.normal.title': 'Speech to Text',
@@ -45,6 +52,7 @@ module.exports = {
   'home.normal.releaseToSend': 'Release to Send',
   'home.normal.recording': 'Recording...',
   'home.normal.processing': 'Processing...',
+  'home.normal.psychologyBtn': 'AI Chat',
 
   // Quick Phrases
   'phrase.help': 'I need help',
@@ -57,6 +65,23 @@ module.exports = {
   'phrase.price': 'How much is it?',
   'phrase.bye': 'Goodbye',
   'phrase.sorry': 'Sorry',
+
+  // AI Chat Assistant
+  'psychology.title': 'AI Chat Assistant',
+  'psychology.welcomeMessage': 'Hello, I am your AI chat assistant. You can communicate with me using sign language or text, and I will listen to your heart carefully.',
+  'psychology.viewSign': 'View Sign Language',
+  'psychology.cameraStatus': 'Tap to start signing',
+  'psychology.recognizing': 'Recognizing...',
+  'psychology.confirmStart': 'Confirm to start sign conversation',
+  'psychology.recognized': 'Recognized',
+  'psychology.cameraHint': 'Tap to enable sign input',
+  'psychology.inputPlaceholder': 'Say something...',
+  'psychology.send': 'Send',
+  'psychology.signModalTitle': 'Sign Language Playback',
+  'psychology.signLoading': 'Generating sign language video',
+  'psychology.signLoadingWait': 'Please wait...',
+  'psychology.signEmpty': 'Waiting for sign video',
+  'psychology.originalText': 'Original Text',
 
   // Settings
   'settings.title': 'Settings',
@@ -79,9 +104,15 @@ module.exports = {
   'settings.help': 'Help',
   'settings.tutorial': 'Tutorial',
   'settings.communityWork': 'Community Work',
+  'settings.resetOnboarding': 'Restart Onboarding',
+  'settings.resetOnboardingConfirm': 'Are you sure you want to restart the onboarding process?',
   'settings.selectLanguage': 'Select Language',
   'settings.selectFontSize': 'Select Font Size',
   'settings.selectMode': 'Select Usage Mode',
+  'settings.feedbackTitle': 'Feedback',
+  'settings.feedbackPlaceholder': 'Please enter your suggestions or feedback, we will keep improving...',
+  'settings.feedbackEmpty': 'Please enter feedback content',
+  'settings.feedbackSuccess': 'Thank you for your feedback, we will keep improving!',
 
   // Language Options
   'lang.zh-CN': '简体中文',

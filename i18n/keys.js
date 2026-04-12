@@ -32,7 +32,12 @@ const NAV = {
 const HOME = {
   TITLE: 'home.title',
   START_TRANSLATE: 'home.startTranslate',
-  QUICK_PHRASES: 'home.quickPhrases'
+  QUICK_PHRASES: 'home.quickPhrases',
+  // 普通版 - AI对话助手按钮
+  NORMAL_PSYCHOLOGY_BTN: 'home.normal.psychologyBtn',
+  // 听障版 - AI对话助手入口
+  DEAF_PSYCHOLOGY_TITLE: 'home.deaf.psychologyTitle',
+  DEAF_PSYCHOLOGY_DESC: 'home.deaf.psychologyDesc'
 }
 
 // 设置页键
@@ -50,7 +55,9 @@ const SETTINGS = {
   FEEDBACK: 'settings.feedback',
   SELECT_LANGUAGE: 'settings.selectLanguage',
   SELECT_FONT_SIZE: 'settings.selectFontSize',
-  SELECT_MODE: 'settings.selectMode'
+  SELECT_MODE: 'settings.selectMode',
+  RESET_ONBOARDING: 'settings.resetOnboarding',
+  RESET_ONBOARDING_CONFIRM: 'settings.resetOnboardingConfirm'
 }
 
 // 字体大小选项
@@ -87,6 +94,25 @@ const PHRASES = {
   NO: 'phrase.no'
 }
 
+// AI对话助手
+const PSYCHOLOGY = {
+  TITLE: 'psychology.title',
+  WELCOME_MESSAGE: 'psychology.welcomeMessage',
+  VIEW_SIGN: 'psychology.viewSign',
+  CAMERA_STATUS: 'psychology.cameraStatus',
+  RECOGNIZING: 'psychology.recognizing',
+  CONFIRM_START: 'psychology.confirmStart',
+  RECOGNIZED: 'psychology.recognized',
+  CAMERA_HINT: 'psychology.cameraHint',
+  INPUT_PLACEHOLDER: 'psychology.inputPlaceholder',
+  SEND: 'psychology.send',
+  SIGN_MODAL_TITLE: 'psychology.signModalTitle',
+  SIGN_LOADING: 'psychology.signLoading',
+  SIGN_LOADING_WAIT: 'psychology.signLoadingWait',
+  SIGN_EMPTY: 'psychology.signEmpty',
+  ORIGINAL_TEXT: 'psychology.originalText'
+}
+
 // 所有键的集合
 const TRANSLATION_KEYS = {
   ...COMMON,
@@ -96,7 +122,8 @@ const TRANSLATION_KEYS = {
   ...FONT_SIZE_OPTIONS,
   ...MODE_OPTIONS,
   ...LANGUAGE_OPTIONS,
-  ...PHRASES
+  ...PHRASES,
+  ...PSYCHOLOGY
 }
 
 module.exports = {
@@ -108,5 +135,6 @@ module.exports = {
   MODE_OPTIONS,
   LANGUAGE_OPTIONS,
   PHRASES,
+  PSYCHOLOGY,
   TRANSLATION_KEYS
 }

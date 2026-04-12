@@ -5,6 +5,7 @@ module.exports = {
   'common.cancel': 'Abbrechen',
   'common.save': 'Speichern',
   'common.ok': 'OK',
+  'common.submit': 'Absenden',
   'common.loading': 'Wird geladen...',
   'common.close': 'Schließen',
   'common.back': 'Zurück',
@@ -20,6 +21,10 @@ module.exports = {
   // Einführung
   'onboarding.welcome': 'Willkommen bei HerzStimme',
   'onboarding.subtitle': 'Wählen Sie Ihren bevorzugten Modus für barrierefreie Kommunikation',
+  'onboarding.enterApp': 'App starten',
+  'onboarding.footerHint': 'Sie können diese Optionen später in den Einstellungen ändern',
+  'onboarding.settingsSaved': 'Einstellungen gespeichert',
+  'onboarding.saveFailed': 'Speichern fehlgeschlagen, bitte versuchen Sie es erneut',
   'onboarding.option.deaf.title': 'Gehörlosenmodus',
   'onboarding.option.deaf.desc': 'Text zu Sprache für die Kommunikation mit anderen',
   'onboarding.option.normal.title': 'Standardmodus',
@@ -34,6 +39,8 @@ module.exports = {
   'home.deaf.quickPhrases': 'Schnellphrasen',
   'home.deaf.history': 'Verlauf',
   'home.deaf.clear': 'Löschen',
+  'home.deaf.psychologyTitle': 'KI-Chat-Assistent',
+  'home.deaf.psychologyDesc': 'KI-Begleiter, der dir zuhört',
 
   // Startseite - Standardmodus
   'home.normal.title': 'Sprache zu Text',
@@ -45,6 +52,7 @@ module.exports = {
   'home.normal.releaseToSend': 'Loslassen zum Senden',
   'home.normal.recording': 'Nimmt auf...',
   'home.normal.processing': 'Verarbeitet...',
+  'home.normal.psychologyBtn': 'KI-Chat',
 
   // Schnellphrasen
   'phrase.help': 'Ich brauche Hilfe',
@@ -57,6 +65,23 @@ module.exports = {
   'phrase.price': 'Wie viel kostet das?',
   'phrase.bye': 'Auf Wiedersehen',
   'phrase.sorry': 'Entschuldigung',
+
+  // KI-Chat-Assistent
+  'psychology.title': 'KI-Chat-Assistent',
+  'psychology.welcomeMessage': 'Hallo, ich bin Ihr KI-Chat-Assistent. Sie können mit mir per Gebärdensprache oder Text kommunizieren, und ich werde Ihnen aufmerksam zuhören.',
+  'psychology.viewSign': 'Gebärdensprache anzeigen',
+  'psychology.cameraStatus': 'Tippen zum Starten',
+  'psychology.recognizing': 'Erkennen...',
+  'psychology.confirmStart': 'Bestätigen zum Starten',
+  'psychology.recognized': 'Erkannt',
+  'psychology.cameraHint': 'Tippen zur Gebärdeneingabe',
+  'psychology.inputPlaceholder': 'Sagen Sie etwas...',
+  'psychology.send': 'Senden',
+  'psychology.signModalTitle': 'Gebärdensprache-Wiedergabe',
+  'psychology.signLoading': 'Generiere Gebärdensprache-Video',
+  'psychology.signLoadingWait': 'Bitte warten...',
+  'psychology.signEmpty': 'Warte auf Gebärden-Video',
+  'psychology.originalText': 'Originaltext',
 
   // Einstellungen
   'settings.title': 'Einstellungen',
@@ -79,9 +104,15 @@ module.exports = {
   'settings.help': 'Hilfe',
   'settings.tutorial': 'Anleitung',
   'settings.communityWork': 'Gemeinschaftsarbeit',
+  'settings.resetOnboarding': 'Einführung neustarten',
+  'settings.resetOnboardingConfirm': 'Möchten Sie die Einführung wirklich neustarten?',
   'settings.selectLanguage': 'Sprache auswählen',
   'settings.selectFontSize': 'Schriftgröße auswählen',
   'settings.selectMode': 'Nutzungsmodus auswählen',
+  'settings.feedbackTitle': 'Feedback',
+  'settings.feedbackPlaceholder': 'Bitte geben Sie Ihre Vorschläge oder Feedback ein, wir werden uns kontinuierlich verbessern...',
+  'settings.feedbackEmpty': 'Bitte geben Sie Feedback ein',
+  'settings.feedbackSuccess': 'Vielen Dank für Ihr Feedback, wir werden uns kontinuierlich verbessern!',
 
   // Sprachoptionen
   'lang.zh-CN': '简体中文',

@@ -1,4 +1,4 @@
-// 心理健康入口卡片组件
+// AI对话助手入口卡片组件
 Component({
   properties: {},
 
@@ -6,7 +6,7 @@ Component({
 
   methods: {
     /**
-     * 导航到心理健康页面
+     * 导航到AI对话助手页面
      */
     navigateToPsychology() {
       // 触觉反馈

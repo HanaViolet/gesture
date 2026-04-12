@@ -1,4 +1,4 @@
-/* ===== 心理健康助手：温暖疗愈设计 ===== */
+/* ===== AI对话助手：温暖疗愈设计 ===== */
 
 .page-container {
   width: 100%;
@@ -7,6 +7,51 @@
   flex-direction: column;
   background: var(--bg-primary);
   overflow: hidden;
+}
+
+/* ===== 自定义导航栏 ===== */
+.custom-nav {
+  background: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.status-bar {
+  width: 100%;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  height: 88rpx;
+}
+
+.nav-back {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-back-icon {
+  font-size: 48rpx;
+  color: var(--text-primary);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+}
+
+.nav-placeholder {
+  width: 64rpx;
 }
 
 /* ===== 对话区 ===== */

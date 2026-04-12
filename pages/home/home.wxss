@@ -457,12 +457,54 @@
   height: 100rpx;
   font-size: var(--font-md);
   font-weight: 600;
+  padding: 0 20rpx;
+  overflow: hidden;
 }
 
 /* 编辑模式样式 */
 .phrase-grid .btn-capsule.editing {
   opacity: 0.85;
   animation: shake 0.5s ease-in-out infinite;
+}
+
+/* 按钮文本容器 - 用于滚动效果 */
+.btn-text-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 普通文本居中显示 */
+.btn-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* 长文本滚动动画 */
+.btn-text.scroll-text {
+  animation: text-scroll 5s ease-in-out infinite;
+  max-width: none;
+}
+
+/* 点击时暂停滚动以便看清 */
+.btn-capsule.has-scroll:active .btn-text.scroll-text {
+  animation-play-state: paused;
+}
+
+/* 滚动动画关键帧 - 文本从左到右滚动 */
+@keyframes text-scroll {
+  0%, 15% {
+    transform: translateX(0);
+  }
+  40%, 60% {
+    transform: translateX(calc(-100% + 200rpx));
+  }
+  85%, 100% {
+    transform: translateX(0);
+  }
 }
 
 @keyframes shake {

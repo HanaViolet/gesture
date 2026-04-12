@@ -6,19 +6,16 @@
   <!-- 顶部欢迎区域 -->
   <view class="welcome-section">
     <view class="welcome-icon">
-      <view class="icon-circle">
-        <text class="icon-text">心</text>
-      </view>
+      <image class="welcome-logo" src="/images/logo.png" mode="aspectFit"/>
     </view>
-    <text class="welcome-title">欢迎使用 语见</text>
-    <text class="welcome-subtitle">打破沟通障碍，连接无声世界</text>
+    <text class="welcome-title">{{texts.welcomeTitle}}</text>
+    <text class="welcome-subtitle">{{texts.welcomeSubtitle}}</text>
   </view>
 
   <!-- 语言选择区域 -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">选择语言</text>
-      <text class="section-desc">Select Language</text>
+      <text class="section-title">{{texts.selectLanguage}}</text>
     </view>
     <view class="language-selector">
       <view
@@ -40,8 +37,7 @@
   <!-- 使用模式选择区域 -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">选择使用模式</text>
-      <text class="section-desc">选择最适合您需求的交互方式</text>
+      <text class="section-title">{{texts.selectMode}}</text>
     </view>
     <view class="mode-selector">
       <view
@@ -73,9 +69,9 @@
       class="enter-btn {{!selectedLang || !selectedMode ? 'disabled' : ''}}"
       bindtap="onEnterApp"
     >
-      <text class="btn-text">进入应用</text>
+      <text class="btn-text">{{texts.enterApp}}</text>
     </view>
-    <text class="footer-hint">稍后在设置中可更改这些选项</text>
+    <text class="footer-hint">{{texts.footerHint}}</text>
   </view>
 
   <!-- 安全区域占位 -->

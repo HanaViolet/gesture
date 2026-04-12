@@ -1,14 +1,26 @@
 <view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav">
+    <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+    <view class="nav-bar">
+      <view class="nav-back" bindtap="goBack">
+        <text class="nav-back-icon">‹</text>
+      </view>
+      <text class="nav-title">{{texts.title}}</text>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
+
   <!-- 通用设置 -->
   <view class="section">
-    <view class="section-title">{{t('settings.general') || '通用设置'}}</view>
+    <view class="section-title">{{texts.general}}</view>
 
     <view class="list">
       <!-- 语言 -->
       <view class="list-item" bindtap="showLanguagePicker">
         <view class="list-item-left">
           <text class="icon">🌐</text>
-          <text class="label">{{t('settings.language') || '语言'}}</text>
+          <text class="label">{{texts.language}}</text>
         </view>
         <view class="list-item-right">
           <text class="value">{{languageName}}</text>
@@ -20,7 +32,7 @@
       <view class="list-item" bindtap="showFontPicker">
         <view class="list-item-left">
           <text class="icon">🔤</text>
-          <text class="label">{{t('settings.fontSize') || '字体大小'}}</text>
+          <text class="label">{{texts.fontSize}}</text>
         </view>
         <view class="list-item-right">
           <text class="value">{{fontSizeName}}</text>
@@ -32,7 +44,7 @@
       <view class="list-item" bindtap="showModePicker">
         <view class="list-item-left">
           <text class="icon">👤</text>
-          <text class="label">{{t('settings.mode') || '使用模式'}}</text>
+          <text class="label">{{texts.mode}}</text>
         </view>
         <view class="list-item-right">
           <text class="value">{{modeName}}</text>
@@ -44,14 +56,14 @@
 
   <!-- 无障碍 -->
   <view class="section">
-    <view class="section-title">{{t('settings.accessibility') || '无障碍'}}</view>
+    <view class="section-title">{{texts.accessibility}}</view>
 
     <view class="list">
       <!-- 高对比度 -->
       <view class="list-item">
         <view class="list-item-left">
           <text class="icon">◐</text>
-          <text class="label">{{t('settings.highContrast') || '高对比度'}}</text>
+          <text class="label">{{texts.highContrast}}</text>
         </view>
         <view class="list-item-right">
           <switch checked="{{settings.highContrast}}" bindchange="onHighContrastChange" color="#6da4df"/>
@@ -62,7 +74,7 @@
       <view class="list-item">
         <view class="list-item-left">
           <text class="icon">✓</text>
-          <text class="label">{{t('settings.reduceMotion') || '减少动画'}}</text>
+          <text class="label">{{texts.reduceMotion}}</text>
         </view>
         <view class="list-item-right">
           <switch checked="{{settings.reduceMotion}}" bindchange="onReduceMotionChange" color="#6da4df"/>
@@ -73,17 +85,17 @@
 
   <!-- 个人设置 -->
   <view class="section">
-    <view class="section-title">{{t('settings.personal') || '个人'}}</view>
+    <view class="section-title">{{texts.personal}}</view>
 
     <view class="list">
       <!-- 关于我 -->
       <view class="list-item" bindtap="openProfile">
         <view class="list-item-left">
           <text class="icon">👤</text>
-          <text class="label">{{t('settings.profile') || '关于我'}}</text>
+          <text class="label">{{texts.profile}}</text>
         </view>
         <view class="list-item-right">
-          <text class="value">{{profileName || t('settings.notSet') || '未设置'}}</text>
+          <text class="value">{{profileName || texts.notSet}}</text>
           <text class="arrow">></text>
         </view>
       </view>
@@ -92,14 +104,14 @@
 
   <!-- 帮助 -->
   <view class="section">
-    <view class="section-title">{{t('settings.help') || '帮助'}}</view>
+    <view class="section-title">{{texts.help}}</view>
 
     <view class="list">
       <!-- 使用教程 -->
       <view class="list-item" bindtap="openTutorial">
         <view class="list-item-left">
           <text class="icon">📖</text>
-          <text class="label">{{t('settings.tutorial') || '使用教程'}}</text>
+          <text class="label">{{texts.tutorial}}</text>
         </view>
         <view class="list-item-right">
           <text class="arrow">></text>
@@ -110,7 +122,29 @@
       <view class="list-item" bindtap="openCommunity">
         <view class="list-item-left">
           <text class="icon">🏢</text>
-          <text class="label">{{t('settings.communityWork') || '社区工作'}}</text>
+          <text class="label">{{texts.communityWork}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="arrow">></text>
+        </view>
+      </view>
+
+      <!-- 重新进入新手引导 -->
+      <view class="list-item" bindtap="resetOnboarding">
+        <view class="list-item-left">
+          <text class="icon">🔄</text>
+          <text class="label">{{texts.resetOnboarding}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="arrow">></text>
+        </view>
+      </view>
+
+      <!-- 意见反馈 -->
+      <view class="list-item" bindtap="showFeedback">
+        <view class="list-item-left">
+          <text class="icon">💬</text>
+          <text class="label">{{texts.feedback}}</text>
         </view>
         <view class="list-item-right">
           <text class="arrow">></text>
@@ -121,14 +155,14 @@
 
   <!-- 关于 -->
   <view class="section">
-    <view class="section-title">{{t('settings.about') || '关于'}}</view>
+    <view class="section-title">{{texts.about}}</view>
 
     <view class="list">
       <!-- 关于语见 -->
       <view class="list-item" bindtap="showAbout">
         <view class="list-item-left">
           <image class="app-logo" src="/images/logo.png" mode="aspectFit"/>
-          <text class="label">{{t('settings.aboutApp') || '关于语见'}}</text>
+          <text class="label">{{texts.aboutApp}}</text>
         </view>
         <view class="list-item-right">
           <text class="arrow">></text>
@@ -142,7 +176,7 @@
 <view class="picker-mask {{showLangPicker ? 'show' : ''}}" bindtap="hideLanguagePicker">
   <view class="picker-content {{showLangPicker ? 'show' : ''}}" catchtap="preventBubble">
     <view class="picker-header">
-      <text class="picker-title">{{t('settings.selectLanguage') || '选择语言'}}</text>
+      <text class="picker-title">{{texts.selectLanguage}}</text>
       <text class="picker-close" bindtap="hideLanguagePicker">✕</text>
     </view>
     <view class="picker-list">
@@ -164,7 +198,7 @@
 <view class="picker-mask {{showFontPicker ? 'show' : ''}}" bindtap="hideFontPicker">
   <view class="picker-content {{showFontPicker ? 'show' : ''}}" catchtap="preventBubble">
     <view class="picker-header">
-      <text class="picker-title">{{t('settings.selectFontSize') || '选择字体大小'}}</text>
+      <text class="picker-title">{{texts.selectFontSize}}</text>
       <text class="picker-close" bindtap="hideFontPicker">✕</text>
     </view>
     <view class="picker-list">
@@ -186,7 +220,7 @@
 <view class="picker-mask {{showModePicker ? 'show' : ''}}" bindtap="hideModePicker">
   <view class="picker-content {{showModePicker ? 'show' : ''}}" catchtap="preventBubble">
     <view class="picker-header">
-      <text class="picker-title">{{t('settings.selectMode') || '选择使用模式'}}</text>
+      <text class="picker-title">{{texts.selectMode}}</text>
       <text class="picker-close" bindtap="hideModePicker">✕</text>
     </view>
     <view class="picker-list">
@@ -201,6 +235,31 @@
         <text class="picker-item-desc">{{item.desc}}</text>
         <text class="picker-item-check" wx:if="{{settings.mode === item.value}}">✓</text>
       </view>
+    </view>
+  </view>
+</view>
+
+<!-- 意见反馈弹窗 -->
+<view class="picker-mask {{showFeedbackModal ? 'show' : ''}}" bindtap="hideFeedback">
+  <view class="picker-content feedback-content {{showFeedbackModal ? 'show' : ''}}" catchtap="preventBubble">
+    <view class="picker-header">
+      <text class="picker-title">{{texts.feedbackTitle}}</text>
+      <text class="picker-close" bindtap="hideFeedback">✕</text>
+    </view>
+    <view class="feedback-body">
+      <textarea
+        class="feedback-textarea"
+        placeholder="{{texts.feedbackPlaceholder}}"
+        value="{{feedbackText}}"
+        bindinput="onFeedbackInput"
+        maxlength="500"
+        auto-height
+      />
+      <text class="feedback-counter">{{feedbackText.length || 0}}/500</text>
+    </view>
+    <view class="feedback-actions">
+      <button class="feedback-btn cancel" bindtap="hideFeedback">{{texts.cancel}}</button>
+      <button class="feedback-btn confirm {{!feedbackText ? 'disabled' : ''}}" bindtap="submitFeedback">{{texts.submit}}</button>
     </view>
   </view>
 </view>

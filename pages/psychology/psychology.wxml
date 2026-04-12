@@ -1,5 +1,16 @@
 <!-- 心理健康AI对话页面 -->
 <view class="page-container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav">
+    <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+    <view class="nav-bar">
+      <view class="nav-back" bindtap="goBack">
+        <text class="nav-back-icon">‹</text>
+      </view>
+      <text class="nav-title">{{texts.title}}</text>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
 
   <!-- 对话区 -->
   <scroll-view
@@ -17,12 +28,12 @@
         <image class="ai-avatar" src="/images/logo.png" mode="aspectFill"/>
         <view class="msg-col">
           <view class="bubble ai-bubble">
-            <text class="bubble-text">你好，我是你的心理健康助手。你可以用手语或文字和我交流，我会认真倾听你的感受。🌿</text>
+            <text class="bubble-text">{{texts.welcomeMessage}}🌿</text>
           </view>
           <view class="sign-chip-row">
-            <view class="sign-chip" bindtap="onShowSign" data-text="你好，我是你的心理健康助手。你可以用手语或文字和我交流，我会认真倾听你的感受。">
+            <view class="sign-chip" bindtap="onShowSign" data-text="{{texts.welcomeMessage}}">
               <text class="sign-chip-emoji">🤟</text>
-              <text class="sign-chip-text">查看手语</text>
+              <text class="sign-chip-text">{{texts.viewSign}}</text>
             </view>
           </view>
         </view>
@@ -41,7 +52,7 @@
             <view class="sign-chip-row">
               <view class="sign-chip" bindtap="onShowSign" data-text="{{item.content}}">
                 <text class="sign-chip-emoji">🤟</text>
-                <text class="sign-chip-text">查看手语</text>
+                <text class="sign-chip-text">{{texts.viewSign}}</text>
               </view>
               <text class="msg-time">{{item.time}}</text>
             </view>
@@ -89,19 +100,19 @@
         <cover-view wx:if="{{recording}}">
           <cover-view class="record-badge is-recording">
             <cover-view class="record-dot"></cover-view>
-            <cover-view class="record-text">识别中…</cover-view>
+            <cover-view class="record-text">{{texts.recognizing}}</cover-view>
           </cover-view>
         </cover-view>
         <!-- 未录制：显示确认开始按钮 -->
         <cover-view wx:else class="confirm-start-wrap">
           <cover-view class="confirm-start-btn" bindtap="onToggleRecording">
             <cover-view class="confirm-btn-icon">▶</cover-view>
-            <cover-view class="confirm-btn-text">确认开始手语对话</cover-view>
+            <cover-view class="confirm-btn-text">{{texts.confirmStart}}</cover-view>
           </cover-view>
         </cover-view>
         <!-- 识别结果 -->
         <cover-view class="recog-result" wx:if="{{recognizedText}}">
-          <cover-view class="recog-label">已识别</cover-view>
+          <cover-view class="recog-label">{{texts.recognized}}</cover-view>
           <cover-view class="recog-text">{{recognizedText}}</cover-view>
         </cover-view>
       </cover-view>
@@ -111,7 +122,7 @@
     <view wx:else class="camera-placeholder" bindtap="onToggleRecording">
       <view class="camera-pulse-ring"></view>
       <text class="camera-icon">📹</text>
-      <text class="camera-hint">点击开启手语输入</text>
+      <text class="camera-hint">{{texts.cameraHint}}</text>
     </view>
   </view>
 
@@ -120,7 +131,7 @@
     <view class="input-wrap">
       <input
         class="text-input"
-        placeholder="说点什么…"
+        placeholder="{{texts.inputPlaceholder}}"
         placeholder-style="color:#B0BEC5"
         value="{{textInput}}"
         bindinput="onTextInput"
@@ -133,14 +144,14 @@
       class="send-btn {{textInput ? 'send-active' : ''}}"
       bindtap="onSendText"
       disabled="{{!textInput}}"
-    ><text style="line-height:normal">发送</text></button>
+    ><text style="line-height:normal">{{texts.send}}</text></button>
   </view>
 
   <!-- 手语浮层 -->
   <view class="sign-modal" wx:if="{{showSignModal}}" bindtap="onHideSign">
     <view class="sign-modal-box" catchtap="noop">
       <view class="sign-modal-header">
-        <text class="sign-modal-title">手语播放</text>
+        <text class="sign-modal-title">{{texts.signModalTitle}}</text>
         <view class="sign-modal-close" bindtap="onHideSign">
           <text class="close-icon">✕</text>
         </view>
@@ -153,8 +164,8 @@
           <view class="loading-ring">
             <view class="loading-circle"></view>
           </view>
-          <text class="sign-loading-text">正在生成手语视频</text>
-          <text class="sign-loading-sub">请稍候...</text>
+          <text class="sign-loading-text">{{texts.signLoading}}</text>
+          <text class="sign-loading-sub">{{texts.signLoadingWait}}</text>
         </view>
 
         <!-- 视频播放器 -->
@@ -176,13 +187,13 @@
         <!-- 空状态 -->
         <view class="sign-empty" wx:else>
           <text class="sign-empty-icon">🤟</text>
-          <text class="sign-empty-text">等待生成手语视频</text>
+          <text class="sign-empty-text">{{texts.signEmpty}}</text>
         </view>
       </view>
 
       <!-- 原文展示区域 -->
       <view class="sign-text-section">
-        <view class="sign-text-label">原文</view>
+        <view class="sign-text-label">{{texts.originalText}}</view>
         <scroll-view class="sign-text-content" scroll-y>
           <text class="sign-original-text">{{currentSignText}}</text>
         </scroll-view>

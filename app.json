@@ -6,15 +6,27 @@
     "pages/camera/camera",
     "pages/analysis_result/analysis_result",
     "pages/popularization/popularization",
-    "pages/teach/teach",
     "pages/text_result/text_result",
     "pages/get_detail/get_detail",
-    "pages/society_cowork/society_cowork",
     "pages/settings/settings",
-    "pages/settings_profile/settings_profile",
-    "pages/forum/forum",
-    "pages/forum_create/forum_create",
-    "pages/forum_detail/forum_detail"
+    "pages/settings_profile/settings_profile"
+  ],
+  "subpackages": [
+    {
+      "root": "subpackage_teach/",
+      "pages": [
+        "pages/teach/teach"
+      ]
+    },
+    {
+      "root": "subpackage_community/",
+      "pages": [
+        "pages/society_cowork/society_cowork",
+        "pages/forum/forum",
+        "pages/forum_create/forum_create",
+        "pages/forum_detail/forum_detail"
+      ]
+    }
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -23,7 +35,6 @@
     "backgroundColor": "#FDFBF8"
   },
   "usingComponents": {
-    "mode-switcher": "/components/mode-switcher/mode-switcher",
     "smpl-viewer": "/components/smpl-viewer/smpl-viewer",
     "custom-btn": "/components/button/button",
     "psychology-entry": "/components/psychology-entry/psychology-entry",

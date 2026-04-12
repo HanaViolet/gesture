@@ -166,15 +166,40 @@ Component({
     // ArrayBuffer转UTF-8字符串
     arrayBufferToString(buffer) {
       const uint8Array = new Uint8Array(buffer);
-      // 使用TextDecoder正确解码UTF-8
-      if (typeof TextDecoder !== 'undefined') {
-        const decoder = new TextDecoder('utf-8');
-        return decoder.decode(uint8Array);
-      }
-      // 降级方案
+      // 手动解码UTF-8，避免TextDecoder兼容问题
       let str = '';
-      for (let i = 0; i < uint8Array.length; i++) {
-        str += String.fromCharCode(uint8Array[i]);
+      let i = 0;
+      while (i < uint8Array.length) {
+        const byte1 = uint8Array[i];
+        if (byte1 < 0x80) {
+          // 单字节ASCII
+          str += String.fromCharCode(byte1);
+          i++;
+        } else if ((byte1 & 0xE0) === 0xC0) {
+          // 两字节UTF-8
+          const byte2 = uint8Array[i + 1];
+          const code = ((byte1 & 0x1F) << 6) | (byte2 & 0x3F);
+          str += String.fromCharCode(code);
+          i += 2;
+        } else if ((byte1 & 0xF0) === 0xE0) {
+          // 三字节UTF-8 (中文常用)
+          const byte2 = uint8Array[i + 1];
+          const byte3 = uint8Array[i + 2];
+          const code = ((byte1 & 0x0F) << 12) | ((byte2 & 0x3F) << 6) | (byte3 & 0x3F);
+          str += String.fromCharCode(code);
+          i += 3;
+        } else if ((byte1 & 0xF8) === 0xF0) {
+          // 四字节UTF-8
+          const byte2 = uint8Array[i + 1];
+          const byte3 = uint8Array[i + 2];
+          const byte4 = uint8Array[i + 3];
+          const code = ((byte1 & 0x07) << 18) | ((byte2 & 0x3F) << 12) | ((byte3 & 0x3F) << 6) | (byte4 & 0x3F);
+          str += String.fromCharCode(code);
+          i += 4;
+        } else {
+          // 非法字节，跳过
+          i++;
+        }
       }
       return str;
     },

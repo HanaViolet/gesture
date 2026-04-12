@@ -1,0 +1,25 @@
+<view class="container">
+  <!-- 全屏滑动容器 -->
+  <swiper 
+    class="swiper-container" 
+    indicator-dots="{{true}}"
+    indicator-color="rgba(0,0,0,0.2)"
+    indicator-active-color="#000000"
+    autoplay="{{false}}"
+    circular="{{true}}"
+  >
+    <swiper-item 
+      wx:for="{{9}}" 
+      wx:key="*this"
+      class="swiper-item"
+    >
+      <view class="white-frame" style="height: 1299rpx; display: block; box-sizing: border-box; left: 0rpx; top: 0rpx">
+        <image 
+          src="../../images/图片{{index+1}}.png" 
+          mode="aspectFill"
+          class="content-image"
+         style="height: 1299rpx; display: inline-block; box-sizing: border-box; position: relative; left: 0rpx"></image>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>

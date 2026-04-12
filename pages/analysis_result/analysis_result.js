@@ -16,8 +16,13 @@ Page({
     progress: 0,
     maleAudioUrl: '',
     femaleAudioUrl: '',
+    statusBarHeight: 44
   },
   onLoad: function (options) {
+    // 获取状态栏高度
+    const windowInfo = wx.getWindowInfo()
+    this.setData({ statusBarHeight: windowInfo.statusBarHeight })
+
     if (options.videoPath) {
       this.setData({
         videoPath: options.videoPath,
@@ -231,9 +236,13 @@ Page({
       title: '已保存至常用语',
       icon: 'success'
     });
-    wx.navigateTo({
-      url: '/pages/home/home',
-    })
+    // 返回上一页，如果不存在则返回首页
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+      wx.navigateBack({ delta: 1 });
+    } else {
+      wx.reLaunch({ url: '/pages/home/home' });
+    }
   },
   confirmEdit: function (e) {
     this.setData({
@@ -264,5 +273,8 @@ Page({
     if (this.data.audioContext) {
       this.data.audioContext.destroy();
     }
+  },
+  goBack: function () {
+    wx.navigateBack({ delta: 1 });
   }
 });

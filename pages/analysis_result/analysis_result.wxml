@@ -1,4 +1,15 @@
 <view class="page-full result-page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-nav">
+    <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+    <view class="nav-bar">
+      <view class="nav-back" bindtap="goBack">
+        <text class="nav-back-icon">‹</text>
+      </view>
+      <text class="nav-title">翻译结果</text>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
   <!-- 进度条 -->
   <view class="progress-wrapper">
     <progress percent="{{progress}}" stroke-width="8" activeColor="#007AFF" backgroundColor="#E3F2FD" show-info="{{false}}"/>

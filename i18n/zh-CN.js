@@ -5,6 +5,7 @@ module.exports = {
   'common.cancel': '取消',
   'common.save': '保存',
   'common.ok': '知道了',
+  'common.submit': '提交',
   'common.loading': '加载中...',
   'common.close': '关闭',
   'common.back': '返回',
@@ -20,6 +21,10 @@ module.exports = {
   // 首次引导
   'onboarding.welcome': '欢迎使用语见',
   'onboarding.subtitle': '选择适合您的使用模式，开始无障碍沟通',
+  'onboarding.enterApp': '进入应用',
+  'onboarding.footerHint': '稍后在设置中可更改这些选项',
+  'onboarding.settingsSaved': '设置已保存',
+  'onboarding.saveFailed': '保存失败，请重试',
   'onboarding.option.deaf.title': '听障模式',
   'onboarding.option.deaf.desc': '文字转语音，帮您与他人交流',
   'onboarding.option.normal.title': '普通模式',
@@ -34,6 +39,8 @@ module.exports = {
   'home.deaf.quickPhrases': '快捷短语',
   'home.deaf.history': '历史记录',
   'home.deaf.clear': '清空',
+  'home.deaf.psychologyTitle': 'AI对话助手',
+  'home.deaf.psychologyDesc': 'AI陪伴，倾听你的心声',
 
   // 首页 - 普通版
   'home.normal.title': '语音转文字',
@@ -45,6 +52,7 @@ module.exports = {
   'home.normal.releaseToSend': '松开发送',
   'home.normal.recording': '正在录音...',
   'home.normal.processing': '正在识别...',
+  'home.normal.psychologyBtn': 'AI对话助手',
 
   // 快捷短语
   'phrase.help': '我需要帮助',
@@ -57,6 +65,23 @@ module.exports = {
   'phrase.price': '请问多少钱',
   'phrase.bye': '再见',
   'phrase.sorry': '对不起',
+
+  // AI对话助手
+  'psychology.title': 'AI对话助手',
+  'psychology.welcomeMessage': '你好，我是你的AI对话助手。你可以用手语或文字和我交流，我会认真倾听你的心声。',
+  'psychology.viewSign': '查看手语',
+  'psychology.cameraStatus': '点击开始手语',
+  'psychology.recognizing': '识别中…',
+  'psychology.confirmStart': '确认开始手语对话',
+  'psychology.recognized': '已识别',
+  'psychology.cameraHint': '点击开启手语输入',
+  'psychology.inputPlaceholder': '说点什么…',
+  'psychology.send': '发送',
+  'psychology.signModalTitle': '手语播放',
+  'psychology.signLoading': '正在生成手语视频',
+  'psychology.signLoadingWait': '请稍候...',
+  'psychology.signEmpty': '等待生成手语视频',
+  'psychology.originalText': '原文',
 
   // 设置页
   'settings.title': '设置',
@@ -79,9 +104,15 @@ module.exports = {
   'settings.help': '帮助',
   'settings.tutorial': '使用教程',
   'settings.communityWork': '社区工作',
+  'settings.resetOnboarding': '重新进入新手引导',
+  'settings.resetOnboardingConfirm': '确定要重新进入新手引导吗？',
   'settings.selectLanguage': '选择语言',
   'settings.selectFontSize': '选择字体大小',
   'settings.selectMode': '选择使用模式',
+  'settings.feedbackTitle': '意见反馈',
+  'settings.feedbackPlaceholder': '请输入您的意见或建议，我们将不断改进...',
+  'settings.feedbackEmpty': '请输入反馈内容',
+  'settings.feedbackSuccess': '感谢您的反馈，我们将不断改进！',
 
   // 语言选项
   'lang.zh-CN': '简体中文',

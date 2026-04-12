@@ -1,6 +1,6 @@
 Page({
   data: {
-      countdown: '30:00',
+      countdown: '30',
       cameraPosition: 'back',
       flashMode: 'off',
       isRecording: false,
@@ -8,12 +8,20 @@ Page({
       recordedVideoPath: '',
       countdownInterval: null,
       convertedGifPath: '',
-      statusBarHeight: 44
+      statusBarHeight: 44,
+      playing: false,
+      // 防止重复点击
+      isToggling: false
   },
+
+  // 相机上下文，页面加载时创建
+  cameraContext: null,
 
   onLoad() {
       const windowInfo = wx.getWindowInfo();
       this.setData({ statusBarHeight: windowInfo.statusBarHeight });
+      // 提前创建相机上下文，避免每次点击都创建
+      this.cameraContext = wx.createCameraContext();
   },
 
   goBack() {
@@ -21,50 +29,74 @@ Page({
   },
 
   toggleRecording() {
-      const ctx = wx.createCameraContext();
+      // 防止重复点击
+      if (this.data.isToggling) {
+          console.log('操作过于频繁，请稍候');
+          return;
+      }
+
+      const ctx = this.cameraContext;
+      if (!ctx) {
+          console.error('相机上下文未初始化');
+          return;
+      }
+
       if (this.data.recording) {
           // 停止录制
+          this.setData({ isToggling: true });
+          wx.vibrateShort({ type: 'light' });
           ctx.stopRecord({
               success: (res) => {
+                  console.log('录制结束，视频路径:', res.tempVideoPath);
+                  // 先清理定时器
+                  if (this.data.countdownInterval) {
+                      clearInterval(this.data.countdownInterval);
+                  }
+                  // 再更新状态
                   this.setData({
                       recording: false,
                       recordedVideoPath: res.tempVideoPath,
-                      // 恢复按钮样式
-                      isRecording: false
+                      isRecording: false,
+                      countdownInterval: null,
+                      isToggling: false
                   });
-                  console.log('录制结束，视频路径:', res.tempVideoPath);
-                  if (this.data.countdownInterval) {
-                      clearInterval(this.data.countdownInterval);
-                  }
               },
               fail: (err) => {
                   console.error('停止录制失败:', err);
-                  this.setData({ recording: false, isRecording: false });
                   if (this.data.countdownInterval) {
                       clearInterval(this.data.countdownInterval);
-                      this.setData({ countdownInterval: null });
                   }
+                  this.setData({
+                      recording: false,
+                      isRecording: false,
+                      countdownInterval: null,
+                      isToggling: false
+                  });
               }
           });
       } else {
-          // 开始新录制（无论是否有之前的录制）
-          this.setData({
-              recording: true,
-              countdown: '30:00',
-              // 设置按钮为录制状态样式
-              isRecording: true
-          });
+          // 开始新录制 - 先设置防重复点击，等待startRecord成功后再设置recording状态
+          this.setData({ isToggling: true });
+          wx.vibrateShort({ type: 'heavy' });
           ctx.startRecord({
               success: () => {
-                  console.log('开始录制');
+                  console.log('开始录制成功');
+                  this.setData({
+                      recording: true,
+                      countdown: '30',
+                      isRecording: true,
+                      isToggling: false
+                  });
                   this.startCountdown();
               },
               fail: (err) => {
                   console.error('录制失败:', err);
                   this.setData({
                       recording: false,
-                      isRecording: false
+                      isRecording: false,
+                      isToggling: false
                   });
+                  wx.showToast({ title: '启动录制失败', icon: 'none' });
               }
           });
       }
@@ -72,45 +104,56 @@ Page({
 
   startCountdown() {
       let totalSeconds = 30;
-      // 使用100ms间隔，减少性能开销
+      // 先清除可能存在的旧定时器
+      if (this.data.countdownInterval) {
+          clearInterval(this.data.countdownInterval);
+      }
+
       const intervalId = setInterval(() => {
           totalSeconds--;
 
-          // 更新显示
+          // 更新显示 - 只显示剩余秒数
           if (totalSeconds >= 0) {
-              const formattedSeconds = String(totalSeconds).padStart(2, '0');
               this.setData({
-                  countdown: `${formattedSeconds}:00`
+                  countdown: String(totalSeconds)
               });
           }
 
-          // 时间耗尽
+          // 时间耗尽，自动停止
           if (totalSeconds <= 0) {
-              this.setData({
-                  countdown: '00:00'
-              });
               clearInterval(intervalId);
-              this.setData({ countdownInterval: null });
 
               // 如果正在录制，自动停止
               if (this.data.recording) {
-                  const ctx = wx.createCameraContext();
+                  const ctx = this.cameraContext;
+                  if (!ctx) {
+                      this.setData({
+                          recording: false,
+                          isRecording: false,
+                          countdown: '30',
+                          countdownInterval: null
+                      });
+                      return;
+                  }
                   ctx.stopRecord({
                       success: (res) => {
+                          console.log('倒计时结束，自动停止录制:', res.tempVideoPath);
                           this.setData({
                               recording: false,
                               recordedVideoPath: res.tempVideoPath,
-                              isRecording: false
+                              isRecording: false,
+                              countdown: '30',
+                              countdownInterval: null
                           });
-                          console.log('录制结束，视频路径:', res.tempVideoPath);
                       },
                       fail: (err) => {
-                          console.error('倒计时结束时停止录制失败:', err);
-                          this.setData({ recording: false, isRecording: false });
-                          if (this.data.countdownInterval) {
-                              clearInterval(this.data.countdownInterval);
-                              this.setData({ countdownInterval: null });
-                          }
+                          console.error('自动停止录制失败:', err);
+                          this.setData({
+                              recording: false,
+                              isRecording: false,
+                              countdown: '30',
+                              countdownInterval: null
+                          });
                       }
                   });
               }
@@ -202,7 +245,8 @@ Page({
   // 页面隐藏时停止录制并清理
   onHide() {
       if (this.data.recording) {
-          const ctx = wx.createCameraContext();
+          const ctx = this.cameraContext;
+          if (!ctx) return;
           ctx.stopRecord({
               success: () => {
                   console.log('页面隐藏，停止录制');

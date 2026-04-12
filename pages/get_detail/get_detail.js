@@ -251,15 +251,27 @@ Page({
     const app = getApp();
     const gifList = app.globalData.gifList;
     const gifIndex = gifList.findIndex(item => item.videoPath === this.data.videoPath);
-    gifList[gifIndex].translationResult = this.data.inputText;
-    gifList[gifIndex].maleAudioUrl = this.data.maleAudioUrl;
-    gifList[gifIndex].femaleAudioUrl = this.data.femaleAudioUrl;
+    if (gifIndex === -1) {
+      // 未找到对应项，添加新记录
+      gifList.push({
+        thumbPath: '',
+        videoPath: this.data.videoPath,
+        translationResult: this.data.inputText,
+        maleAudioUrl: this.data.maleAudioUrl,
+        femaleAudioUrl: this.data.femaleAudioUrl
+      });
+    } else {
+      // 更新已有记录
+      gifList[gifIndex].translationResult = this.data.inputText;
+      gifList[gifIndex].maleAudioUrl = this.data.maleAudioUrl;
+      gifList[gifIndex].femaleAudioUrl = this.data.femaleAudioUrl;
+    }
     app.globalData.gifList = gifList;
     wx.showToast({
       title: '已保存',
       icon: 'success'
     });
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/pages/home/home',
     })
   }

@@ -91,6 +91,7 @@ function uploadVideo() {
 }
 
 function chunkGifList() {
+  const app = getApp();
   const gifList = app.globalData.gifList;
   if (!gifList || !gifList.length) {
     this.setData({ chunkedGifList: [[null]] });
@@ -216,9 +217,25 @@ Page({
     const filteredCustom = customPhrases.filter(p => !defaultTexts.has(p.text));
     const uniquePhrases = [...defaultPhrases, ...filteredCustom];
 
+    // 计算每个短语是否需要滚动（根据文本长度估算）
+    // 中文字符按2个单位计算，英文/德文按1个单位
+    const processedPhrases = uniquePhrases.map(p => {
+      const text = p.text;
+      // 计算文本宽度估算值：中文=2，其他=1
+      let width = 0;
+      for (let char of String(text)) {
+        width += (char.charCodeAt(0) > 127) ? 2 : 1;
+      }
+      // 宽度超过11（约6个中文字或11个英文字）需要滚动
+      return {
+        ...p,
+        needScroll: width >= 12
+      };
+    });
+
     this.setData({
       statusBarHeight: windowInfo.statusBarHeight,
-      quickPhrases: uniquePhrases,
+      quickPhrases: processedPhrases,
       // 加载历史记录
       smplHistory: wx.getStorageSync('smplHistory') || [],
       deafOutputHistory: wx.getStorageSync('deafOutputHistory') || []
@@ -239,7 +256,8 @@ Page({
 
     if (settingsChanged) {
       this.setData({ contentVisible: false });
-      setTimeout(() => {
+      // 保存定时器引用以便清理
+      this._contentTimer = setTimeout(() => {
         this.setData({
           mode: currentSettings.mode,
           settings: currentSettings,
@@ -264,6 +282,19 @@ Page({
     if (this.unsubscribeSettings) {
       this.unsubscribeSettings();
     }
+    // 清理可能存在的定时器
+    if (this._contentTimer) {
+      clearTimeout(this._contentTimer);
+      this._contentTimer = null;
+    }
+    // 清理音频上下文，防止内存泄漏
+    if (this._currentAudioContext) {
+      try {
+        this._currentAudioContext.stop();
+        this._currentAudioContext.destroy();
+      } catch (e) {}
+      this._currentAudioContext = null;
+    }
   },
 
   // 更新翻译文本
@@ -277,6 +308,22 @@ Page({
     const defaultTexts = new Set(defaultPhrases.map(p => p.text));
     const filteredCustom = customPhrases.filter(p => !defaultTexts.has(p.text));
     const mergedPhrases = [...defaultPhrases, ...filteredCustom];
+
+    // 重新计算每个短语是否需要滚动（根据文本长度估算）
+    // 中文字符按2个单位计算，英文/德文按1个单位
+    const processedPhrases = mergedPhrases.map(p => {
+      const text = p.text;
+      // 计算文本宽度估算值：中文=2，其他=1
+      let width = 0;
+      for (let char of String(text)) {
+        width += (char.charCodeAt(0) > 127) ? 2 : 1;
+      }
+      // 宽度≥12（约6个中文字或12个英文字）需要滚动
+      return {
+        ...p,
+        needScroll: width >= 12
+      };
+    });
 
     this.setData({
       texts: {
@@ -316,10 +363,15 @@ Page({
         popularization: t('home.normal.popularization'),
         popularizationDesc: t('home.normal.popularizationDesc'),
         releaseToSend: t('home.normal.releaseToSend'),
-        recording: t('home.normal.recording')
+        recording: t('home.normal.recording'),
+        // AI对话助手（普通版）
+        psychologyBtn: t('home.normal.psychologyBtn') || 'AI对话助手',
+        // AI对话助手（听障版）
+        psychologyTitle: t('home.deaf.psychologyTitle') || 'AI对话助手',
+        psychologyDesc: t('home.deaf.psychologyDesc') || 'AI陪伴，倾听你的心声'
       },
       // 更新快捷短语，保留自定义短语
-      quickPhrases: mergedPhrases
+      quickPhrases: processedPhrases
     });
   },
 
@@ -399,7 +451,7 @@ Page({
   },
 
   openTeach() {
-    wx.navigateTo({ url: '/pages/teach/teach' });
+    wx.navigateTo({ url: '/subpackage_teach/pages/teach/teach' });
   },
 
   openPopularization() {
@@ -785,7 +837,7 @@ Page({
   usePhrase(e) {
     const phrase = e.currentTarget.dataset.phrase;
     this.setData({ inputText: phrase, showPhraseModal: false });
-    this.sendText();
+    // 只填充到输入框，不自动发送，让用户可以编辑
   },
 
   // 打开键盘
@@ -807,8 +859,8 @@ Page({
   sendKeyboardText() {
     const text = this.data.keyboardInput;
     if (text && text.trim()) {
+      // 填充到输入框，不自动发送，让用户可以编辑
       this.setData({ inputText: text.trim() });
-      this.sendText();
     }
     this.hideKeyboardModal();
   },
@@ -871,10 +923,12 @@ Page({
       return;
     }
 
+    // 生成唯一ID：时间戳 + 随机数，避免高并发冲突
+    const uniqueId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newPhrase = {
       text: trimmedText,
       type: selectedPhraseType,
-      id: `custom_${Date.now()}`
+      id: uniqueId
     };
 
     const updatedPhrases = [...quickPhrases, newPhrase];
@@ -976,12 +1030,33 @@ Page({
       sourceType: ['album'],
       success: (res) => {
         if (res.tempFiles && res.tempFiles.length > 0) {
-          const videoPath = res.tempFiles[0].tempFilePath;
+          const tempFile = res.tempFiles[0];
+          const videoPath = tempFile.tempFilePath;
+          const size = tempFile.size || 0;
+
+          // 验证文件大小（最大50MB）
+          const maxSize = 50 * 1024 * 1024;
+          if (size > maxSize) {
+            wx.showToast({ title: '视频过大，请选择小于50MB的视频', icon: 'none' });
+            return;
+          }
+
+          // 验证视频时长（最大60秒）
+          const duration = tempFile.duration || 0;
+          if (duration > 60) {
+            wx.showToast({ title: '视频过长，请选择小于60秒的视频', icon: 'none' });
+            return;
+          }
+
           this.recognizeSignLanguage(videoPath);
         }
       },
-      fail: () => {
-        wx.showToast({ title: '选择视频失败', icon: 'none' });
+      fail: (err) => {
+        console.error('选择视频失败:', err);
+        // 用户取消不显示错误
+        if (err.errMsg && !err.errMsg.includes('cancel')) {
+          wx.showToast({ title: '选择视频失败', icon: 'none' });
+        }
       }
     });
   },
@@ -1036,11 +1111,11 @@ Page({
   },
 
   navigateToSocietyCowork() {
-    wx.navigateTo({ url: '/pages/society_cowork/society_cowork' });
+    wx.navigateTo({ url: '/subpackage_community/pages/society_cowork/society_cowork' });
   },
 
   navigateToForum() {
-    wx.navigateTo({ url: '/pages/forum/forum' });
+    wx.navigateTo({ url: '/subpackage_community/pages/forum/forum' });
   },
 
   previewGif(e) {

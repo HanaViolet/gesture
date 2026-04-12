@@ -1,7 +1,6 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
-    "mode-switcher": "/components/mode-switcher/mode-switcher",
     "smpl-viewer": "/components/smpl-viewer/smpl-viewer"
   }
 }

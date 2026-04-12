@@ -28,21 +28,9 @@
   margin-bottom: var(--space-5);
 }
 
-.icon-circle {
-  width: 140rpx;
-  height: 140rpx;
-  border-radius: 50%;
-  background: var(--gradient-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
-}
-
-.icon-text {
-  font-size: 64rpx;
-  font-weight: 700;
-  color: #fff;
+.welcome-logo {
+  width: 180rpx;
+  height: 180rpx;
 }
 
 .welcome-title {
@@ -270,10 +258,14 @@
   opacity: 0.7;
 }
 
-.btn-text {
+.enter-btn .btn-text {
   font-size: var(--font-lg);
   font-weight: 600;
-  color: #fff;
+  color: #FFFFFF !important;
+}
+
+.btn-text {
+  color: #FFFFFF !important;
 }
 
 .footer-hint {

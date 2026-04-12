@@ -1,4 +1,6 @@
 // 首次启动引导页面
+const { i18n, t, setLanguage } = require('../../i18n/index')
+
 Page({
   data: {
     // 系统信息
@@ -14,31 +16,60 @@ Page({
     selectedLang: '',
 
     // 使用模式列表
-    modes: [
-      {
-        id: 'deaf',
-        title: '文字 / 手语',
-        description: '适合听障人士，提供文字输入、常用语快捷表达和手语识别功能',
-        icon: '/icons/mode-text.svg',
-        iconBg: 'rgba(91, 123, 163, 0.12)'
-      },
-      {
-        id: 'normal',
-        title: '语音说话',
-        description: '适合健听人士，提供语音识别、语音合成和实时翻译功能',
-        icon: '/icons/mode-voice.svg',
-        iconBg: 'rgba(122, 158, 126, 0.12)'
-      }
-    ],
-    selectedMode: ''
+    modes: [],
+    selectedMode: '',
+
+    // 翻译文本
+    texts: {}
   },
 
   onLoad(options) {
+    // 初始化 i18n
+    i18n.init()
+
     // 获取系统信息
     this.initSystemInfo();
 
     // 检查是否已完成引导
     this.checkOnboardingStatus();
+
+    // 初始化文本
+    this.updateTexts()
+  },
+
+  // 更新界面文本
+  updateTexts() {
+    const modes = [
+      {
+        id: 'deaf',
+        title: t('onboarding.option.deaf.title'),
+        description: t('onboarding.option.deaf.desc'),
+        icon: '/icons/mode-text.svg',
+        iconBg: 'rgba(91, 123, 163, 0.12)'
+      },
+      {
+        id: 'normal',
+        title: t('onboarding.option.normal.title'),
+        description: t('onboarding.option.normal.desc'),
+        icon: '/icons/mode-voice.svg',
+        iconBg: 'rgba(122, 158, 126, 0.12)'
+      }
+    ]
+
+    this.setData({
+      modes,
+      texts: {
+        welcomeTitle: t('onboarding.welcome'),
+        welcomeSubtitle: t('onboarding.subtitle'),
+        selectLanguage: t('settings.selectLanguage'),
+        selectMode: t('settings.selectMode'),
+        enterApp: t('onboarding.enterApp') || '进入应用',
+        footerHint: t('onboarding.footerHint') || '稍后在设置中可更改这些选项',
+        pleaseSelectLanguage: t('settings.selectLanguage') || '请选择语言',
+        pleaseSelectMode: t('settings.selectMode') || '请选择使用模式',
+        settingsSaved: t('onboarding.settingsSaved') || '设置已保存'
+      }
+    })
   },
 
   // 初始化系统信息
@@ -96,6 +127,10 @@ Page({
     const langCode = e.currentTarget.dataset.code;
     this.setData({ selectedLang: langCode });
 
+    // 切换 i18n 语言并更新界面
+    setLanguage(langCode)
+    this.updateTexts()
+
     // 触觉反馈
     this.triggerHaptic();
   },
@@ -120,12 +155,12 @@ Page({
 
   // 进入应用
   onEnterApp() {
-    const { selectedLang, selectedMode } = this.data;
+    const { selectedLang, selectedMode, texts } = this.data;
 
     // 验证选择
     if (!selectedLang) {
       wx.showToast({
-        title: '请选择语言',
+        title: texts.pleaseSelectLanguage,
         icon: 'none'
       });
       return;
@@ -133,7 +168,7 @@ Page({
 
     if (!selectedMode) {
       wx.showToast({
-        title: '请选择使用模式',
+        title: texts.pleaseSelectMode,
         icon: 'none'
       });
       return;
@@ -150,7 +185,7 @@ Page({
 
       // 显示成功提示
       wx.showToast({
-        title: '设置已保存',
+        title: texts.settingsSaved,
         icon: 'success',
         duration: 800,
         complete: () => {
@@ -165,7 +200,7 @@ Page({
     } catch (e) {
       console.error('保存设置失败', e);
       wx.showToast({
-        title: '保存失败，请重试',
+        title: t('onboarding.saveFailed') || '保存失败，请重试',
         icon: 'none'
       });
     }
