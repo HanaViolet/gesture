@@ -272,6 +272,7 @@
       text="{{viewerText}}"
       videoUrl="{{viewerVideoUrl}}"
       taskId="{{viewerTaskId}}"
+      resultType="{{viewerResultType}}"
       smplBase="{{SMPL_BASE}}"
       endpoints="{{ENDPOINTS}}"
       bind:close="closeViewer"

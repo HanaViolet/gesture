@@ -41,10 +41,15 @@
     <view class="retry-btn" bindtap="closeViewer">返回重试</view>
   </view>
 
-  <!-- Content Area - 视频/3D内容 -->
+  <!-- Content Area - 图片/视频/3D内容 -->
   <view class="content-area" wx:if="{{!loading && !error && !isGenerating}}">
-    <!-- 视频播放器模式 -->
-    <view class="video-container" wx:if="{{videoUrl}}">
+    <!-- 审核模式：图片展示 -->
+    <view class="image-container" wx:if="{{_resultType === 'image' && videoUrl}}">
+      <image src="{{videoUrl}}" mode="aspectFit" class="sign-image"/>
+    </view>
+
+    <!-- 正常模式：视频播放器 -->
+    <view class="video-container" wx:elif="{{_resultType === 'video' && videoUrl}}">
       <video
         id="smplVideo"
         class="smpl-video"

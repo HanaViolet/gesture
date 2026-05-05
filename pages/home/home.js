@@ -143,6 +143,8 @@ Page({
     viewerVideoUrl: '',
     // 当前任务ID
     viewerTaskId: '',
+    // 当前结果类型（image/video）
+    viewerResultType: '',
     // 后端历史任务列表
     backendTasks: [],
     // 听障版输出历史记录（最多3条）
@@ -659,7 +661,8 @@ Page({
         'Content-Type': 'application/json'
       },
       data: {
-        text: text
+        text: text,
+        num_samples: 1
       },
       success: (res) => {
         wx.hideLoading();
@@ -669,7 +672,8 @@ Page({
             showViewer: true,
             viewerText: text,
             viewerTaskId: res.data.task_id,
-            viewerVideoUrl: ''  // 初始为空，生成完成后再填充
+            viewerVideoUrl: '',  // 初始为空，生成完成后再填充
+            viewerResultType: ''
           });
         } else {
           const errorMsg = (res.data && res.data.error) || '提交任务失败';
@@ -699,7 +703,8 @@ Page({
             text: task.text || '未命名任务',
             time: this.formatTaskTime(task.created_at),
             timestamp: new Date(task.created_at).getTime(),
-            videoUrl: task.status === 'completed' ? `${SMPL_BASE}${ENDPOINTS.SMPL_VIDEO}/${task.id}` : ''
+            videoUrl: task.status === 'completed' ? `${SMPL_BASE}${ENDPOINTS.SMPL_VIDEO}/${task.id}` : '',
+            outputType: task.output_type || 'video'
           })).filter(task => task.status !== 'failed').slice(0, 10); // 只取最近10个成功的
 
           this.setData({ backendTasks: tasks });
@@ -725,17 +730,18 @@ Page({
 
   // SMPL 生成完成回调
   onSmplComplete(e) {
-    const { videoUrl, text, taskId } = e.detail;
-    console.log('[Home] SMPL生成完成回调:', { videoUrl, text, taskId });
+    const { videoUrl, text, taskId, outputType } = e.detail;
+    console.log('[Home] SMPL生成完成回调:', { videoUrl, text, taskId, outputType });
 
-    // 保存到本地历史记录（同时保存taskId，用于URL失效时重新获取）
+    // 保存到本地历史记录（同时保存taskId和outputType，用于URL失效时重新获取和正确展示）
     const newRecord = {
       id: Date.now(),
       text: text,
       time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
       timestamp: Date.now(),
       videoUrl: videoUrl,
-      taskId: taskId || ''  // 保存taskId备用
+      taskId: taskId || '',  // 保存taskId备用
+      outputType: outputType || 'video'  // 保存结果类型
     };
 
     const currentHistory = this.data.smplHistory || [];
@@ -781,7 +787,8 @@ Page({
         showViewer: true,
         viewerText: item.text,
         viewerVideoUrl: hasTaskId ? '' : (item.videoUrl || ''),  // 有taskId时先不传videoUrl，让组件轮询获取
-        viewerTaskId: hasTaskId ? item.taskId : ''  // 只有有效的taskId才传递
+        viewerTaskId: hasTaskId ? item.taskId : '',  // 只有有效的taskId才传递
+        viewerResultType: item.outputType || ''  // 传入已知的结果类型
       });
     }
   },
@@ -794,7 +801,8 @@ Page({
         showViewer: true,
         viewerText: task.text,
         viewerVideoUrl: task.videoUrl,
-        viewerTaskId: ''  // 已有视频URL，不需要taskId
+        viewerTaskId: '',  // 已有视频URL，不需要taskId
+        viewerResultType: task.outputType || 'video'
       });
     } else {
       wx.showToast({ title: '视频暂未生成完成', icon: 'none' });

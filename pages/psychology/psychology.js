@@ -533,7 +533,8 @@ Page({
       showSignModal: true,
       signLoading: true,
       currentSignText: text,
-      signVideoUrl: ''
+      signVideoUrl: '',
+      signResultType: ''
     });
     this.haptic();
     this.fetchSignVideo(text);
@@ -559,7 +560,7 @@ Page({
       url: `${SMPL_BASE}${ENDPOINTS.SMPL_GENERATE}`,
       method: 'POST',
       header: { 'Content-Type': 'application/json' },
-      data: { text: text },
+      data: { text: text, num_samples: 1 },
       timeout: 30000,
       success: (res) => {
         wx.hideLoading();
@@ -610,11 +611,13 @@ Page({
             const status = res.data.status;
 
             if (status === 'completed') {
-              // 任务完成，获取视频URL
-              const videoUrl = `${SMPL_BASE}${ENDPOINTS.SMPL_VIDEO}/${taskId}`;
+              // 任务完成，根据 output_type 决定展示图片或视频
+              const outputType = res.data.output_type || 'video';
+              const resultUrl = `${SMPL_BASE}${ENDPOINTS.SMPL_VIDEO}/${taskId}`;
               this.setData({
                 signLoading: false,
-                signVideoUrl: videoUrl
+                signVideoUrl: resultUrl,
+                signResultType: outputType
               });
               wx.vibrateShort({ type: 'light' });
             } else if (status === 'failed') {

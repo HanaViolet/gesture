@@ -21,6 +21,10 @@ Component({
     endpoints: {
       type: Object,
       value: {}  // API端点配置
+    },
+    resultType: {
+      type: String,
+      value: ''  // 'image' | 'video'，用于直接传入已知类型
     }
   },
   data: {
@@ -34,7 +38,9 @@ Component({
     // 生成状态
     isGenerating: false,
     progress: 0,
-    statusText: '正在为您生成中...'
+    statusText: '正在为您生成中...',
+    // 结果类型：image 或 video
+    _resultType: ''
   },
   lifetimes: {
     attached() {
@@ -42,8 +48,13 @@ Component({
     },
     ready() {
       // 如果有taskId且有有效的smplBase和endpoints，开始轮询生成进度
-      const { taskId, smplBase, endpoints, videoUrl } = this.properties;
-      console.log('[SMPL] ready 生命周期, taskId:', taskId, 'videoUrl:', videoUrl);
+      const { taskId, smplBase, endpoints, videoUrl, resultType } = this.properties;
+      console.log('[SMPL] ready 生命周期, taskId:', taskId, 'videoUrl:', videoUrl, 'resultType:', resultType);
+
+      // 如果直接传入了 resultType，优先使用
+      if (resultType) {
+        this.setData({ _resultType: resultType });
+      }
 
       // 检查taskId是否有效（不为空、undefined、null）
       const hasValidTaskId = taskId && taskId !== 'undefined' && taskId !== 'null' && taskId !== '';
@@ -81,8 +92,10 @@ Component({
           isGenerating: false,
           progress: 100
         });
-        // 视频加载完成后播放
-        this.videoContext = wx.createVideoContext('smplVideo', this);
+        // 视频加载完成后播放（仅视频模式）
+        if (this.data._resultType === 'video' || !this.data._resultType) {
+          this.videoContext = wx.createVideoContext('smplVideo', this);
+        }
         wx.vibrateShort({ type: 'light' });
       }
     }
@@ -284,19 +297,21 @@ Component({
                   this._progressRequest = null;
                 }
                 if (this._pollTimer) clearTimeout(this._pollTimer);
-                // 任务完成，获取视频URL
-                const finalVideoUrl = `${smplBase}${endpoints.SMPL_VIDEO}/${taskId}`;
-                console.log('[SMPL] 设置视频URL:', finalVideoUrl);
+                // 任务完成，获取结果URL并判断类型
+                const finalUrl = `${smplBase}${endpoints.SMPL_VIDEO}/${taskId}`;
+                const outputType = res.data.output_type || 'video';
+                console.log('[SMPL] 设置结果URL:', finalUrl, '类型:', outputType);
                 this.setData({
-                  videoUrl: finalVideoUrl,
+                  videoUrl: finalUrl,
+                  _resultType: outputType,
                   loading: false,
                   isGenerating: false,
                   progress: 100,
                   statusText: '生成完成！'
                 });
-                // 通知父组件 - 确保传递taskId
-                console.log('[SMPL] 触发complete事件，taskId:', taskId);
-                this.triggerEvent('complete', { videoUrl: finalVideoUrl, text: this.properties.text, taskId: taskId });
+                // 通知父组件 - 确保传递taskId和outputType
+                console.log('[SMPL] 触发complete事件，taskId:', taskId, 'outputType:', outputType);
+                this.triggerEvent('complete', { videoUrl: finalUrl, text: this.properties.text, taskId: taskId, outputType: outputType });
                 wx.vibrateShort({ type: 'light' });
               } else if (status === 'failed') {
                 console.error('[SMPL] 任务失败:', res.data.error);

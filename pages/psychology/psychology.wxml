@@ -168,9 +168,17 @@
           <text class="sign-loading-sub">{{texts.signLoadingWait}}</text>
         </view>
 
-        <!-- 视频播放器 -->
+        <!-- 审核模式：图片展示 -->
+        <image
+          wx:elif="{{signResultType === 'image' && signVideoUrl}}"
+          src="{{signVideoUrl}}"
+          mode="aspectFit"
+          class="sign-video-player"
+        />
+
+        <!-- 正常模式：视频播放器 -->
         <video
-          wx:elif="{{signVideoUrl}}"
+          wx:elif="{{signResultType === 'video' && signVideoUrl}}"
           id="signVideo"
           class="sign-video-player"
           src="{{signVideoUrl}}"
