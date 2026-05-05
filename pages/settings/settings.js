@@ -117,7 +117,6 @@ Page({
         // 帮助
         help: t('settings.help') || '帮助',
         tutorial: t('settings.tutorial') || '使用教程',
-        communityWork: t('settings.communityWork') || '社区工作',
         resetOnboarding: t('settings.resetOnboarding') || '重新进入新手引导',
         resetOnboardingConfirm: t('settings.resetOnboardingConfirm') || '确定要重新进入新手引导吗？',
         feedback: t('settings.feedback') || '意见反馈',
@@ -366,11 +365,6 @@ Page({
         }
       }
     });
-  },
-
-  // ========== 社区工作 ==========
-  openCommunity() {
-    wx.navigateTo({ url: '/subpackage_community/pages/forum/forum' });
   },
 
   // ========== 关于页面 ==========

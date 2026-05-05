@@ -17,15 +17,6 @@
       "pages": [
         "pages/teach/teach"
       ]
-    },
-    {
-      "root": "subpackage_community/",
-      "pages": [
-        "pages/society_cowork/society_cowork",
-        "pages/forum/forum",
-        "pages/forum_create/forum_create",
-        "pages/forum_detail/forum_detail"
-      ]
     }
   ],
   "window": {

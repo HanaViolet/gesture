@@ -91,9 +91,7 @@ const PAGES = {
   CAMERA: '/pages/camera/camera',
   ANALYSIS_RESULT: '/pages/analysis_result/analysis_result',
   TEXT_RESULT: '/pages/text_result/text_result',
-  SOCIETY_COWORK: '/subpackage_community/pages/society_cowork/society_cowork',
   PERSONAL_SETTINGS: '/pages/personal_settings/personal_settings',
-  FORUM: '/subpackage_community/pages/forum/forum',
   POPULARIZATION: '/pages/popularization/popularization',
   TEACH: '/subpackage_teach/pages/teach/teach'
 };

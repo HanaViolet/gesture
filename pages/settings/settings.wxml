@@ -118,17 +118,6 @@
         </view>
       </view>
 
-      <!-- 社区工作 -->
-      <view class="list-item" bindtap="openCommunity">
-        <view class="list-item-left">
-          <text class="icon">🏢</text>
-          <text class="label">{{texts.communityWork}}</text>
-        </view>
-        <view class="list-item-right">
-          <text class="arrow">></text>
-        </view>
-      </view>
-
       <!-- 重新进入新手引导 -->
       <view class="list-item" bindtap="resetOnboarding">
         <view class="list-item-left">

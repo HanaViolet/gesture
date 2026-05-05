@@ -5,8 +5,6 @@
   <!-- 可编辑的聊天文本 -->
   <view class="chat-container" style="position: fixed; left: 375rpx; top: 116rpx">
     <view class="chat-content" style="position: relative; left: 0rpx; top: 0rpx; height: 1158rpx; display: block; box-sizing: border-box">
-      <video id="localVideo" src="{{videoPath}}" controls autoplay binderror="videoErrorCallback" bindloadstart="videoLoadStartCallback" style="position: relative; left: -14rpx; top: -16rpx; margin-bottom: 50rpx">
-      </video>
       <input type="text" bindinput="onTextInput" value="{{translationResult}}" placeholder="编辑聊天文本" />
       <button bindtap="saveToCommonPhrases" style="position: relative; left: 0rpx; top: 90rpx">保存</button>
       <button bindtap="confirmEdit" style="position: relative; left: 0rpx; top: 100rpx">生成语音</button>

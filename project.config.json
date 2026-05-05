@@ -5,16 +5,16 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "test_img"
+        "value": "test_img",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "docs"
+        "value": "docs",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "images/12.mp4"
+        "value": "images/12.mp4",
+        "type": "file"
       }
     ],
     "include": []
@@ -50,7 +50,7 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "YOUR_APPID_HERE",
+  "appid": "wx19a48af5cc8fd6f3",
   "_comment": "请将上方appid替换为你自己的小程序AppID",
   "simulatorPluginLibVersion": {}
 }

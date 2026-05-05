@@ -31,19 +31,6 @@ Page({
     }
     console.log(this.data)
   },
-  videoErrorCallback: function (e) {
-    console.log('视频播放出错，错误信息:', e.detail.errMsg);
-    const videoComponent = this.selectComponent('#localVideo');
-    if (videoComponent) {
-        const videoPath = videoComponent.src;
-        console.log('视频出错，视频路径为：', videoPath);
-    } else {
-        console.log('未能获取到视频组件实例');
-    }
-},
-  videoLoadStartCallback: function (e) {
-    console.log('视频开始加载');
-  },
   onTextInput: function (e) {
     const newText = e.detail.value;
     this.setData({

@@ -339,7 +339,6 @@ Page({
         holdToSpeak: t('home.normal.holdToSpeak') || '按住说话，松开发送',
         quickPhrasesTitle: t('home.deaf.quickPhrases') || '快捷短语',
         // 通用按钮和标签
-        community: t('home.community'),
         settings: t('home.settings'),
         currentOutput: t('home.currentOutput'),
         outputHint: t('home.outputHint'),
@@ -1116,14 +1115,6 @@ Page({
 
   navigateToPsychology() {
     wx.navigateTo({ url: '/pages/psychology/psychology' });
-  },
-
-  navigateToSocietyCowork() {
-    wx.navigateTo({ url: '/subpackage_community/pages/society_cowork/society_cowork' });
-  },
-
-  navigateToForum() {
-    wx.navigateTo({ url: '/subpackage_community/pages/forum/forum' });
   },
 
   previewGif(e) {
