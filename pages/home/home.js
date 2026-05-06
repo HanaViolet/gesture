@@ -1123,9 +1123,9 @@ Page({
   },
 
   previewGif(e) {
-    const videoPath = e.currentTarget.dataset.videopath;
+    const id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/get_detail/get_detail?videoPath=${encodeURIComponent(videoPath)}`
+      url: `/pages/get_detail/get_detail?id=${id}`
     });
   },
 

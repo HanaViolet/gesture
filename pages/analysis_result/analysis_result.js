@@ -225,8 +225,8 @@ Page({
     // 保存信息到全局 gifList
     const app = getApp();
     const newGifInfo = {
+      id: Date.now(),
       thumbPath: this.data.thumbPath,
-      videoPath: this.data.videoPath,
       translationResult: this.data.chatTexts,
       maleAudioUrl: this.data.maleAudioUrl,
       femaleAudioUrl: this.data.femaleAudioUrl

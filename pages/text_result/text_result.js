@@ -51,7 +51,7 @@ Page({
     }
     app.globalData.gifList.push({
       thumbPath: '',
-      videoPath: '',
+      id: Date.now(),
       translationResult: text,
       maleAudioUrl: this.data.maleAudioUrl || '',
       femaleAudioUrl: this.data.femaleAudioUrl || ''

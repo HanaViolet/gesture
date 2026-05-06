@@ -10,19 +10,19 @@ Page({
     progress: 0,
     maleAudioUrl: null,
     femaleAudioUrl: null,
-    videoPath: '',
+    recordId: '',
     translationResult: ''
   },
   onLoad: function (options) {
-    const videoPath = decodeURIComponent(options.videoPath);
+    const id = options.id;
     const app = getApp();
     const gifList = app.globalData.gifList;
-    const gifInfo = gifList.find(info => info.videoPath === videoPath);
+    const gifInfo = gifList.find(info => info.id === id);
     console.log(gifInfo)
     if (gifInfo) {
       // 展示详细信息，例如更新页面数据
       this.setData({
-        videoPath: gifInfo.videoPath,
+        recordId: gifInfo.id,
         translationResult: gifInfo.translationResult,
         maleAudioUrl: gifInfo.maleAudioUrl,
         femaleAudioUrl: gifInfo.femaleAudioUrl,
@@ -47,10 +47,10 @@ Page({
     this.generateBothVoices(cleanedText);
   },
   generateBothVoices: function (text) {
-    console.log(this.data.videoPath)
+    console.log(this.data.recordId)
     const app = getApp();
     const gifList = app.globalData.gifList;
-    const gifIndex = gifList.findIndex(item => item.videoPath === this.data.videoPath);
+    const gifIndex = gifList.findIndex(item => item.id === this.data.recordId);
     gifList[gifIndex].translationResult = text;
     this.setData({
       progress: 20
@@ -237,12 +237,12 @@ Page({
     // 保存信息到全局 gifList
     const app = getApp();
     const gifList = app.globalData.gifList;
-    const gifIndex = gifList.findIndex(item => item.videoPath === this.data.videoPath);
+    const gifIndex = gifList.findIndex(item => item.id === this.data.recordId);
     if (gifIndex === -1) {
       // 未找到对应项，添加新记录
       gifList.push({
         thumbPath: '',
-        videoPath: this.data.videoPath,
+        id: this.data.recordId,
         translationResult: this.data.inputText,
         maleAudioUrl: this.data.maleAudioUrl,
         femaleAudioUrl: this.data.femaleAudioUrl
