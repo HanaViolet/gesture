@@ -1,3 +1,5 @@
+const featureGate = require('../../utils/feature-gate');
+
 // AI对话助手入口卡片组件
 Component({
   properties: {},
@@ -14,15 +16,18 @@ Component({
         wx.vibrateShort({ type: 'light' });
       }
 
-      wx.navigateTo({
-        url: '/pages/psychology/psychology',
-        fail: (err) => {
-          console.error('[PsychologyEntry] 导航失败:', err);
-          wx.showToast({
-            title: '页面跳转失败',
-            icon: 'none'
-          });
-        }
+      featureGate.checkPsychologyAccess((allowed) => {
+        if (!allowed) return;
+        wx.navigateTo({
+          url: '/pages/psychology/psychology',
+          fail: (err) => {
+            console.error('[PsychologyEntry] 导航失败:', err);
+            wx.showToast({
+              title: '页面跳转失败',
+              icon: 'none'
+            });
+          }
+        });
       });
     }
   }

@@ -1,3 +1,5 @@
+const featureGate = require('../../utils/feature-gate');
+
 Component({
   data: {
     showPopup: false,
@@ -71,7 +73,11 @@ Component({
 
     onConfirm() {
       this.setData({ showPopup: false });
-      wx.navigateTo({ url: '/pages/psychology/psychology' });
+      featureGate.checkPsychologyAccess((allowed) => {
+        if (allowed) {
+          wx.navigateTo({ url: '/pages/psychology/psychology' });
+        }
+      });
     },
 
     triggerWobble() {

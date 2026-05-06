@@ -3,6 +3,7 @@ const { i18n, t } = require('../../i18n/index');
 const settingsManager = require('../../utils/settings-manager');
 const api = require('../../utils/api');
 const { API_BASE, SMPL_BASE, ENDPOINTS, getSmplUrl } = api;
+const featureGate = require('../../utils/feature-gate');
 
 // 数据清洗函数 - 修复 [object Object] bug
 function sanitizePhrases(phrases) {
@@ -1114,7 +1115,11 @@ Page({
   },
 
   navigateToPsychology() {
-    wx.navigateTo({ url: '/pages/psychology/psychology' });
+    featureGate.checkPsychologyAccess((allowed) => {
+      if (allowed) {
+        wx.navigateTo({ url: '/pages/psychology/psychology' });
+      }
+    });
   },
 
   previewGif(e) {
