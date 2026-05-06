@@ -151,10 +151,6 @@ Page({
         wx.showToast({ title: '播放失败', icon: 'none' });
       });
 
-      // 延迟播放，确保资源加载完成
-      setTimeout(() => {
-        audioContext.play();
-      }, 100);
 
       this.setData({
         maleAudioContext: audioContext,
@@ -205,10 +201,6 @@ Page({
         wx.showToast({ title: '播放失败', icon: 'none' });
       });
 
-      // 延迟播放，确保资源加载完成
-      setTimeout(() => {
-        audioContext.play();
-      }, 100);
 
       this.setData({
         femaleAudioContext: audioContext,

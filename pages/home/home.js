@@ -560,46 +560,41 @@ Page({
           data: res.data,
           encoding: 'binary',
           success: () => {
-            // 延迟一点再播放，确保文件写入完成
-            setTimeout(() => {
-              const audio = wx.createInnerAudioContext();
-              this._currentAudioContext = audio;
-              audio.src = tmpPath;
+            const audio = wx.createInnerAudioContext();
+            this._currentAudioContext = audio;
+            audio.src = tmpPath;
 
-              // 关键：设置自动播放，确保音频不会被系统中断
-              audio.autoplay = false;
+            // 监听可以播放事件
+            audio.onCanplay(() => {
+              audio.play();
+            });
 
-              // 监听可以播放事件
-              audio.onCanplay(() => {
-                audio.play();
-              });
-
-              // 监听播放完成
-              audio.onEnded(() => {
-                setTimeout(() => {
-                  if (this._currentAudioContext === audio) {
-                    this._currentAudioContext = null;
-                  }
-                  try {
-                    audio.destroy();
-                  } catch (e) {}
-                }, 100);
-              });
-
-              // 监听播放错误
-              audio.onError((e) => {
-                console.error('音频播放失败:', e);
+            // 监听播放完成
+            audio.onEnded(() => {
+              setTimeout(() => {
                 if (this._currentAudioContext === audio) {
                   this._currentAudioContext = null;
                 }
                 try {
                   audio.destroy();
-                } catch (err) {}
-              });
+                } catch (e) {}
+              }, 100);
+            });
 
-              // 开始播放
-              audio.play();
-            }, 100);
+            // 监听播放错误
+            audio.onError((e) => {
+              console.error('音频播放失败:', e);
+              wx.showToast({
+                title: '音频播放失败，请重试',
+                icon: 'none'
+              });
+              if (this._currentAudioContext === audio) {
+                this._currentAudioContext = null;
+              }
+              try {
+                audio.destroy();
+              } catch (err) {}
+            });
           },
           fail: (err) => {
             wx.showToast({ title: '保存音频失败', icon: 'none' });
