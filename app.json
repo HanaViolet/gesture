@@ -10,14 +10,6 @@
     "pages/settings/settings",
     "pages/settings_profile/settings_profile"
   ],
-  "subpackages": [
-    {
-      "root": "subpackage_teach/",
-      "pages": [
-        "pages/teach/teach"
-      ]
-    }
-  ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "语见",

@@ -428,10 +428,6 @@ Page({
     });
   },
 
-  openTeach() {
-    wx.navigateTo({ url: '/subpackage_teach/pages/teach/teach' });
-  },
-
   openPopularization() {
     wx.navigateTo({ url: '/pages/popularization/popularization' });
   },

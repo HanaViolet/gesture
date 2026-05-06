@@ -344,11 +344,6 @@ Page({
     })
   },
 
-  // ========== 使用教程 ==========
-  openTutorial() {
-    wx.navigateTo({ url: '/subpackage_teach/pages/teach/teach' });
-  },
-
   // ========== 重新进入新手引导 ==========
   resetOnboarding() {
     wx.showModal({

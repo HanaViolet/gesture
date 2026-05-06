@@ -93,7 +93,6 @@ const PAGES = {
   TEXT_RESULT: '/pages/text_result/text_result',
   PERSONAL_SETTINGS: '/pages/personal_settings/personal_settings',
   POPULARIZATION: '/pages/popularization/popularization',
-  TEACH: '/subpackage_teach/pages/teach/teach'
 };
 
 module.exports = {

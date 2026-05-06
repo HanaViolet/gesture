@@ -107,16 +107,6 @@
     <view class="section-title">{{texts.help}}</view>
 
     <view class="list">
-      <!-- 使用教程 -->
-      <view class="list-item" bindtap="openTutorial">
-        <view class="list-item-left">
-          <text class="icon">📖</text>
-          <text class="label">{{texts.tutorial}}</text>
-        </view>
-        <view class="list-item-right">
-          <text class="arrow">></text>
-        </view>
-      </view>
 
       <!-- 重新进入新手引导 -->
       <view class="list-item" bindtap="resetOnboarding">
