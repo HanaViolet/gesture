@@ -91,26 +91,6 @@ function uploadVideo() {
   }
 }
 
-function chunkGifList() {
-  const app = getApp();
-  const gifList = app.globalData.gifList;
-  if (!gifList || !gifList.length) {
-    this.setData({ chunkedGifList: [[null]] });
-    return;
-  }
-  const chunked = [];
-  for (let i = 0; i < gifList.length; i += 2) {
-    const pair = [gifList[i]];
-    if (i + 1 < gifList.length) {
-      pair.push(gifList[i + 1]);
-    } else {
-      pair.push(null);
-    }
-    chunked.push(pair);
-  }
-  this.setData({ chunkedGifList: chunked });
-}
-
 Page({
   data: {
     mode: 'normal',
@@ -127,7 +107,6 @@ Page({
     deafInput: '',
     videoPath: '',
     thumbTempFilePath: '',
-    chunkedGifList: [],
     rippleActive: false,
     statusBarHeight: 44,
     isRecording: false,
@@ -243,12 +222,9 @@ Page({
       smplHistory: wx.getStorageSync('smplHistory') || [],
       deafOutputHistory: wx.getStorageSync('deafOutputHistory') || []
     });
-    this.chunkGifList();
   },
 
   onShow() {
-    this.chunkGifList();
-
     // 检查设置是否被更改
     const currentSettings = settingsManager.getSettings();
     const settingsChanged = (
@@ -1010,7 +986,6 @@ Page({
   chooseVideo,
   chooseMediaAfterAuth,
   uploadVideo,
-  chunkGifList,
 
   // ===== 听障版：打开相机进行手语识别 =====
   openCameraForDeaf() {
@@ -1122,27 +1097,4 @@ Page({
     });
   },
 
-  previewGif(e) {
-    const id = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/get_detail/get_detail?id=${id}`
-    });
-  },
-
-  showDeletePrompt(e) {
-    const index = e.currentTarget.dataset.index;
-    wx.showModal({
-      title: '删除常用语',
-      content: '确定删除该常用语吗？',
-      success: (res) => {
-        if (res.confirm) {
-          const gifList = app.globalData.gifList;
-          gifList.splice(index, 1);
-          app.globalData.gifList = gifList;
-          this.chunkGifList();
-          wx.showToast({ title: '删除成功', icon: 'success' });
-        }
-      }
-    });
-  }
 });

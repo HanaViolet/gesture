@@ -7,7 +7,6 @@
     "pages/analysis_result/analysis_result",
     "pages/popularization/popularization",
     "pages/text_result/text_result",
-    "pages/get_detail/get_detail",
     "pages/settings/settings",
     "pages/settings_profile/settings_profile"
   ],
